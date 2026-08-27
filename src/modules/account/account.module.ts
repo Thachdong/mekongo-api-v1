@@ -7,6 +7,7 @@ import {
   TRANSACTION_MANAGER,
 } from './application/ports/account-application.tokens';
 import { RegisterAccountUseCase } from './application/use-cases/register-account.use-case';
+import { REGISTER_ACCOUNT_USECASE } from './public-api';
 import { AccountTypeOrmEntity } from './infrastructure/typeorm/entities/account.typeorm-entity';
 import { TypeOrmAccountRepository } from './infrastructure/typeorm/account.repository';
 import { AddressTypeOrmEntity } from './infrastructure/typeorm/entities/address.typeorm-entity';
@@ -25,11 +26,12 @@ import { TypeOrmTransactionManager } from './infrastructure/typeorm/typeorm-tran
   ],
   providers: [
     RegisterAccountUseCase,
+    { provide: REGISTER_ACCOUNT_USECASE, useExisting: RegisterAccountUseCase },
     { provide: ACCOUNT_REPOSITORY, useClass: TypeOrmAccountRepository },
     { provide: ADDRESS_REPOSITORY, useClass: TypeOrmAddressRepository },
     { provide: PROFILE_REPOSITORY, useClass: TypeOrmProfileRepository },
     { provide: TRANSACTION_MANAGER, useClass: TypeOrmTransactionManager },
   ],
-  exports: [RegisterAccountUseCase],
+  exports: [REGISTER_ACCOUNT_USECASE],
 })
 export class AccountModule {}

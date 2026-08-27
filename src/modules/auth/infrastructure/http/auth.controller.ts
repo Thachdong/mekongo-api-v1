@@ -5,6 +5,7 @@ import {
   TAuthRegisterOutput,
 } from '../../application/use-cases/register.use-case';
 import { RegisterRequestDto } from './dto/register-request.dto';
+import { RegisterDoc } from './docs/register.doc';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -13,6 +14,7 @@ export class AuthController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
+  @RegisterDoc()
   async register(
     @Body() body: RegisterRequestDto,
   ): Promise<TAuthRegisterOutput> {

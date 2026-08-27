@@ -15,6 +15,7 @@ import { GlobalExceptionFilter } from '@shared/common/filters/global-exception.f
 import { ResponseInterceptor } from '@shared/common/interceptors/response.interceptor';
 import { PinoLoggerModule } from '@shared/common/logger/pino-logger.module';
 import { SharedTypeOrmModule } from '@shared/infrastructure/database/typeorm.module';
+import { HashingModule } from '@shared/common/hashing/hashing.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { SharedTypeOrmModule } from '@shared/infrastructure/database/typeorm.mod
     }),
     PinoLoggerModule,
     SharedTypeOrmModule,
+    HashingModule,
     AccountModule,
     AuthModule,
   ],

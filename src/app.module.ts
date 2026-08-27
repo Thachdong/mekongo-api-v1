@@ -13,6 +13,7 @@ import { loggerConfig } from '@config/logger.config';
 import { validationSchema } from '@config/validation.schema';
 import { GlobalExceptionFilter } from '@shared/common/filters/global-exception.filter';
 import { ResponseInterceptor } from '@shared/common/interceptors/response.interceptor';
+import { PinoLoggerModule } from '@shared/common/logger/pino-logger.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ResponseInterceptor } from '@shared/common/interceptors/response.interc
       isGlobal: true,
       validationSchema: validationSchema,
     }),
+    PinoLoggerModule,
     AccountModule,
     AuthModule,
   ],

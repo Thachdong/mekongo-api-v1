@@ -1,7 +1,15 @@
 import { registerAs } from '@nestjs/config';
 
-export const loggerConfig = registerAs('logger', () => ({
-  level: process.env.LOG_LEVEL,
-  dir: process.env.LOG_DIR,
-  file: process.env.LOG_FILE,
+export type TLoggerConfig = {
+  level: string;
+  dir: string;
+  file: string;
+};
+
+export const loggerConfig = registerAs('logger', (): TLoggerConfig => ({
+  level:
+    process.env.LOG_LEVEL ??
+    (process.env.NODE_ENV === 'development' ? 'debug' : 'info'),
+  dir: process.env.LOG_DIR ?? './logs',
+  file: process.env.LOG_FILE ?? 'app.log',
 }));

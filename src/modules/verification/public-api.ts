@@ -3,6 +3,7 @@ export const ISSUE_ACCOUNT_VERIFICATION_USECASE = Symbol(
 );
 
 export type {
+  IIssueAccountVerificationUseCase,
   TIssueAccountVerificationInput,
   TIssueAccountVerificationOutput,
-} from './application/use-cases/issue-account-verification.use-case';
+} from './application/ports/issue-account-verification-use-case.interface';

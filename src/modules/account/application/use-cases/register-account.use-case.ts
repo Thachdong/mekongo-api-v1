@@ -2,8 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Account } from '../../domain/account.entity';
 import { Address } from '../../domain/address.entity';
 import { Profile } from '../../domain/profile.entity';
-import { TAccountLoginType } from '../../domain/value-objects/account-login-type.enum';
-import { TProfileType } from '../../domain/value-objects/profile-type.enum';
 import {
   ACCOUNT_REPOSITORY,
   ADDRESS_REPOSITORY,
@@ -13,32 +11,15 @@ import {
 import { IAccountRepository } from '../ports/account-repository.interface';
 import { IAddressRepository } from '../ports/address-repository.interface';
 import { IProfileRepository } from '../ports/profile-repository.interface';
+import {
+  IRegisterAccountUseCase,
+  TRegisterAccountInput,
+  TRegisterAccountOutput,
+} from '../ports/register-account-use-case.interface';
 import { ITransactionManager } from '../ports/transaction-manager.interface';
 
-export type TRegisterAccountInput = {
-  loginType: TAccountLoginType;
-  identifierHash: string;
-  passwordHash: string;
-  displayName: string;
-  avatarUrl: string | null;
-  address: {
-    label: string;
-    province: string;
-    provinceCode: number;
-    ward: string;
-    details: string;
-  };
-  profileType: TProfileType;
-};
-
-export type TRegisterAccountOutput = {
-  account: Account;
-  address: Address;
-  profile: Profile;
-};
-
 @Injectable()
-export class RegisterAccountUseCase {
+export class RegisterAccountUseCase implements IRegisterAccountUseCase {
   constructor(
     @Inject(ACCOUNT_REPOSITORY)
     private readonly _accountRepository: IAccountRepository,

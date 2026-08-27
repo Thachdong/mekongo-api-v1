@@ -5,6 +5,11 @@ import { TOtpConfig } from '@config/otp.config';
 import { OTP_HASHER } from '@shared/common/hashing/hashing.tokens';
 import { IKeyedHasher } from '@shared/common/hashing/keyed-hasher.interface';
 import { Otp } from '../../domain/otp.entity';
+import {
+  IIssueAccountVerificationUseCase,
+  TIssueAccountVerificationInput,
+  TIssueAccountVerificationOutput,
+} from '../ports/issue-account-verification-use-case.interface';
 import { IOtpRepository } from '../ports/otp-repository.interface';
 import { IOtpSender } from '../ports/otp-sender.interface';
 import {
@@ -12,18 +17,8 @@ import {
   OTP_SENDER,
 } from '../ports/verification-application.tokens';
 
-export type TIssueAccountVerificationInput = {
-  accountId: string;
-  identifier: string;
-};
-
-export type TIssueAccountVerificationOutput = {
-  otpId: string;
-  expiredAt: Date;
-};
-
 @Injectable()
-export class IssueAccountVerificationUseCase {
+export class IssueAccountVerificationUseCase implements IIssueAccountVerificationUseCase {
   constructor(
     @Inject(OTP_REPOSITORY)
     private readonly _otpRepository: IOtpRepository,

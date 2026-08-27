@@ -14,6 +14,7 @@ import { validationSchema } from '@config/validation.schema';
 import { GlobalExceptionFilter } from '@shared/common/filters/global-exception.filter';
 import { ResponseInterceptor } from '@shared/common/interceptors/response.interceptor';
 import { PinoLoggerModule } from '@shared/common/logger/pino-logger.module';
+import { SharedTypeOrmModule } from '@shared/infrastructure/database/typeorm.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PinoLoggerModule } from '@shared/common/logger/pino-logger.module';
       validationSchema: validationSchema,
     }),
     PinoLoggerModule,
+    SharedTypeOrmModule,
     AccountModule,
     AuthModule,
   ],

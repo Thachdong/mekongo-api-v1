@@ -1,0 +1,24 @@
+import { Profile } from '@modules/account/domain/profile.entity';
+import { ProfileTypeOrmEntity } from '../entities/profile.typeorm-entity';
+
+export class ProfileMapper {
+  static toDomain(entity: ProfileTypeOrmEntity): Profile {
+    return new Profile({
+      id: entity.id,
+      activeProfile: entity.activeProfile,
+      accountId: entity.accountId,
+      createdAt: entity.createdAt,
+      updatedAt: entity.updatedAt,
+    });
+  }
+
+  static toPersistence(profile: Profile): ProfileTypeOrmEntity {
+    const entity = new ProfileTypeOrmEntity();
+    if (profile.id) {
+      entity.id = profile.id;
+    }
+    entity.activeProfile = profile.activeProfile;
+    entity.accountId = profile.accountId;
+    return entity;
+  }
+}

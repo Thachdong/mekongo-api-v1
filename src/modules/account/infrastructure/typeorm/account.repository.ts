@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { IAccountRepository } from '../../application/ports/account-repository.interface';
 import { Account } from '../../domain/account.entity';
-import { AccountMapper } from './account.mapper';
 import { AccountTypeOrmEntity } from './entities/account.typeorm-entity';
 import { transactionContext } from './transaction-context';
+import { AccountMapper } from './mappers/account.mapper';
 
 @Injectable()
 export class TypeOrmAccountRepository implements IAccountRepository {

@@ -10,6 +10,7 @@ import { dbConfig } from '@config/db.config';
 import { jwtConfig } from '@config/jwt.config';
 import { firebaseConfig } from '@config/firebase.config';
 import { loggerConfig } from '@config/logger.config';
+import { otpConfig } from '@config/otp.config';
 import { validationSchema } from '@config/validation.schema';
 import { GlobalExceptionFilter } from '@shared/common/filters/global-exception.filter';
 import { ResponseInterceptor } from '@shared/common/interceptors/response.interceptor';
@@ -21,7 +22,14 @@ import { VerificationModule } from './modules/verification/verification.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [appConfig, dbConfig, jwtConfig, firebaseConfig, loggerConfig],
+      load: [
+        appConfig,
+        dbConfig,
+        jwtConfig,
+        firebaseConfig,
+        loggerConfig,
+        otpConfig,
+      ],
       isGlobal: true,
       validationSchema: validationSchema,
     }),

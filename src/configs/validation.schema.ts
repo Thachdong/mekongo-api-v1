@@ -19,6 +19,10 @@ export const validationSchema = Joi.object({
   REFRESH_TOKEN_EXPIRED_IN: Joi.string().default('7d'),
   REFRESH_TOKEN_SECRET: Joi.string().required(),
 
+  // OTP CONFIG
+  OTP_CODE_LENGTH: Joi.number().default(6),
+  OTP_EXPIRE_MINUTES: Joi.number().default(5),
+
   //  FIREBASE CONFIG
   FIREBASE_PROJECT_ID: Joi.string().required(),
   FIREBASE_CLIENT_EMAIL: Joi.string().required(),

@@ -5,6 +5,7 @@ import {
   OTP_SENDER,
 } from './application/ports/verification-application.tokens';
 import { IssueAccountVerificationUseCase } from './application/use-cases/issue-account-verification.use-case';
+import { ISSUE_ACCOUNT_VERIFICATION_USECASE } from './public-api';
 import { ConsoleOtpSender } from './infrastructure/console/console-otp-sender.service';
 import { EmailOtpSenderService } from './infrastructure/console/email-otp-sender.service';
 import { PhoneOtpSenderService } from './infrastructure/console/phone-otp-sender.service';
@@ -15,11 +16,15 @@ import { TypeOrmOtpRepository } from './infrastructure/typeorm/otp.repository';
   imports: [TypeOrmModule.forFeature([OtpTypeOrmEntity])],
   providers: [
     IssueAccountVerificationUseCase,
+    {
+      provide: ISSUE_ACCOUNT_VERIFICATION_USECASE,
+      useExisting: IssueAccountVerificationUseCase,
+    },
     EmailOtpSenderService,
     PhoneOtpSenderService,
     { provide: OTP_REPOSITORY, useClass: TypeOrmOtpRepository },
     { provide: OTP_SENDER, useClass: ConsoleOtpSender },
   ],
-  exports: [IssueAccountVerificationUseCase],
+  exports: [ISSUE_ACCOUNT_VERIFICATION_USECASE],
 })
 export class VerificationModule {}

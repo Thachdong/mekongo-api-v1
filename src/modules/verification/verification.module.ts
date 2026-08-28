@@ -3,8 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   OTP_REPOSITORY,
   OTP_SENDER,
+  VERIFY_OTP_USECASE,
 } from './application/ports/verification-application.tokens';
 import { IssueAccountVerificationUseCase } from './application/use-cases/issue-account-verification.use-case';
+import { VerifyOtpUseCase } from './application/use-cases/verify-otp.use-case';
 import { ISSUE_ACCOUNT_VERIFICATION_USECASE } from './public-api';
 import { ConsoleOtpSender } from './infrastructure/console/console-otp-sender.service';
 import { EmailOtpSenderService } from './infrastructure/console/email-otp-sender.service';
@@ -20,11 +22,16 @@ import { TypeOrmOtpRepository } from './infrastructure/typeorm/otp.repository';
       provide: ISSUE_ACCOUNT_VERIFICATION_USECASE,
       useExisting: IssueAccountVerificationUseCase,
     },
+    VerifyOtpUseCase,
+    {
+      provide: VERIFY_OTP_USECASE,
+      useExisting: VerifyOtpUseCase,
+    },
     EmailOtpSenderService,
     PhoneOtpSenderService,
     { provide: OTP_REPOSITORY, useClass: TypeOrmOtpRepository },
     { provide: OTP_SENDER, useClass: ConsoleOtpSender },
   ],
-  exports: [ISSUE_ACCOUNT_VERIFICATION_USECASE],
+  exports: [ISSUE_ACCOUNT_VERIFICATION_USECASE, VERIFY_OTP_USECASE],
 })
 export class VerificationModule {}

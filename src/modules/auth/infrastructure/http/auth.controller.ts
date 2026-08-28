@@ -4,13 +4,18 @@ import {
   RegisterUseCase,
   TAuthRegisterOutput,
 } from '../../application/use-cases/register.use-case';
+import { VerifyUseCase } from '../../application/use-cases/verify.use-case';
 import { RegisterRequestDto } from './dto/register-request.dto';
+import { VerifyRequestDto } from './dto/verify-request.dto';
 import { RegisterDoc } from './docs/register.doc';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly _registerUseCase: RegisterUseCase) {}
+  constructor(
+    private readonly _registerUseCase: RegisterUseCase,
+    private readonly _verifyUseCase: VerifyUseCase,
+  ) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
@@ -33,5 +38,15 @@ export class AuthController {
       },
       profileType: body.profileType,
     });
+  }
+
+  @Post('verify')
+  @HttpCode(HttpStatus.OK)
+  async verify(@Body() body: VerifyRequestDto): Promise<null> {
+    await this._verifyUseCase.execute({
+      identifier: body.identifier,
+      code: body.code,
+    });
+    return null;
   }
 }

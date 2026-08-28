@@ -90,6 +90,10 @@ export class Otp {
     return this._updatedAt;
   }
 
+  get wrongCount(): number {
+    return this._wrongCount;
+  }
+
   checkIsExpired(): boolean {
     return this._expiredAt.getTime() <= Date.now();
   }
@@ -125,5 +129,18 @@ export class Otp {
   block(blockType: TOtpBlockType, blockUntil: Date): void {
     this._blockType = blockType;
     this._blockUntil = blockUntil;
+  }
+
+  registerWrongAttempt(
+    maxWrongCount: number,
+    blockDurationMs: number,
+  ): TOtpBlockState | null {
+    this._wrongCount += 1;
+    if (this._wrongCount < maxWrongCount) {
+      return null;
+    }
+    const blockUntil = new Date(Date.now() + blockDurationMs);
+    this.block('WRONG_LIMIT', blockUntil);
+    return { blockType: 'WRONG_LIMIT', blockUntil };
   }
 }

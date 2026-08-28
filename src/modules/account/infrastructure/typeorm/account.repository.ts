@@ -33,4 +33,11 @@ export class TypeOrmAccountRepository implements IAccountRepository {
       .save(entity);
     return AccountMapper.toDomain(saved);
   }
+
+  async findById(id: string): Promise<Account | null> {
+    const entity = await this._manager
+      .getRepository(AccountTypeOrmEntity)
+      .findOne({ where: { id } });
+    return entity ? AccountMapper.toDomain(entity) : null;
+  }
 }

@@ -30,6 +30,7 @@ export class OtpMapper {
     entity.codeHash = otp.codeHash;
     entity.expiredAt = otp.expiredAt;
     entity.retryCount = otp.getRetryCount();
+    entity.wrongCount = otp.wrongCount;
     entity.blockType = otp.blockType;
     entity.blockUntil = otp.blockUntil;
     return entity;

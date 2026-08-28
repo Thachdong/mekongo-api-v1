@@ -54,6 +54,7 @@ export class IssueAccountVerificationUseCase implements IIssueAccountVerificatio
         wrongCount: 0,
         blockType: null,
         blockUntil: null,
+        isConsumed: false,
         createdAt: null,
         updatedAt: null,
       }),

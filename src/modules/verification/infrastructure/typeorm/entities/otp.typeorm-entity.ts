@@ -40,6 +40,9 @@ export class OtpTypeOrmEntity {
   @Column({ name: 'block_until', type: 'timestamptz', nullable: true })
   blockUntil: Date | null;
 
+  @Column({ name: 'is_consumed', type: 'boolean', default: false })
+  isConsumed: boolean;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

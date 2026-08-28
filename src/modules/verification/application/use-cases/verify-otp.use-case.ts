@@ -7,6 +7,7 @@ import { OtpNotFoundError } from '../../domain/errors/otp-not-found.error';
 import { OtpBlockedError } from '../../domain/errors/otp-blocked.error';
 import { OtpExpiredError } from '../../domain/errors/otp-expired.error';
 import { InvalidOtpCodeError } from '../../domain/errors/invalid-otp-code.error';
+import { OtpAlreadyConsumedError } from '../../domain/errors/otp-already-consumed.error';
 import {
   IVerifyOtpUseCase,
   TVerifyOtpInput,
@@ -35,6 +36,10 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
       throw new OtpNotFoundError();
     }
 
+    if (otp.isConsumed) {
+      throw new OtpAlreadyConsumedError();
+    }
+
     const blockState = otp.checkIsBlocked();
     if (blockState) {
       throw new OtpBlockedError(blockState.blockUntil);
@@ -60,6 +65,7 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
       throw new InvalidOtpCodeError();
     }
 
+    otp.markConsumed();
     await this._otpRepository.update(otp);
 
     return { accountId: otp.accountId };

@@ -8,6 +8,7 @@ import { Otp } from '../../domain/otp.entity';
 import { OtpNotFoundError } from '../../domain/errors/otp-not-found.error';
 import { OtpBlockedError } from '../../domain/errors/otp-blocked.error';
 import { OtpNotExpiredError } from '../../domain/errors/otp-not-expired.error';
+import { OtpAlreadyConsumedError } from '../../domain/errors/otp-already-consumed.error';
 import {
   IReSendOtpUseCase,
   TReSendOtpInput,
@@ -42,6 +43,10 @@ export class ReSendOtpUseCase implements IReSendOtpUseCase {
       throw new OtpNotFoundError();
     }
 
+    if (lastOtp.isConsumed) {
+      throw new OtpAlreadyConsumedError();
+    }
+
     const blockState = lastOtp.checkIsBlocked();
     if (blockState) {
       throw new OtpBlockedError(blockState.blockUntil);
@@ -73,6 +78,7 @@ export class ReSendOtpUseCase implements IReSendOtpUseCase {
         wrongCount: 0,
         blockType: null,
         blockUntil: null,
+        isConsumed: false,
         createdAt: null,
         updatedAt: null,
       }),

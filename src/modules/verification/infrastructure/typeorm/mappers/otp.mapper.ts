@@ -14,6 +14,7 @@ export class OtpMapper {
       wrongCount: entity.wrongCount,
       blockType: entity.blockType,
       blockUntil: entity.blockUntil,
+      isConsumed: entity.isConsumed,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     });
@@ -33,6 +34,7 @@ export class OtpMapper {
     entity.wrongCount = otp.wrongCount;
     entity.blockType = otp.blockType;
     entity.blockUntil = otp.blockUntil;
+    entity.isConsumed = otp.isConsumed;
     return entity;
   }
 }

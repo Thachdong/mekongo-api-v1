@@ -12,6 +12,7 @@ export type TOtpProps = {
   wrongCount: number;
   blockType: TOtpBlockType | null;
   blockUntil: Date | null;
+  isConsumed: boolean;
   createdAt: Date | null;
   updatedAt: Date | null;
 };
@@ -32,6 +33,7 @@ export class Otp {
   private _wrongCount: number;
   private _blockType: TOtpBlockType | null;
   private _blockUntil: Date | null;
+  private _isConsumed: boolean;
   private readonly _createdAt: Date | null;
   private readonly _updatedAt: Date | null;
 
@@ -46,6 +48,7 @@ export class Otp {
     this._wrongCount = props.wrongCount;
     this._blockType = props.blockType;
     this._blockUntil = props.blockUntil;
+    this._isConsumed = props.isConsumed;
     this._createdAt = props.createdAt;
     this._updatedAt = props.updatedAt;
   }
@@ -94,6 +97,10 @@ export class Otp {
     return this._wrongCount;
   }
 
+  get isConsumed(): boolean {
+    return this._isConsumed;
+  }
+
   checkIsExpired(): boolean {
     return this._expiredAt.getTime() <= Date.now();
   }
@@ -112,6 +119,10 @@ export class Otp {
 
   compareCodeHash(codeHash: string): boolean {
     return this._codeHash === codeHash;
+  }
+
+  markConsumed(): void {
+    this._isConsumed = true;
   }
 
   increaseRetryCount(): void {

@@ -8,6 +8,7 @@ import { VerifyUseCase } from '../../application/use-cases/verify.use-case';
 import { RegisterRequestDto } from './dto/register-request.dto';
 import { VerifyRequestDto } from './dto/verify-request.dto';
 import { RegisterDoc } from './docs/register.doc';
+import { VerifyDoc } from './docs/verify.doc';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -42,6 +43,7 @@ export class AuthController {
 
   @Post('verify')
   @HttpCode(HttpStatus.OK)
+  @VerifyDoc()
   async verify(@Body() body: VerifyRequestDto): Promise<null> {
     await this._verifyUseCase.execute({
       identifier: body.identifier,

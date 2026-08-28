@@ -11,7 +11,10 @@ export class VerificationController {
   @Post('re-send')
   @HttpCode(HttpStatus.OK)
   async reSend(@Body() body: ReSendRequestDto): Promise<null> {
-    await this._reSendOtpUseCase.execute({ identifier: body.identifier });
+    await this._reSendOtpUseCase.execute({
+      identifier: body.identifier,
+      purpose: body.purpose,
+    });
     return null;
   }
 }

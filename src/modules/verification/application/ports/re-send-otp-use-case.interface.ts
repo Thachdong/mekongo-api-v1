@@ -1,5 +1,8 @@
+import { TOtpPurpose } from '../../domain/value-objects/otp-purpose.enum';
+
 export type TReSendOtpInput = {
   identifier: string;
+  purpose: TOtpPurpose;
 };
 
 export type TReSendOtpOutput = {

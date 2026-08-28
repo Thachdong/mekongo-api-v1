@@ -36,7 +36,7 @@ export class ReSendOtpUseCase implements IReSendOtpUseCase {
   async execute(input: TReSendOtpInput): Promise<TReSendOtpOutput> {
     const lastOtp = await this._otpRepository.findLatestByIdentifier(
       input.identifier,
-      'ACCOUNT_VERIFICATION',
+      input.purpose,
     );
 
     if (!lastOtp) {
@@ -69,7 +69,7 @@ export class ReSendOtpUseCase implements IReSendOtpUseCase {
     const newOtp = await this._otpRepository.create(
       new Otp({
         id: null,
-        purpose: 'ACCOUNT_VERIFICATION',
+        purpose: input.purpose,
         identifier: lastOtp.identifier,
         accountId: lastOtp.accountId,
         codeHash,
@@ -87,7 +87,7 @@ export class ReSendOtpUseCase implements IReSendOtpUseCase {
     await this._otpSender.send({
       identifier: lastOtp.identifier,
       code,
-      purpose: 'ACCOUNT_VERIFICATION',
+      purpose: input.purpose,
     });
 
     return { otpId: newOtp.id as string, expiredAt: newOtp.expiredAt };

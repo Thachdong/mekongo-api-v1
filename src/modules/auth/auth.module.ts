@@ -4,7 +4,7 @@ import { VerificationModule } from '@modules/verification/verification.module';
 import { ChangePasswordUseCase } from './application/use-cases/change-password.use-case';
 import { RegisterUseCase } from './application/use-cases/register.use-case';
 import { ResetPasswordUseCase } from './application/use-cases/reset-password.use-case';
-import { VerifyUseCase } from './application/use-cases/verify.use-case';
+import { ActivateUseCase } from './application/use-cases/activate.use-case';
 import { AuthController } from './infrastructure/http/auth.controller';
 
 @Module({
@@ -12,7 +12,7 @@ import { AuthController } from './infrastructure/http/auth.controller';
   controllers: [AuthController],
   providers: [
     RegisterUseCase,
-    VerifyUseCase,
+    ActivateUseCase,
     ResetPasswordUseCase,
     ChangePasswordUseCase,
   ],

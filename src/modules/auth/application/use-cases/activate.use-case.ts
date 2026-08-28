@@ -8,13 +8,13 @@ import {
   VERIFY_OTP_USECASE,
 } from '@modules/verification/public-api';
 
-export type TAuthVerifyInput = {
+export type TAuthActivateInput = {
   identifier: string;
   code: string;
 };
 
 @Injectable()
-export class VerifyUseCase {
+export class ActivateUseCase {
   constructor(
     @Inject(VERIFY_OTP_USECASE)
     private readonly _verifyOtpUseCase: IVerifyOtpUseCase,
@@ -22,7 +22,7 @@ export class VerifyUseCase {
     private readonly _activateAccountUseCase: IActivateAccountUseCase,
   ) {}
 
-  async execute(input: TAuthVerifyInput): Promise<void> {
+  async execute(input: TAuthActivateInput): Promise<void> {
     const { accountId } = await this._verifyOtpUseCase.execute({
       identifier: input.identifier,
       code: input.code,

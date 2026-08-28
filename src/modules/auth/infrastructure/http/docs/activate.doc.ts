@@ -1,11 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
-import { VerifyRequestDto } from '../dto/verify-request.dto';
+import { ActivateRequestDto } from '../dto/activate-request.dto';
 
-export function VerifyDoc() {
+export function ActivateDoc() {
   return applyDecorators(
     ApiOperation({ summary: 'Xác thực OTP và kích hoạt account' }),
-    ApiBody({ type: VerifyRequestDto }),
+    ApiBody({ type: ActivateRequestDto }),
     ApiResponse({
       status: 200,
       description: 'Xác thực thành công, account được kích hoạt',

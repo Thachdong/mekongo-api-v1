@@ -9,22 +9,22 @@ import {
   ResetPasswordUseCase,
   TAuthResetPasswordOutput,
 } from '../../application/use-cases/reset-password.use-case';
-import { VerifyUseCase } from '../../application/use-cases/verify.use-case';
+import { ActivateUseCase } from '../../application/use-cases/activate.use-case';
 import { ChangePasswordRequestDto } from './dto/change-password-request.dto';
 import { RegisterRequestDto } from './dto/register-request.dto';
 import { ResetPasswordRequestDto } from './dto/reset-password-request.dto';
-import { VerifyRequestDto } from './dto/verify-request.dto';
+import { ActivateRequestDto } from './dto/activate-request.dto';
 import { ChangePasswordDoc } from './docs/change-password.doc';
 import { RegisterDoc } from './docs/register.doc';
 import { ResetPasswordDoc } from './docs/reset-password.doc';
-import { VerifyDoc } from './docs/verify.doc';
+import { ActivateDoc } from './docs/activate.doc';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly _registerUseCase: RegisterUseCase,
-    private readonly _verifyUseCase: VerifyUseCase,
+    private readonly _activateUseCase: ActivateUseCase,
     private readonly _resetPasswordUseCase: ResetPasswordUseCase,
     private readonly _changePasswordUseCase: ChangePasswordUseCase,
   ) {}
@@ -52,11 +52,11 @@ export class AuthController {
     });
   }
 
-  @Post('verify')
+  @Post('activate')
   @HttpCode(HttpStatus.OK)
-  @VerifyDoc()
-  async verify(@Body() body: VerifyRequestDto): Promise<null> {
-    await this._verifyUseCase.execute({
+  @ActivateDoc()
+  async activate(@Body() body: ActivateRequestDto): Promise<null> {
+    await this._activateUseCase.execute({
       identifier: body.identifier,
       code: body.code,
     });

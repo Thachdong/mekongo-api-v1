@@ -40,4 +40,11 @@ export class TypeOrmAccountRepository implements IAccountRepository {
       .findOne({ where: { id } });
     return entity ? AccountMapper.toDomain(entity) : null;
   }
+
+  async findByIdentifierHash(identifierHash: string): Promise<Account | null> {
+    const entity = await this._manager
+      .getRepository(AccountTypeOrmEntity)
+      .findOne({ where: { identifierHash } });
+    return entity ? AccountMapper.toDomain(entity) : null;
+  }
 }

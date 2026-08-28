@@ -4,10 +4,16 @@ import {
   RegisterUseCase,
   TAuthRegisterOutput,
 } from '../../application/use-cases/register.use-case';
+import {
+  ResetPasswordUseCase,
+  TAuthResetPasswordOutput,
+} from '../../application/use-cases/reset-password.use-case';
 import { VerifyUseCase } from '../../application/use-cases/verify.use-case';
 import { RegisterRequestDto } from './dto/register-request.dto';
+import { ResetPasswordRequestDto } from './dto/reset-password-request.dto';
 import { VerifyRequestDto } from './dto/verify-request.dto';
 import { RegisterDoc } from './docs/register.doc';
+import { ResetPasswordDoc } from './docs/reset-password.doc';
 import { VerifyDoc } from './docs/verify.doc';
 
 @ApiTags('auth')
@@ -16,6 +22,7 @@ export class AuthController {
   constructor(
     private readonly _registerUseCase: RegisterUseCase,
     private readonly _verifyUseCase: VerifyUseCase,
+    private readonly _resetPasswordUseCase: ResetPasswordUseCase,
   ) {}
 
   @Post('register')
@@ -50,5 +57,16 @@ export class AuthController {
       code: body.code,
     });
     return null;
+  }
+
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @ResetPasswordDoc()
+  async resetPassword(
+    @Body() body: ResetPasswordRequestDto,
+  ): Promise<TAuthResetPasswordOutput> {
+    return this._resetPasswordUseCase.execute({
+      identifier: body.identifier,
+    });
   }
 }

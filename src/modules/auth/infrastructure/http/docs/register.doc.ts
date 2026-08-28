@@ -9,7 +9,26 @@ export function RegisterDoc() {
     ApiOperation({ summary: 'Đăng ký account mới' }),
     ApiBody({ type: RegisterRequestDto }),
     ApiResponseData(RegisterResponseDto, { status: 201 }),
-    ApiResponse({ status: 400, description: 'Validation failed' }),
-    ApiResponse({ status: 500, description: 'Internal server error' }),
+    ApiResponse({
+      status: 400,
+      description: 'Validation failed',
+      schema: {
+        properties: {
+          statusCode: { type: 'number', example: 400 },
+          message: { type: 'array', items: { type: 'string' } },
+          error: { type: 'string', example: 'Bad Request' },
+        },
+      },
+    }),
+    ApiResponse({
+      status: 500,
+      description: 'Internal server error',
+      schema: {
+        properties: {
+          statusCode: { type: 'number', example: 500 },
+          message: { type: 'string', example: 'Internal server error' },
+        },
+      },
+    }),
   );
 }

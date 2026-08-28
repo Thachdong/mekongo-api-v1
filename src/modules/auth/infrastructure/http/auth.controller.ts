@@ -1,5 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ChangePasswordUseCase } from '../../application/use-cases/change-password.use-case';
 import {
   RegisterUseCase,
   TAuthRegisterOutput,
@@ -9,9 +10,11 @@ import {
   TAuthResetPasswordOutput,
 } from '../../application/use-cases/reset-password.use-case';
 import { VerifyUseCase } from '../../application/use-cases/verify.use-case';
+import { ChangePasswordRequestDto } from './dto/change-password-request.dto';
 import { RegisterRequestDto } from './dto/register-request.dto';
 import { ResetPasswordRequestDto } from './dto/reset-password-request.dto';
 import { VerifyRequestDto } from './dto/verify-request.dto';
+import { ChangePasswordDoc } from './docs/change-password.doc';
 import { RegisterDoc } from './docs/register.doc';
 import { ResetPasswordDoc } from './docs/reset-password.doc';
 import { VerifyDoc } from './docs/verify.doc';
@@ -23,6 +26,7 @@ export class AuthController {
     private readonly _registerUseCase: RegisterUseCase,
     private readonly _verifyUseCase: VerifyUseCase,
     private readonly _resetPasswordUseCase: ResetPasswordUseCase,
+    private readonly _changePasswordUseCase: ChangePasswordUseCase,
   ) {}
 
   @Post('register')
@@ -68,5 +72,17 @@ export class AuthController {
     return this._resetPasswordUseCase.execute({
       identifier: body.identifier,
     });
+  }
+
+  @Post('change-password')
+  @HttpCode(HttpStatus.OK)
+  @ChangePasswordDoc()
+  async changePassword(@Body() body: ChangePasswordRequestDto): Promise<null> {
+    await this._changePasswordUseCase.execute({
+      identifier: body.identifier,
+      code: body.code,
+      password: body.password,
+    });
+    return null;
   }
 }

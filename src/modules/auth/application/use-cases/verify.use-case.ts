@@ -26,6 +26,7 @@ export class VerifyUseCase {
     const { accountId } = await this._verifyOtpUseCase.execute({
       identifier: input.identifier,
       code: input.code,
+      purpose: 'ACCOUNT_VERIFICATION',
     });
 
     await this._activateAccountUseCase.execute({ accountId });

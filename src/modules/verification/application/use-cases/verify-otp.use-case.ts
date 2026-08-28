@@ -29,7 +29,7 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
   async execute(input: TVerifyOtpInput): Promise<TVerifyOtpOutput> {
     const otp = await this._otpRepository.findLatestByIdentifier(
       input.identifier,
-      'ACCOUNT_VERIFICATION',
+      input.purpose,
     );
 
     if (!otp) {

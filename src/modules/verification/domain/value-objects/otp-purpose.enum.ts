@@ -1,0 +1,1 @@
+export type TOtpPurpose = 'ACCOUNT_VERIFICATION' | 'RESET_PASSWORD';

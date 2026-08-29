@@ -1,4 +1,5 @@
 import { AccountBlockedError } from './errors/account-blocked.error';
+import { AccountNotActiveError } from './errors/account-not-active.error';
 import { InvalidAccountStatusTransitionError } from './errors/invalid-account-status-transition.error';
 import { TAccountLoginType } from './value-objects/account-login-type.enum';
 import { TAccountStatus } from './value-objects/account-status.enum';
@@ -145,6 +146,12 @@ export class Account {
   assertNotBlocked(): void {
     if (this.checkIsBlock()) {
       throw new AccountBlockedError(this._blockUntil as Date);
+    }
+  }
+
+  assertIsActive(): void {
+    if (this._status !== 'ACTIVE') {
+      throw new AccountNotActiveError();
     }
   }
 }

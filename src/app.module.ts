@@ -17,6 +17,7 @@ import { ResponseInterceptor } from '@shared/common/interceptors/response.interc
 import { PinoLoggerModule } from '@shared/common/logger/pino-logger.module';
 import { SharedTypeOrmModule } from '@shared/infrastructure/database/typeorm.module';
 import { HashingModule } from '@shared/common/hashing/hashing.module';
+import { AuthPassportModule } from '@shared/common/auth/auth.module';
 import { VerificationModule } from './modules/verification/verification.module';
 
 @Module({
@@ -36,6 +37,7 @@ import { VerificationModule } from './modules/verification/verification.module';
     PinoLoggerModule,
     SharedTypeOrmModule,
     HashingModule,
+    AuthPassportModule,
     AccountModule,
     AuthModule,
     VerificationModule,

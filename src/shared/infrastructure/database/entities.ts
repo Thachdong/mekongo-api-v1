@@ -1,6 +1,7 @@
 import { AccountTypeOrmEntity } from '@modules/account/infrastructure/typeorm/entities/account.typeorm-entity';
 import { AddressTypeOrmEntity } from '@modules/account/infrastructure/typeorm/entities/address.typeorm-entity';
 import { ProfileTypeOrmEntity } from '@modules/account/infrastructure/typeorm/entities/profile.typeorm-entity';
+import { RefreshTokenTypeOrmEntity } from '@modules/auth/infrastructure/typeorm/entities/refresh-token.typeorm-entity';
 import { OtpTypeOrmEntity } from '@modules/verification/infrastructure/typeorm/entities/otp.typeorm-entity';
 import { EntitySchema } from 'typeorm';
 
@@ -16,4 +17,5 @@ export const ENTITIES: (TEntityClass | EntitySchema)[] = [
   AddressTypeOrmEntity,
   ProfileTypeOrmEntity,
   OtpTypeOrmEntity,
+  RefreshTokenTypeOrmEntity,
 ];

@@ -1,0 +1,2 @@
+export const TOKEN_ISSUER = Symbol('TOKEN_ISSUER');
+export const REFRESH_TOKEN_REPOSITORY = Symbol('REFRESH_TOKEN_REPOSITORY');

@@ -10,25 +10,37 @@ import { dbConfig } from '@config/db.config';
 import { jwtConfig } from '@config/jwt.config';
 import { firebaseConfig } from '@config/firebase.config';
 import { loggerConfig } from '@config/logger.config';
+import { otpConfig } from '@config/otp.config';
 import { validationSchema } from '@config/validation.schema';
 import { GlobalExceptionFilter } from '@shared/common/filters/global-exception.filter';
 import { ResponseInterceptor } from '@shared/common/interceptors/response.interceptor';
 import { PinoLoggerModule } from '@shared/common/logger/pino-logger.module';
 import { SharedTypeOrmModule } from '@shared/infrastructure/database/typeorm.module';
 import { HashingModule } from '@shared/common/hashing/hashing.module';
+import { AuthPassportModule } from '@shared/common/auth/auth.module';
+import { VerificationModule } from './modules/verification/verification.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [appConfig, dbConfig, jwtConfig, firebaseConfig, loggerConfig],
+      load: [
+        appConfig,
+        dbConfig,
+        jwtConfig,
+        firebaseConfig,
+        loggerConfig,
+        otpConfig,
+      ],
       isGlobal: true,
       validationSchema: validationSchema,
     }),
     PinoLoggerModule,
     SharedTypeOrmModule,
     HashingModule,
+    AuthPassportModule,
     AccountModule,
     AuthModule,
+    VerificationModule,
   ],
   controllers: [AppController],
   providers: [

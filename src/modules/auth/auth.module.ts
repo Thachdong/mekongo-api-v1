@@ -9,6 +9,7 @@ import { RegisterUseCase } from './application/use-cases/register.use-case';
 import { ResetPasswordUseCase } from './application/use-cases/reset-password.use-case';
 import { ActivateUseCase } from './application/use-cases/activate.use-case';
 import { LoginUseCase } from './application/use-cases/login.use-case';
+import { RefreshTokenUseCase } from './application/use-cases/refresh-token.use-case';
 import { AuthController } from './infrastructure/http/auth.controller';
 import {
   REFRESH_TOKEN_REPOSITORY,
@@ -40,6 +41,7 @@ import { TypeOrmRefreshTokenRepository } from './infrastructure/typeorm/refresh-
     ResetPasswordUseCase,
     ChangePasswordUseCase,
     LoginUseCase,
+    RefreshTokenUseCase,
     {
       provide: TOKEN_ISSUER,
       useClass: JwtTokenIssuer,

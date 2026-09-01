@@ -27,7 +27,7 @@ Validate refresh token hiện có, phát hành lại cặp accessToken + refresh
 ## Chunk tree
 
 ### Chunk 1: Refresh token endpoint (module: auth)
-- status: in-progress
+- status: done
 - Entity: tái dùng `RefreshToken` nguyên trạng (không sửa).
 - Steps (atomic skill theo thứ tự):
   1. domain — thêm error mới `RefreshTokenNotFoundError` (401, code `REFRESH_TOKEN_NOT_FOUND`) tại
@@ -57,6 +57,6 @@ Validate refresh token hiện có, phát hành lại cặp accessToken + refresh
   5. doc — `RefreshTokenDoc` (`refresh-token.doc.ts`): `@ApiBearerAuth`, trace domain error để liệt kê 401
      (not found/expired/revoked/invalid access token), 400 (validation).
 - Integrate into: không có consumer module khác (endpoint là entry point cuối).
-- Gate: endpoint chạy được end-to-end trong module auth.
-- Commit range: (điền sau khi chạy xong)
+- Gate: endpoint chạy được end-to-end trong module auth. Build + test suite pass.
+- Commit range: daccae7..b27b311
 - Approved by: user (2026-09-01)

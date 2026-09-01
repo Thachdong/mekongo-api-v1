@@ -3,7 +3,7 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -21,7 +21,7 @@ export class AccountController {
     private readonly _changeOwnPasswordUseCase: ChangeOwnPasswordUseCase,
   ) {}
 
-  @Patch('change-password')
+  @Post('change-password')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   @ChangePasswordDoc()
@@ -31,7 +31,7 @@ export class AccountController {
   ): Promise<null> {
     await this._changeOwnPasswordUseCase.execute({
       accountId: user.accountId,
-      currentPassword: body.currentPassword,
+      currentPassword: body.oldPassword,
       newPassword: body.newPassword,
     });
     return null;

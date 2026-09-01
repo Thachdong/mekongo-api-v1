@@ -39,6 +39,7 @@ import { RegisterDoc } from './docs/register.doc';
 import { ResetPasswordDoc } from './docs/reset-password.doc';
 import { ActivateDoc } from './docs/activate.doc';
 import { LoginDoc } from './docs/login.doc';
+import { RefreshTokenDoc } from './docs/refresh-token.doc';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -123,6 +124,7 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtRefreshAuthGuard)
+  @RefreshTokenDoc()
   async refresh(
     @CurrentUser() user: TJwtPayload,
     @Body() body: RefreshTokenRequestDto,

@@ -54,9 +54,8 @@ export class RefreshTokenUseCase {
       .update(input.refreshToken)
       .digest('hex');
 
-    const record = await this._refreshTokenRepository.findByTokenHash(
-      presentedTokenHash,
-    );
+    const record =
+      await this._refreshTokenRepository.findByTokenHash(presentedTokenHash);
     if (!record || record.accountId !== input.accountId) {
       throw new RefreshTokenNotFoundError();
     }
@@ -67,9 +66,7 @@ export class RefreshTokenUseCase {
     }
 
     const newRawToken = randomBytes(32).toString('hex');
-    const newTokenHash = createHash('sha256')
-      .update(newRawToken)
-      .digest('hex');
+    const newTokenHash = createHash('sha256').update(newRawToken).digest('hex');
     const refreshTokenExpiredIn = this._configService.get<string>(
       'jwt.refreshTkenExpiredIn',
       '7d',
@@ -92,4 +89,3 @@ export class RefreshTokenUseCase {
     };
   }
 }
-

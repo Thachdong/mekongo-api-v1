@@ -14,7 +14,7 @@ description: Tạo hoặc sửa use-case, port (interface), DI token trong appli
 Không giới hạn.
 
 ## Bước 0 — Đọc constitution
-Đọc `docs/architecture/constitution.md` — đặc biệt mục layer boundary, cross-module
+Đọc `.claude/docs/architecture/constitution.md` — đặc biệt mục layer boundary, cross-module
 composition (mặc định KHÔNG facade), naming DI token.
 
 ## Quy trình
@@ -67,7 +67,7 @@ Trước khi viết code, xác định và trình bày rõ:
 ```
 
 ## Out-of-scope
-Dùng format tại `docs/architecture/out-of-scope-format.md`. Các trường hợp
+Dùng format tại `.claude/docs/architecture/out-of-scope-format.md`. Các trường hợp
 thường gặp:
 - Cần entity/domain-error mới → trỏ sang `domain`.
 - Cần implement adapter cho port vừa định nghĩa → trỏ sang `infrastructure`.

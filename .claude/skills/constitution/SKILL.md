@@ -1,12 +1,12 @@
 ---
 name: constitution
-description: Tạo hoặc cập nhật file "constitution" (docs/architecture/constitution.md) — quy ước KỸ THUẬT/KIẾN TRÚC cố định của project Hexagonal + NestJS (layer boundary, naming, DI token, error convention, folder structure, tech stack). KHÔNG liên quan business logic. PHẢI dùng skill này khi: setup skill system lần đầu cho project, khi đổi convention kỹ thuật, hoặc khi bất kỳ skill nào khác phát hiện constitution.md còn thiếu/mơ hồ một mục cần thiết để tiếp tục code. Đây là skill DUY NHẤT được phép ghi vào docs/architecture/constitution.md.
+description: Tạo hoặc cập nhật file "constitution" (.claude/docs/architecture/constitution.md) — quy ước KỸ THUẬT/KIẾN TRÚC cố định của project Hexagonal + NestJS (layer boundary, naming, DI token, error convention, folder structure, tech stack). KHÔNG liên quan business logic. PHẢI dùng skill này khi: setup skill system lần đầu cho project, khi đổi convention kỹ thuật, hoặc khi bất kỳ skill nào khác phát hiện constitution.md còn thiếu/mơ hồ một mục cần thiết để tiếp tục code. Đây là skill DUY NHẤT được phép ghi vào .claude/docs/architecture/constitution.md.
 ---
 
 # Constitution Skill
 
 ## Phạm vi ghi (DUY NHẤT)
-- `docs/architecture/constitution.md`
+- `.claude/docs/architecture/constitution.md`
 
 Không ghi bất kỳ file code nào khác. Skill này không sinh business code.
 
@@ -23,7 +23,7 @@ constitution chưa nói rõ — nếu thiếu, phải quay lại chạy skill n�
    đang dùng thực tế (naming, cấu trúc folder, ORM, validation lib...) — tránh hỏi
    lại cái đã có sẵn trong code.
 2. Phỏng vấn dev lần lượt theo từng mục còn thiếu trong template
-   (`docs/architecture/constitution.md`), tối đa 1 câu hỏi/lượt, ưu tiên câu có sẵn
+   (`.claude/docs/architecture/constitution.md`), tối đa 1 câu hỏi/lượt, ưu tiên câu có sẵn
    gợi ý từ bước 1 để dev chỉ cần xác nhận thay vì gõ từ đầu:
    - Naming convention (file/class/port/adapter/DI token/DTO)
    - Response envelope format (JSON response chuẩn thành công/lỗi)
@@ -32,7 +32,7 @@ constitution chưa nói rõ — nếu thiếu, phải quay lại chạy skill n�
    - Vị trí global interceptor (nếu có)
    - Tech stack cố định (ORM, config lib...)
    - Test convention (vị trí file test, coverage tối thiểu, bắt buộc test gì)
-3. Ghi đầy đủ vào `docs/architecture/constitution.md`, thay các block `<!-- Điền -->`
+3. Ghi đầy đủ vào `.claude/docs/architecture/constitution.md`, thay các block `<!-- Điền -->`
    bằng nội dung thật.
 4. In tóm tắt toàn bộ constitution vừa tạo để dev review lần cuối trước khi các
    skill khác bắt đầu dùng nó.
@@ -42,7 +42,7 @@ constitution chưa nói rõ — nếu thiếu, phải quay lại chạy skill n�
 2. Cảnh báo nếu thay đổi này ảnh hưởng ngược tới code đã tồn tại (vd đổi response
    envelope format sẽ ảnh hưởng mọi endpoint đã có) — liệt kê rủi ro, không tự sửa
    code cũ (việc đó không thuộc scope của skill này, đưa vào phần suggestion theo
-   `docs/architecture/out-of-scope-format.md`).
+   `.claude/docs/architecture/out-of-scope-format.md`).
 3. Ghi thay đổi, giữ nguyên các mục không liên quan.
 
 ### Khi được gọi "giữa chừng" bởi skill khác (thiếu 1 mục cụ thể)

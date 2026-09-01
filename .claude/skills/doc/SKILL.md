@@ -14,7 +14,7 @@ description: Sinh swagger/OpenAPI documentation cho 1 endpoint đã tồn tại,
 2. Use-case mà endpoint đó gọi (đọc input/output).
 3. Domain-error mà use-case đó (và các use-case nó gọi lồng bên trong, nếu có) có
    thể ném ra — đọc trong `domain/`.
-4. Global exception filter (đường dẫn lấy từ `docs/architecture/constitution.md`)
+4. Global exception filter (đường dẫn lấy từ `.claude/docs/architecture/constitution.md`)
    — đọc mapping domain-error → HTTP status.
 5. Global validation pipe (constitution) — để biết status/format lỗi validate
    (thường 400).
@@ -23,7 +23,7 @@ description: Sinh swagger/OpenAPI documentation cho 1 endpoint đã tồn tại,
 
 ## Bước 0 — Đọc constitution
 Lấy đường dẫn global exception filter, validation pipe, interceptor, và response
-envelope format từ `docs/architecture/constitution.md`. Nếu thiếu → dừng, yêu cầu
+envelope format từ `.claude/docs/architecture/constitution.md`. Nếu thiếu → dừng, yêu cầu
 chạy `constitution` trước.
 
 ## Quy trình
@@ -60,6 +60,6 @@ chạy `constitution` trước.
 ## Out-of-scope
 Nếu phát hiện domain-error thiếu mapping trong global filter, hoặc response DTO
 không khớp response thật (bug ở endpoint) → dùng format tại
-`docs/architecture/out-of-scope-format.md`, trỏ sang `infrastructure` (sửa
+`.claude/docs/architecture/out-of-scope-format.md`, trỏ sang `infrastructure` (sửa
 endpoint) hoặc báo trực tiếp cho dev (sửa global filter không thuộc quyền ghi của
 bất kỳ atomic skill nào trong bộ này — cần dev tự xử lý hoặc mở rộng scope sau).

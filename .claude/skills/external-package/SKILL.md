@@ -17,7 +17,7 @@ Không giới hạn.
 
 ## Bước 0 — Đọc constitution
 Đọc mục "Tech stack cố định & external package policy" tại
-`docs/architecture/constitution.md`. Nếu package sắp thêm không nằm trong tech
+`.claude/docs/architecture/constitution.md`. Nếu package sắp thêm không nằm trong tech
 stack đã chốt, dừng lại hỏi dev xác nhận trước khi cài (tránh thêm dependency
 ngoài kế hoạch).
 
@@ -47,7 +47,7 @@ ngoài kế hoạch).
 ```
 
 ## Out-of-scope
-Dùng format tại `docs/architecture/out-of-scope-format.md`. Trường hợp phổ biến:
+Dùng format tại `.claude/docs/architecture/out-of-scope-format.md`. Trường hợp phổ biến:
 > "Package X đã sẵn sàng ở shared/. Cần dùng nó trong use-case Y (module Z) —
 > chạy skill use-case với prompt: '...'"
 → luôn trỏ sang `use-case` (nếu cần business logic dùng package) hoặc

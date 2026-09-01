@@ -14,7 +14,7 @@ description: Tạo hoặc sửa code trong infrastructure layer của 1 module N
 Không giới hạn.
 
 ## Bước 0 — Đọc constitution
-Đọc `docs/architecture/constitution.md` — DTO/validation/response convention,
+Đọc `.claude/docs/architecture/constitution.md` — DTO/validation/response convention,
 naming adapter, error mapping.
 
 ## Hai loại việc skill này xử lý
@@ -58,7 +58,7 @@ naming adapter, error mapping.
 ```
 
 ## Out-of-scope
-Dùng format tại `docs/architecture/out-of-scope-format.md`:
+Dùng format tại `.claude/docs/architecture/out-of-scope-format.md`:
 - Thiếu use-case → `use-case`
 - Thiếu wrapper package ở shared/ → `external-package`
 - Cần swagger doc cho endpoint vừa tạo → `doc`

@@ -6,13 +6,13 @@ description: Điều phối việc implement TRỌN VẸN 1 feature/endpoint t�
 # Full-feature Skill (Orchestration)
 
 ## Phạm vi ghi trực tiếp
-- CHỈ file Plan: `docs/plans/<feature-slug>.plan.md`.
+- CHỈ file Plan: `.claude/docs/plans/<feature-slug>.plan.md`.
 - Skill này KHÔNG tự viết business code — mọi thay đổi code thực tế đều do các
   atomic skill (`domain`, `use-case`, `infrastructure`, `doc`,
   `external-package`, `config-env`) thực hiện khi được skill này gọi.
 
 ## Bước 0 — Đọc constitution
-Bắt buộc đọc `docs/architecture/constitution.md` trước khi Discovery. Nếu thiếu,
+Bắt buộc đọc `.claude/docs/architecture/constitution.md` trước khi Discovery. Nếu thiếu,
 dừng lại, gọi `constitution` trước.
 
 ---
@@ -45,7 +45,7 @@ mới, phải flag rõ trong Plan ở bước sau: "Có thể tái dùng X — c
 - Dù các chunk độc lập kỹ thuật (có thể chạy song song), vẫn chạy TUẦN TỰ theo
   đúng thứ tự trong Plan — mục tiêu là review tuyến tính, không phải tốc độ.
 
-### Format file Plan — lưu tại `docs/plans/<feature-slug>.plan.md`
+### Format file Plan — lưu tại `.claude/docs/plans/<feature-slug>.plan.md`
 
 ```markdown
 # Plan: <Tên feature gốc>

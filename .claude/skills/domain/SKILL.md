@@ -15,7 +15,7 @@ của `full-feature`) phần mô tả use-case sắp dùng entity này để suy
 thiết.
 
 ## Bước 0 — Đọc constitution
-Đọc `docs/architecture/constitution.md`, mục "Domain method/error policy" và
+Đọc `.claude/docs/architecture/constitution.md`, mục "Domain method/error policy" và
 naming convention. Nếu thiếu/mơ hồ, dừng lại và yêu cầu chạy skill `constitution`
 trước.
 
@@ -69,5 +69,5 @@ qua kể cả khi nghĩ mình biết rõ cần gì.
 
 ## Out-of-scope
 Nếu phát hiện cần thứ ngoài domain/ (vd cần port để lưu entity) → không tự tạo,
-báo theo format tại `docs/architecture/out-of-scope-format.md`, trỏ sang skill
+báo theo format tại `.claude/docs/architecture/out-of-scope-format.md`, trỏ sang skill
 `use-case`.

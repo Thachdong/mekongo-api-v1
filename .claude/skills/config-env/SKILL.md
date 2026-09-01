@@ -12,7 +12,7 @@ description: Tạo hoặc sửa cấu hình environment/config của project tro
 Không giới hạn.
 
 ## Bước 0 — Đọc constitution
-Đọc mục tech stack / config lib đã chốt tại `docs/architecture/constitution.md`.
+Đọc mục tech stack / config lib đã chốt tại `.claude/docs/architecture/constitution.md`.
 
 ## Quy trình
 1. Xác định biến env cần thêm (tên, kiểu, bắt buộc/optional, giá trị mặc định nếu
@@ -36,5 +36,5 @@ Không giới hạn.
 
 ## Out-of-scope
 Nếu config này thực ra phục vụ 1 package cụ thể chưa được wrap ở `shared/` →
-dùng format tại `docs/architecture/out-of-scope-format.md`, trỏ sang
+dùng format tại `.claude/docs/architecture/out-of-scope-format.md`, trỏ sang
 `external-package`.

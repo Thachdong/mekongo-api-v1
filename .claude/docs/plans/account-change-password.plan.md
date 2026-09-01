@@ -72,3 +72,35 @@ currentPassword khớp passwordHash hiện tại rồi update passwordHash mới
   end-to-end (không cross-module nên không cần điều kiện (2)/(3)).
 - Commit range: 538d2da..4efd99d
 - Approved by: dev (2026-09-01, qua AskUserQuestion)
+
+### Chunk 2: Điều chỉnh HTTP method + field naming (module: account)
+- status: done
+- Điều chỉnh so với Chunk 1, lý do: dev yêu cầu `POST` thay vì `PATCH`, field
+  `oldPassword` thay vì `currentPassword` trong request body. Business logic
+  KHÔNG đổi (vẫn: lấy account theo accountId từ `@CurrentUser`, compare password
+  qua `IPasswordHasher.verify`, update passwordHash, không OTP).
+- Làm rõ ghi chú dev "endpoint hiện tại đang dùng chung use-case với
+  auth/change-password (cần OTP)": ĐÃ KIỂM TRA LẠI code hiện tại — không đúng.
+  `ChangeOwnPasswordUseCase` (account module) độc lập hoàn toàn với
+  `ChangePasswordUseCase` (auth module, flow OTP reset). Hai use-case chỉ CÙNG
+  gọi chung `ChangeAccountPasswordUseCase` ở bước update passwordHash cuối cùng
+  (bước lưu DB thuần tuý, không có OTP). Route `account/change-password` không
+  yêu cầu OTP ở bất kỳ đâu trong code hiện tại. Không cần sửa domain/use-case.
+- Entity: không đổi.
+- Steps (atomic skill theo thứ tự):
+  1. infrastructure (endpoint) — sửa
+     `infrastructure/http/dto/change-password-request.dto.ts`: rename field
+     `currentPassword` → `oldPassword` (giữ `newPassword`). Sửa
+     `infrastructure/http/account.controller.ts`: đổi decorator `@Patch` →
+     `@Post`, map `body.oldPassword` → `input.currentPassword` khi gọi
+     `ChangeOwnPasswordUseCase` (input type use-case giữ nguyên tên
+     `currentPassword`, chỉ DTO đổi tên — không đụng application layer).
+  2. doc — sửa mô tả trong `change-password.doc.ts` (dòng đang ghi
+     "currentPassword không khớp mật khẩu hiện tại" → đổi thành
+     "oldPassword không khớp mật khẩu hiện tại" cho khớp field mới).
+- Integrate into: không đổi (vẫn không cross-module).
+- Gate: build/lint/test pass, endpoint `POST account/change-password` nhận đúng
+  `{ oldPassword, newPassword }`.
+- Commit range: 7b731f2..7fcefe2
+- Approved by: dev (2026-09-01, qua full-feature command trực tiếp — spec đã rõ,
+  không cần hỏi lại)

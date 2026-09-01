@@ -18,6 +18,7 @@ import {
 import { JwtTokenIssuer } from './infrastructure/jwt/jwt-token-issuer.service';
 import { RefreshTokenTypeOrmEntity } from './infrastructure/typeorm/entities/refresh-token.typeorm-entity';
 import { TypeOrmRefreshTokenRepository } from './infrastructure/typeorm/refresh-token.repository';
+import { LogoutUseCase } from './application/use-cases/logout.use-case';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { TypeOrmRefreshTokenRepository } from './infrastructure/typeorm/refresh-
     ResetPasswordUseCase,
     ChangePasswordUseCase,
     LoginUseCase,
+    LogoutUseCase,
     RefreshTokenUseCase,
     {
       provide: TOKEN_ISSUER,

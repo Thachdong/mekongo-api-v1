@@ -5,18 +5,24 @@ import {
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { ApiResponseData } from '@shared/common/swagger/api-response-data.decorator';
-import { RefreshTokenRequestDto } from '../dto/refresh-token-request.dto';
-import { RefreshTokenResponseDto } from '../dto/refresh-token-response.dto';
+import { LogoutRequestDto } from '../dto/logout-request.dto';
 
-export function RefreshTokenDoc() {
+export function LogoutDoc() {
   return applyDecorators(
-    ApiOperation({
-      summary: 'Cấp lại accessToken + refreshToken mới từ refreshToken hiện có',
-    }),
+    ApiOperation({ summary: 'Thu hồi refresh token của session hiện tại' }),
     ApiBearerAuth('access-token'),
-    ApiBody({ type: RefreshTokenRequestDto }),
-    ApiResponseData(RefreshTokenResponseDto, { status: 200 }),
+    ApiBody({ type: LogoutRequestDto }),
+    ApiResponse({
+      status: 200,
+      description:
+        'Đăng xuất thành công (idempotent — kể cả refreshToken không tồn tại/đã revoke)',
+      schema: {
+        properties: {
+          data: { type: 'object', nullable: true, example: null },
+          meta: { type: 'object', additionalProperties: true, nullable: true },
+        },
+      },
+    }),
     ApiResponse({
       status: 400,
       description: 'Validation failed',
@@ -30,18 +36,11 @@ export function RefreshTokenDoc() {
     }),
     ApiResponse({
       status: 401,
-      description:
-        'Thiếu/sai access token (Authorization header), hoặc refresh token không tồn tại/đã bị revoke/đã hết hạn',
+      description: 'Thiếu/sai/hết hạn access token (Authorization header)',
       schema: {
         properties: {
           statusCode: { type: 'number', example: 401 },
-          code: {
-            type: 'string',
-            example:
-              'REFRESH_TOKEN_NOT_FOUND | REFRESH_TOKEN_REVOKED | REFRESH_TOKEN_EXPIRED',
-          },
           message: { type: 'string' },
-          extra: { type: 'object', nullable: true },
         },
       },
     }),

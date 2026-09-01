@@ -1,5 +1,15 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { CurrentUser } from '@shared/common/auth/current-user.decorator';
+import { JwtRefreshAuthGuard } from '@shared/common/auth/jwt-refresh-auth.guard';
+import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
 import { ChangePasswordUseCase } from '../../application/use-cases/change-password.use-case';
 import {
   RegisterUseCase,
@@ -14,11 +24,16 @@ import {
   LoginUseCase,
   TAuthLoginOutput,
 } from '../../application/use-cases/login.use-case';
+import {
+  RefreshTokenUseCase,
+  TAuthRefreshTokenOutput,
+} from '../../application/use-cases/refresh-token.use-case';
 import { ChangePasswordRequestDto } from './dto/change-password-request.dto';
 import { RegisterRequestDto } from './dto/register-request.dto';
 import { ResetPasswordRequestDto } from './dto/reset-password-request.dto';
 import { ActivateRequestDto } from './dto/activate-request.dto';
 import { LoginRequestDto } from './dto/login-request.dto';
+import { RefreshTokenRequestDto } from './dto/refresh-token-request.dto';
 import { ChangePasswordDoc } from './docs/change-password.doc';
 import { RegisterDoc } from './docs/register.doc';
 import { ResetPasswordDoc } from './docs/reset-password.doc';
@@ -34,6 +49,7 @@ export class AuthController {
     private readonly _resetPasswordUseCase: ResetPasswordUseCase,
     private readonly _changePasswordUseCase: ChangePasswordUseCase,
     private readonly _loginUseCase: LoginUseCase,
+    private readonly _refreshTokenUseCase: RefreshTokenUseCase,
   ) {}
 
   @Post('register')
@@ -101,6 +117,20 @@ export class AuthController {
       loginType: body.loginType,
       identifier: body.identifier,
       password: body.password,
+    });
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtRefreshAuthGuard)
+  async refresh(
+    @CurrentUser() user: TJwtPayload,
+    @Body() body: RefreshTokenRequestDto,
+  ): Promise<TAuthRefreshTokenOutput> {
+    return this._refreshTokenUseCase.execute({
+      accountId: user.accountId,
+      profileId: user.profileId,
+      refreshToken: body.refreshToken,
     });
   }
 }

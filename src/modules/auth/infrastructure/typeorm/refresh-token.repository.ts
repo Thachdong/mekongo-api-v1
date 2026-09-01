@@ -18,4 +18,21 @@ export class TypeOrmRefreshTokenRepository implements IRefreshTokenRepository {
     const saved = await this._repository.save(entity);
     return RefreshTokenMapper.toDomain(saved);
   }
+
+  async findByTokenHash(hash: string): Promise<RefreshToken | null> {
+    const entity = await this._repository
+      .createQueryBuilder('refreshToken')
+      .where(
+        'refreshToken.currentTokenHash = :hash OR refreshToken.previousTokenHash = :hash',
+        { hash },
+      )
+      .getOne();
+    return entity ? RefreshTokenMapper.toDomain(entity) : null;
+  }
+
+  async update(refreshToken: RefreshToken): Promise<RefreshToken> {
+    const entity = RefreshTokenMapper.toPersistence(refreshToken);
+    const saved = await this._repository.save(entity);
+    return RefreshTokenMapper.toDomain(saved);
+  }
 }

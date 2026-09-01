@@ -45,7 +45,7 @@ export function ChangePasswordDoc() {
     }),
     ApiResponse({
       status: 401,
-      description: 'currentPassword không khớp mật khẩu hiện tại',
+      description: 'oldPassword không khớp mật khẩu hiện tại',
       schema: {
         properties: {
           statusCode: { type: 'number', example: 401 },

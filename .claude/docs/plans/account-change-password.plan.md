@@ -104,3 +104,20 @@ currentPassword khớp passwordHash hiện tại rồi update passwordHash mới
 - Commit range: 7b731f2..7fcefe2
 - Approved by: dev (2026-09-01, qua full-feature command trực tiếp — spec đã rõ,
   không cần hỏi lại)
+
+### Chunk 3: Fix swagger schema clash (module: account)
+- status: done
+- Root cause: `auth/infrastructure/http/dto/change-password-request.dto.ts` và
+  `account/infrastructure/http/dto/change-password-request.dto.ts` cùng khai báo
+  class tên `ChangePasswordRequestDto`. `@nestjs/swagger` key
+  `components.schemas` theo TÊN CLASS → 2 class trùng tên đè lẫn nhau, khiến
+  swagger UI của `account/change-password` hiển thị nhầm payload OTP của
+  `auth/change-password` (`identifier`, `code`, `password`).
+- Steps: infrastructure — rename class `ChangePasswordRequestDto` →
+  `ChangeOwnPasswordRequestDto` trong file DTO của module account (giữ nguyên
+  tên file `change-password-request.dto.ts`), cập nhật import ở
+  `account.controller.ts` và `change-password.doc.ts`.
+- Gate: build/lint pass, không còn trùng tên class DTO trong repo.
+- Commit range: 80bf6bf
+- Approved by: dev (báo lỗi trực tiếp qua swagger, không cần hỏi lại — root
+  cause rõ ràng)

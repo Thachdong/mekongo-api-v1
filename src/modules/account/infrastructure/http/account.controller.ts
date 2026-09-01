@@ -11,7 +11,7 @@ import { CurrentUser } from '@shared/common/auth/current-user.decorator';
 import { JwtAuthGuard } from '@shared/common/auth/jwt-auth.guard';
 import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
 import { ChangeOwnPasswordUseCase } from '../../application/use-cases/change-own-password.use-case';
-import { ChangePasswordRequestDto } from './dto/change-password-request.dto';
+import { ChangeOwnPasswordRequestDto } from './dto/change-password-request.dto';
 import { ChangePasswordDoc } from './docs/change-password.doc';
 
 @ApiTags('account')
@@ -27,7 +27,7 @@ export class AccountController {
   @ChangePasswordDoc()
   async changePassword(
     @CurrentUser() user: TJwtPayload,
-    @Body() body: ChangePasswordRequestDto,
+    @Body() body: ChangeOwnPasswordRequestDto,
   ): Promise<null> {
     await this._changeOwnPasswordUseCase.execute({
       accountId: user.accountId,

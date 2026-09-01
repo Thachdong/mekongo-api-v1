@@ -5,13 +5,13 @@ import {
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { ChangePasswordRequestDto } from '../dto/change-password-request.dto';
+import { ChangeOwnPasswordRequestDto } from '../dto/change-password-request.dto';
 
 export function ChangePasswordDoc() {
   return applyDecorators(
     ApiOperation({ summary: 'Đổi mật khẩu account đang đăng nhập' }),
     ApiBearerAuth('access-token'),
-    ApiBody({ type: ChangePasswordRequestDto }),
+    ApiBody({ type: ChangeOwnPasswordRequestDto }),
     ApiResponse({
       status: 200,
       description: 'Đổi mật khẩu thành công',

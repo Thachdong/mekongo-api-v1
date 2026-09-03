@@ -21,6 +21,7 @@ import { AuthPassportModule } from '@shared/common/auth/auth.module';
 import { VerificationModule } from './modules/verification/verification.module';
 import { StorageModule } from '@shared/infrastructure/storage/storage.module';
 import { PostModule } from './modules/post/post.module';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { PostModule } from './modules/post/post.module';
     AuthModule,
     VerificationModule,
     PostModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [

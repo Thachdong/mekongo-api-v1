@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -12,10 +13,13 @@ import { CurrentUser } from '@shared/common/auth/current-user.decorator';
 import { JwtAuthGuard } from '@shared/common/auth/jwt-auth.guard';
 import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
 import { ChangeOwnPasswordUseCase } from '../../application/use-cases/change-own-password.use-case';
+import { GetAccountAddressesUseCase } from '../../application/use-cases/get-account-addresses.use-case';
 import { UpdateAccountProfileUseCase } from '../../application/use-cases/update-account-profile.use-case';
+import { AddressResponseDto } from './dto/address-response.dto';
 import { ChangeOwnPasswordRequestDto } from './dto/change-password-request.dto';
 import { UpdateAccountProfileRequestDto } from './dto/update-account-profile-request.dto';
 import { ChangePasswordDoc } from './docs/change-password.doc';
+import { GetAccountAddressesDoc } from './docs/get-account-addresses.doc';
 import { UpdateAccountProfileDoc } from './docs/update-account-profile.doc';
 
 @ApiTags('account')
@@ -24,6 +28,7 @@ export class AccountController {
   constructor(
     private readonly _changeOwnPasswordUseCase: ChangeOwnPasswordUseCase,
     private readonly _updateAccountProfileUseCase: UpdateAccountProfileUseCase,
+    private readonly _getAccountAddressesUseCase: GetAccountAddressesUseCase,
   ) {}
 
   @Post('change-password')
@@ -56,5 +61,30 @@ export class AccountController {
       avatarUrl: body.avatarUrl,
     });
     return null;
+  }
+
+  @Get('address')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @GetAccountAddressesDoc()
+  async getAddresses(
+    @CurrentUser() user: TJwtPayload,
+  ): Promise<AddressResponseDto[]> {
+    const addresses = await this._getAccountAddressesUseCase.execute({
+      accountId: user.accountId,
+    });
+
+    return addresses.map((address) => {
+      const dto = new AddressResponseDto();
+      dto.id = address.id;
+      dto.label = address.label;
+      dto.province = address.province;
+      dto.provinceCode = address.provinceCode;
+      dto.ward = address.ward;
+      dto.details = address.details;
+      dto.createdAt = address.createdAt;
+      dto.updatedAt = address.updatedAt;
+      return dto;
+    });
   }
 }

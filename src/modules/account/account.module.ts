@@ -8,6 +8,7 @@ import {
   CHANGE_ACCOUNT_PASSWORD_USECASE,
   CHANGE_OWN_PASSWORD_USECASE,
   FIND_ACCOUNT_BY_IDENTIFIER_USECASE,
+  GET_ACCOUNT_ADDRESSES_USECASE,
   PROFILE_REPOSITORY,
   REGISTER_ACCOUNT_USECASE,
   TRANSACTION_MANAGER,
@@ -17,6 +18,7 @@ import { ActivateAccountUseCase } from './application/use-cases/activate-account
 import { ChangeAccountPasswordUseCase } from './application/use-cases/change-account-password.use-case';
 import { ChangeOwnPasswordUseCase } from './application/use-cases/change-own-password.use-case';
 import { FindAccountByIdentifierUseCase } from './application/use-cases/find-account-by-identifier.use-case';
+import { GetAccountAddressesUseCase } from './application/use-cases/get-account-addresses.use-case';
 import { RegisterAccountUseCase } from './application/use-cases/register-account.use-case';
 import { UpdateAccountProfileUseCase } from './application/use-cases/update-account-profile.use-case';
 import { AccountController } from './infrastructure/http/account.controller';
@@ -65,6 +67,11 @@ import { TypeOrmTransactionManager } from './infrastructure/typeorm/typeorm-tran
     {
       provide: UPDATE_ACCOUNT_PROFILE_USECASE,
       useExisting: UpdateAccountProfileUseCase,
+    },
+    GetAccountAddressesUseCase,
+    {
+      provide: GET_ACCOUNT_ADDRESSES_USECASE,
+      useExisting: GetAccountAddressesUseCase,
     },
     { provide: ACCOUNT_REPOSITORY, useClass: TypeOrmAccountRepository },
     { provide: ADDRESS_REPOSITORY, useClass: TypeOrmAddressRepository },

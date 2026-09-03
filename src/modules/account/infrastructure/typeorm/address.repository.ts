@@ -25,4 +25,11 @@ export class TypeOrmAddressRepository implements IAddressRepository {
       .save(entity);
     return AddressMapper.toDomain(saved);
   }
+
+  async findAllByAccountId(accountId: string): Promise<Address[]> {
+    const entities = await this._manager
+      .getRepository(AddressTypeOrmEntity)
+      .find({ where: { accountId } });
+    return entities.map(AddressMapper.toDomain);
+  }
 }

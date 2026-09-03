@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { IAddressRepository } from '../../application/ports/address-repository.interface';
+import { IAddressRepository } from '../../application/ports/address/address-repository.interface';
 import { Address } from '../../domain/address.entity';
 import { AddressTypeOrmEntity } from './entities/address.typeorm-entity';
 import { transactionContext } from './transaction-context';

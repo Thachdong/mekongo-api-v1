@@ -2,14 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { FILE_STORAGE } from '@shared/infrastructure/storage/storage.tokens';
 import { IFileStorage } from '@shared/infrastructure/storage/file-storage.interface';
 import { TMP_STORAGE_PREFIX } from '@shared/infrastructure/storage/storage-key.util';
-import { AccountNotFoundError } from '../../domain/errors/account-not-found.error';
-import { AvatarSourceNotFoundError } from '../../domain/errors/avatar-source-not-found.error';
-import { IAccountRepository } from '../ports/account-repository.interface';
+import { AccountNotFoundError } from '../../../domain/errors/account-not-found.error';
+import { AvatarSourceNotFoundError } from '../../../domain/errors/avatar-source-not-found.error';
+import { IAccountRepository } from '../../ports/account/account-repository.interface';
 import {
   IUpdateAccountProfileUseCase,
   TUpdateAccountProfileInput,
-} from '../ports/update-account-profile-use-case.interface';
-import { ACCOUNT_REPOSITORY } from '../ports/account-application.tokens';
+} from '../../ports/account/update-account-profile-use-case.interface';
+import { ACCOUNT_REPOSITORY } from '../../ports/account-application.tokens';
 
 @Injectable()
 export class UpdateAccountProfileUseCase implements IUpdateAccountProfileUseCase {

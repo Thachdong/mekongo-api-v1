@@ -1,8 +1,8 @@
-import { Account, TAccountProps } from '../../domain/account.entity';
-import { AccountNotFoundError } from '../../domain/errors/account-not-found.error';
-import { InvalidCurrentPasswordError } from '../../domain/errors/invalid-current-password.error';
-import { IAccountRepository } from '../ports/account-repository.interface';
-import { IChangeAccountPasswordUseCase } from '../ports/change-account-password-use-case.interface';
+import { Account, TAccountProps } from '../../../domain/account.entity';
+import { AccountNotFoundError } from '../../../domain/errors/account-not-found.error';
+import { InvalidCurrentPasswordError } from '../../../domain/errors/invalid-current-password.error';
+import { IAccountRepository } from '../../ports/account/account-repository.interface';
+import { IChangeAccountPasswordUseCase } from '../../ports/account/change-account-password-use-case.interface';
 import { IPasswordHasher } from '@shared/common/hashing/password-hasher.interface';
 import { ChangeOwnPasswordUseCase } from './change-own-password.use-case';
 

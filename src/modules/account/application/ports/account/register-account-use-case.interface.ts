@@ -1,8 +1,8 @@
-import { Account } from '../../domain/account.entity';
-import { Address } from '../../domain/address.entity';
-import { Profile } from '../../domain/profile.entity';
-import { TAccountLoginType } from '../../domain/value-objects/account-login-type.enum';
-import { TProfileType } from '../../domain/value-objects/profile-type.enum';
+import { Account } from '../../../domain/account.entity';
+import { Address } from '../../../domain/address.entity';
+import { Profile } from '../../../domain/profile.entity';
+import { TAccountLoginType } from '../../../domain/value-objects/account-login-type.enum';
+import { TProfileType } from '../../../domain/value-objects/profile-type.enum';
 
 export type TRegisterAccountInput = {
   loginType: TAccountLoginType;

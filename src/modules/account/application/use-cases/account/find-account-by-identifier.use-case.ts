@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IDENTIFIER_HASHER } from '@shared/common/hashing/hashing.tokens';
 import { IKeyedHasher } from '@shared/common/hashing/keyed-hasher.interface';
-import { AccountNotFoundError } from '../../domain/errors/account-not-found.error';
+import { AccountNotFoundError } from '../../../domain/errors/account-not-found.error';
 import {
   IFindAccountByIdentifierUseCase,
   TFindAccountByIdentifierInput,
   TFindAccountByIdentifierOutput,
-} from '../ports/find-account-by-identifier-use-case.interface';
-import { IAccountRepository } from '../ports/account-repository.interface';
-import { ACCOUNT_REPOSITORY } from '../ports/account-application.tokens';
+} from '../../ports/account/find-account-by-identifier-use-case.interface';
+import { IAccountRepository } from '../../ports/account/account-repository.interface';
+import { ACCOUNT_REPOSITORY } from '../../ports/account-application.tokens';
 
 @Injectable()
 export class FindAccountByIdentifierUseCase implements IFindAccountByIdentifierUseCase {

@@ -1,4 +1,4 @@
-import { Address } from '../../domain/address.entity';
+import { Address } from '../../../domain/address.entity';
 
 export type TCreateAddressInput = {
   accountId: string;

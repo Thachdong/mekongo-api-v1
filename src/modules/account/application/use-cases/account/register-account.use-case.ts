@@ -1,22 +1,22 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Account } from '../../domain/account.entity';
-import { Address } from '../../domain/address.entity';
-import { Profile } from '../../domain/profile.entity';
+import { Account } from '../../../domain/account.entity';
+import { Address } from '../../../domain/address.entity';
+import { Profile } from '../../../domain/profile.entity';
 import {
   ACCOUNT_REPOSITORY,
   ADDRESS_REPOSITORY,
   PROFILE_REPOSITORY,
   TRANSACTION_MANAGER,
-} from '../ports/account-application.tokens';
-import { IAccountRepository } from '../ports/account-repository.interface';
-import { IAddressRepository } from '../ports/address-repository.interface';
-import { IProfileRepository } from '../ports/profile-repository.interface';
+} from '../../ports/account-application.tokens';
+import { IAccountRepository } from '../../ports/account/account-repository.interface';
+import { IAddressRepository } from '../../ports/address/address-repository.interface';
+import { IProfileRepository } from '../../ports/profile-repository.interface';
 import {
   IRegisterAccountUseCase,
   TRegisterAccountInput,
   TRegisterAccountOutput,
-} from '../ports/register-account-use-case.interface';
-import { ITransactionManager } from '../ports/transaction-manager.interface';
+} from '../../ports/account/register-account-use-case.interface';
+import { ITransactionManager } from '../../ports/transaction-manager.interface';
 
 @Injectable()
 export class RegisterAccountUseCase implements IRegisterAccountUseCase {

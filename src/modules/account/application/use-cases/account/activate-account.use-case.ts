@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { AccountNotFoundError } from '../../domain/errors/account-not-found.error';
+import { AccountNotFoundError } from '../../../domain/errors/account-not-found.error';
 import {
   IActivateAccountUseCase,
   TActivateAccountInput,
-} from '../ports/activate-account-use-case.interface';
-import { IAccountRepository } from '../ports/account-repository.interface';
-import { ACCOUNT_REPOSITORY } from '../ports/account-application.tokens';
+} from '../../ports/account/activate-account-use-case.interface';
+import { IAccountRepository } from '../../ports/account/account-repository.interface';
+import { ACCOUNT_REPOSITORY } from '../../ports/account-application.tokens';
 
 @Injectable()
 export class ActivateAccountUseCase implements IActivateAccountUseCase {

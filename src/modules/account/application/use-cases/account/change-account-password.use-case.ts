@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { AccountNotFoundError } from '../../domain/errors/account-not-found.error';
+import { AccountNotFoundError } from '../../../domain/errors/account-not-found.error';
 import {
   IChangeAccountPasswordUseCase,
   TChangeAccountPasswordInput,
-} from '../ports/change-account-password-use-case.interface';
-import { IAccountRepository } from '../ports/account-repository.interface';
-import { ACCOUNT_REPOSITORY } from '../ports/account-application.tokens';
+} from '../../ports/account/change-account-password-use-case.interface';
+import { IAccountRepository } from '../../ports/account/account-repository.interface';
+import { ACCOUNT_REPOSITORY } from '../../ports/account-application.tokens';
 
 @Injectable()
 export class ChangeAccountPasswordUseCase implements IChangeAccountPasswordUseCase {

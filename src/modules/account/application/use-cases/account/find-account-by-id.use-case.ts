@@ -1,12 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Account } from '../../domain/account.entity';
-import { AccountNotFoundError } from '../../domain/errors/account-not-found.error';
-import { ACCOUNT_REPOSITORY } from '../ports/account-application.tokens';
-import { IAccountRepository } from '../ports/account-repository.interface';
+import { Account } from '../../../domain/account.entity';
+import { AccountNotFoundError } from '../../../domain/errors/account-not-found.error';
+import { ACCOUNT_REPOSITORY } from '../../ports/account-application.tokens';
+import { IAccountRepository } from '../../ports/account/account-repository.interface';
 import {
   IFindAccountByIdUseCase,
   TFindAccountByIdInput,
-} from '../ports/find-account-by-id-use-case.interface';
+} from '../../ports/account/find-account-by-id-use-case.interface';
 
 @Injectable()
 export class FindAccountByIdUseCase implements IFindAccountByIdUseCase {

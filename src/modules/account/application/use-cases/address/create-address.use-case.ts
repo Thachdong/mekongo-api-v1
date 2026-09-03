@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Address } from '../../domain/address.entity';
-import { ADDRESS_REPOSITORY } from '../ports/account-application.tokens';
-import { IAddressRepository } from '../ports/address-repository.interface';
+import { Address } from '../../../domain/address.entity';
+import { ADDRESS_REPOSITORY } from '../../ports/account-application.tokens';
+import { IAddressRepository } from '../../ports/address/address-repository.interface';
 import {
   ICreateAddressUseCase,
   TCreateAddressInput,
-} from '../ports/create-address-use-case.interface';
+} from '../../ports/address/create-address-use-case.interface';
 
 @Injectable()
 export class CreateAddressUseCase implements ICreateAddressUseCase {

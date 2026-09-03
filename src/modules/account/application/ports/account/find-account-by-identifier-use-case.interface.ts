@@ -1,4 +1,4 @@
-import { Account } from '../../domain/account.entity';
+import { Account } from '../../../domain/account.entity';
 
 export type TFindAccountByIdentifierInput = {
   identifier: string;

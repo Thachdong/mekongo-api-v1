@@ -18,17 +18,17 @@ import {
   TRANSACTION_MANAGER,
   UPDATE_ACCOUNT_PROFILE_USECASE,
 } from './application/ports/account-application.tokens';
-import { ActivateAccountUseCase } from './application/use-cases/activate-account.use-case';
-import { ChangeAccountPasswordUseCase } from './application/use-cases/change-account-password.use-case';
-import { ChangeOwnPasswordUseCase } from './application/use-cases/change-own-password.use-case';
-import { CreateAddressUseCase } from './application/use-cases/create-address.use-case';
-import { DeleteAddressUseCase } from './application/use-cases/delete-address.use-case';
-import { FindAccountByIdUseCase } from './application/use-cases/find-account-by-id.use-case';
-import { FindAccountByIdentifierUseCase } from './application/use-cases/find-account-by-identifier.use-case';
-import { GetAccountAddressesUseCase } from './application/use-cases/get-account-addresses.use-case';
-import { RegisterAccountUseCase } from './application/use-cases/register-account.use-case';
-import { SetCurrentAddressUseCase } from './application/use-cases/set-current-address.use-case';
-import { UpdateAccountProfileUseCase } from './application/use-cases/update-account-profile.use-case';
+import { ActivateAccountUseCase } from './application/use-cases/account/activate-account.use-case';
+import { ChangeAccountPasswordUseCase } from './application/use-cases/account/change-account-password.use-case';
+import { ChangeOwnPasswordUseCase } from './application/use-cases/account/change-own-password.use-case';
+import { FindAccountByIdUseCase } from './application/use-cases/account/find-account-by-id.use-case';
+import { FindAccountByIdentifierUseCase } from './application/use-cases/account/find-account-by-identifier.use-case';
+import { RegisterAccountUseCase } from './application/use-cases/account/register-account.use-case';
+import { UpdateAccountProfileUseCase } from './application/use-cases/account/update-account-profile.use-case';
+import { CreateAddressUseCase } from './application/use-cases/address/create-address.use-case';
+import { DeleteAddressUseCase } from './application/use-cases/address/delete-address.use-case';
+import { GetAccountAddressesUseCase } from './application/use-cases/address/get-account-addresses.use-case';
+import { SetCurrentAddressUseCase } from './application/use-cases/address/set-current-address.use-case';
 import { AccountController } from './infrastructure/http/account.controller';
 import { AccountTypeOrmEntity } from './infrastructure/typeorm/entities/account.typeorm-entity';
 import { TypeOrmAccountRepository } from './infrastructure/typeorm/account.repository';

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { IAccountRepository } from '../../application/ports/account-repository.interface';
+import { IAccountRepository } from '../../application/ports/account/account-repository.interface';
 import { Account } from '../../domain/account.entity';
 import { AccountTypeOrmEntity } from './entities/account.typeorm-entity';
 import { transactionContext } from './transaction-context';

@@ -1,9 +1,9 @@
-import { Account, TAccountProps } from '../../domain/account.entity';
-import { AccountNotFoundError } from '../../domain/errors/account-not-found.error';
-import { AvatarSourceNotFoundError } from '../../domain/errors/avatar-source-not-found.error';
-import { InvalidDisplayNameError } from '../../domain/errors/invalid-display-name.error';
+import { Account, TAccountProps } from '../../../domain/account.entity';
+import { AccountNotFoundError } from '../../../domain/errors/account-not-found.error';
+import { AvatarSourceNotFoundError } from '../../../domain/errors/avatar-source-not-found.error';
+import { InvalidDisplayNameError } from '../../../domain/errors/invalid-display-name.error';
 import { IFileStorage } from '@shared/infrastructure/storage/file-storage.interface';
-import { IAccountRepository } from '../ports/account-repository.interface';
+import { IAccountRepository } from '../../ports/account/account-repository.interface';
 import { UpdateAccountProfileUseCase } from './update-account-profile.use-case';
 
 function buildAccount(overrides: Partial<TAccountProps> = {}) {

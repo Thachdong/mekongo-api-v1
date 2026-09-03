@@ -2,16 +2,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   ACCOUNT_REPOSITORY,
   ADDRESS_REPOSITORY,
-} from '../ports/account-application.tokens';
-import { IAccountRepository } from '../ports/account-repository.interface';
-import { IAddressRepository } from '../ports/address-repository.interface';
+} from '../../ports/account-application.tokens';
+import { IAccountRepository } from '../../ports/account/account-repository.interface';
+import { IAddressRepository } from '../../ports/address/address-repository.interface';
 import {
   IDeleteAddressUseCase,
   TDeleteAddressInput,
-} from '../ports/delete-address-use-case.interface';
-import { AccountNotFoundError } from '../../domain/errors/account-not-found.error';
-import { AddressNotFoundError } from '../../domain/errors/address-not-found.error';
-import { CannotDeleteCurrentAddressError } from '../../domain/errors/cannot-delete-current-address.error';
+} from '../../ports/address/delete-address-use-case.interface';
+import { AccountNotFoundError } from '../../../domain/errors/account-not-found.error';
+import { AddressNotFoundError } from '../../../domain/errors/address-not-found.error';
+import { CannotDeleteCurrentAddressError } from '../../../domain/errors/cannot-delete-current-address.error';
 
 @Injectable()
 export class DeleteAddressUseCase implements IDeleteAddressUseCase {

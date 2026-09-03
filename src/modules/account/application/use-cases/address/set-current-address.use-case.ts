@@ -2,15 +2,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   ACCOUNT_REPOSITORY,
   ADDRESS_REPOSITORY,
-} from '../ports/account-application.tokens';
-import { IAccountRepository } from '../ports/account-repository.interface';
-import { IAddressRepository } from '../ports/address-repository.interface';
+} from '../../ports/account-application.tokens';
+import { IAccountRepository } from '../../ports/account/account-repository.interface';
+import { IAddressRepository } from '../../ports/address/address-repository.interface';
 import {
   ISetCurrentAddressUseCase,
   TSetCurrentAddressInput,
-} from '../ports/set-current-address-use-case.interface';
-import { AccountNotFoundError } from '../../domain/errors/account-not-found.error';
-import { AddressNotFoundError } from '../../domain/errors/address-not-found.error';
+} from '../../ports/address/set-current-address-use-case.interface';
+import { AccountNotFoundError } from '../../../domain/errors/account-not-found.error';
+import { AddressNotFoundError } from '../../../domain/errors/address-not-found.error';
 
 @Injectable()
 export class SetCurrentAddressUseCase implements ISetCurrentAddressUseCase {

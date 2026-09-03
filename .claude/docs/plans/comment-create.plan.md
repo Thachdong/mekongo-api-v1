@@ -106,7 +106,7 @@ khác qua `parentId`). `profileId` server tự suy ra từ JWT (giống `POST /p
 - Approved by: dev (2026-09-03, qua AskUserQuestion)
 
 ### Chunk 3: Comment — CreateCommentUseCase + endpoint (assembly)
-- status: pending
+- status: done
 - Entity: tái dùng `Comment`.
 - Steps:
   1. domain — không cần thêm (đã đủ ở Chunk 2).
@@ -145,5 +145,10 @@ khác qua `parentId`). `profileId` server tự suy ra từ JWT (giống `POST /p
 - Gate: vertical slice build được, endpoint `POST /comments` chạy end-to-end
   (gọi được, trả về comment đã tạo, parent.childIds cập nhật đúng khi có
   parentId).
-- Commit range: (điền sau khi chạy xong)
-- Approved by: (chờ dev duyệt Plan)
+- Verify đã chạy: `tsc --noEmit` sạch, `eslint` sạch, `jest` toàn bộ (gồm
+  `create-comment.use-case.spec.ts` mới, 5 test case) pass 29/29, `nest build`
+  sạch, boot thử app thật — `CommentModule` init OK (cross-module DI vào
+  `PostModule` resolve đúng), route `POST /api/comments` map đúng, không lỗi
+  runtime.
+- Commit range: chưa commit (chờ dev xác nhận)
+- Approved by: dev (2026-09-03, qua AskUserQuestion)

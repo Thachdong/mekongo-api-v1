@@ -24,6 +24,7 @@ import { DeleteAddressUseCase } from '../../application/use-cases/address/delete
 import { GetAccountAddressesUseCase } from '../../application/use-cases/address/get-account-addresses.use-case';
 import { SetCurrentAddressUseCase } from '../../application/use-cases/address/set-current-address.use-case';
 import { CreateProfileUseCase } from '../../application/use-cases/profile/create-profile.use-case';
+import { GetAccountProfilesUseCase } from '../../application/use-cases/profile/get-account-profiles.use-case';
 import { AccountResponseDto } from './dto/account-response.dto';
 import { AddressResponseDto } from './dto/address-response.dto';
 import { ProfileResponseDto } from './dto/profile-response.dto';
@@ -36,6 +37,7 @@ import { UpdateAccountProfileRequestDto } from './dto/update-account-profile-req
 import { ChangePasswordDoc } from './docs/change-password.doc';
 import { CreateAddressDoc } from './docs/create-address.doc';
 import { CreateProfileDoc } from './docs/create-profile.doc';
+import { GetAccountProfilesDoc } from './docs/get-account-profiles.doc';
 import { DeleteAddressDoc } from './docs/delete-address.doc';
 import { GetAccountDoc } from './docs/get-account.doc';
 import { GetAccountAddressesDoc } from './docs/get-account-addresses.doc';
@@ -54,6 +56,7 @@ export class AccountController {
     private readonly _deleteAddressUseCase: DeleteAddressUseCase,
     private readonly _findAccountByIdUseCase: FindAccountByIdUseCase,
     private readonly _createProfileUseCase: CreateProfileUseCase,
+    private readonly _getAccountProfilesUseCase: GetAccountProfilesUseCase,
   ) {}
 
   @Get()
@@ -180,6 +183,20 @@ export class AccountController {
     });
 
     return this._toProfileResponseDto(profile);
+  }
+
+  @Get('profile')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @GetAccountProfilesDoc()
+  async getProfiles(
+    @CurrentUser() user: TJwtPayload,
+  ): Promise<ProfileResponseDto[]> {
+    const profiles = await this._getAccountProfilesUseCase.execute({
+      accountId: user.accountId,
+    });
+
+    return profiles.map((profile) => this._toProfileResponseDto(profile));
   }
 
   private _toAccountResponseDto(account: Account): AccountResponseDto {

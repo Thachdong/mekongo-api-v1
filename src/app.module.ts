@@ -22,6 +22,7 @@ import { VerificationModule } from './modules/verification/verification.module';
 import { StorageModule } from '@shared/infrastructure/storage/storage.module';
 import { PostModule } from './modules/post/post.module';
 import { UploadModule } from './modules/upload/upload.module';
+import { CommentModule } from './modules/comment/comment.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { UploadModule } from './modules/upload/upload.module';
     VerificationModule,
     PostModule,
     UploadModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [

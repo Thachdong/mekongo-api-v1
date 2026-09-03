@@ -9,6 +9,7 @@ import {
   CHANGE_OWN_PASSWORD_USECASE,
   CREATE_ADDRESS_USECASE,
   DELETE_ADDRESS_USECASE,
+  FIND_ACCOUNT_BY_ID_USECASE,
   FIND_ACCOUNT_BY_IDENTIFIER_USECASE,
   GET_ACCOUNT_ADDRESSES_USECASE,
   PROFILE_REPOSITORY,
@@ -22,6 +23,7 @@ import { ChangeAccountPasswordUseCase } from './application/use-cases/change-acc
 import { ChangeOwnPasswordUseCase } from './application/use-cases/change-own-password.use-case';
 import { CreateAddressUseCase } from './application/use-cases/create-address.use-case';
 import { DeleteAddressUseCase } from './application/use-cases/delete-address.use-case';
+import { FindAccountByIdUseCase } from './application/use-cases/find-account-by-id.use-case';
 import { FindAccountByIdentifierUseCase } from './application/use-cases/find-account-by-identifier.use-case';
 import { GetAccountAddressesUseCase } from './application/use-cases/get-account-addresses.use-case';
 import { RegisterAccountUseCase } from './application/use-cases/register-account.use-case';
@@ -93,6 +95,11 @@ import { TypeOrmTransactionManager } from './infrastructure/typeorm/typeorm-tran
     {
       provide: DELETE_ADDRESS_USECASE,
       useExisting: DeleteAddressUseCase,
+    },
+    FindAccountByIdUseCase,
+    {
+      provide: FIND_ACCOUNT_BY_ID_USECASE,
+      useExisting: FindAccountByIdUseCase,
     },
     { provide: ACCOUNT_REPOSITORY, useClass: TypeOrmAccountRepository },
     { provide: ADDRESS_REPOSITORY, useClass: TypeOrmAddressRepository },

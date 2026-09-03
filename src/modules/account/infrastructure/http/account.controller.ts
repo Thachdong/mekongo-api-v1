@@ -11,15 +11,18 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '@shared/common/auth/current-user.decorator';
+import { Account } from '../../domain/account.entity';
 import { Address } from '../../domain/address.entity';
 import { JwtAuthGuard } from '@shared/common/auth/jwt-auth.guard';
 import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
 import { ChangeOwnPasswordUseCase } from '../../application/use-cases/change-own-password.use-case';
 import { CreateAddressUseCase } from '../../application/use-cases/create-address.use-case';
 import { DeleteAddressUseCase } from '../../application/use-cases/delete-address.use-case';
+import { FindAccountByIdUseCase } from '../../application/use-cases/find-account-by-id.use-case';
 import { GetAccountAddressesUseCase } from '../../application/use-cases/get-account-addresses.use-case';
 import { SetCurrentAddressUseCase } from '../../application/use-cases/set-current-address.use-case';
 import { UpdateAccountProfileUseCase } from '../../application/use-cases/update-account-profile.use-case';
+import { AccountResponseDto } from './dto/account-response.dto';
 import { AddressResponseDto } from './dto/address-response.dto';
 import { ChangeOwnPasswordRequestDto } from './dto/change-password-request.dto';
 import { CreateAddressRequestDto } from './dto/create-address-request.dto';
@@ -29,6 +32,7 @@ import { UpdateAccountProfileRequestDto } from './dto/update-account-profile-req
 import { ChangePasswordDoc } from './docs/change-password.doc';
 import { CreateAddressDoc } from './docs/create-address.doc';
 import { DeleteAddressDoc } from './docs/delete-address.doc';
+import { GetAccountDoc } from './docs/get-account.doc';
 import { GetAccountAddressesDoc } from './docs/get-account-addresses.doc';
 import { SetCurrentAddressDoc } from './docs/set-current-address.doc';
 import { UpdateAccountProfileDoc } from './docs/update-account-profile.doc';
@@ -43,7 +47,22 @@ export class AccountController {
     private readonly _setCurrentAddressUseCase: SetCurrentAddressUseCase,
     private readonly _createAddressUseCase: CreateAddressUseCase,
     private readonly _deleteAddressUseCase: DeleteAddressUseCase,
+    private readonly _findAccountByIdUseCase: FindAccountByIdUseCase,
   ) {}
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @GetAccountDoc()
+  async getAccount(
+    @CurrentUser() user: TJwtPayload,
+  ): Promise<AccountResponseDto> {
+    const account = await this._findAccountByIdUseCase.execute({
+      accountId: user.accountId,
+    });
+
+    return this._toAccountResponseDto(account);
+  }
 
   @Post('change-password')
   @HttpCode(HttpStatus.OK)
@@ -139,6 +158,21 @@ export class AccountController {
       addressId: body.addressId,
     });
     return null;
+  }
+
+  private _toAccountResponseDto(account: Account): AccountResponseDto {
+    const dto = new AccountResponseDto();
+    dto.id = account.id;
+    dto.loginType = account.loginType;
+    dto.status = account.status;
+    dto.displayName = account.displayName;
+    dto.avatarUrl = account.avatarUrl;
+    dto.currentAddressId = account.currentAddressId;
+    dto.activeProfileId = account.activeProfileId;
+    dto.blockUntil = account.blockUntil;
+    dto.createdAt = account.createdAt;
+    dto.updatedAt = account.updatedAt;
+    return dto;
   }
 
   private _toAddressResponseDto(address: Address): AddressResponseDto {

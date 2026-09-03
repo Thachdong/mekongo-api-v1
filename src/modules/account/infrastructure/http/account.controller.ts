@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -15,16 +16,19 @@ import { JwtAuthGuard } from '@shared/common/auth/jwt-auth.guard';
 import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
 import { ChangeOwnPasswordUseCase } from '../../application/use-cases/change-own-password.use-case';
 import { CreateAddressUseCase } from '../../application/use-cases/create-address.use-case';
+import { DeleteAddressUseCase } from '../../application/use-cases/delete-address.use-case';
 import { GetAccountAddressesUseCase } from '../../application/use-cases/get-account-addresses.use-case';
 import { SetCurrentAddressUseCase } from '../../application/use-cases/set-current-address.use-case';
 import { UpdateAccountProfileUseCase } from '../../application/use-cases/update-account-profile.use-case';
 import { AddressResponseDto } from './dto/address-response.dto';
 import { ChangeOwnPasswordRequestDto } from './dto/change-password-request.dto';
 import { CreateAddressRequestDto } from './dto/create-address-request.dto';
+import { DeleteAddressRequestDto } from './dto/delete-address-request.dto';
 import { SetCurrentAddressRequestDto } from './dto/set-current-address-request.dto';
 import { UpdateAccountProfileRequestDto } from './dto/update-account-profile-request.dto';
 import { ChangePasswordDoc } from './docs/change-password.doc';
 import { CreateAddressDoc } from './docs/create-address.doc';
+import { DeleteAddressDoc } from './docs/delete-address.doc';
 import { GetAccountAddressesDoc } from './docs/get-account-addresses.doc';
 import { SetCurrentAddressDoc } from './docs/set-current-address.doc';
 import { UpdateAccountProfileDoc } from './docs/update-account-profile.doc';
@@ -38,6 +42,7 @@ export class AccountController {
     private readonly _getAccountAddressesUseCase: GetAccountAddressesUseCase,
     private readonly _setCurrentAddressUseCase: SetCurrentAddressUseCase,
     private readonly _createAddressUseCase: CreateAddressUseCase,
+    private readonly _deleteAddressUseCase: DeleteAddressUseCase,
   ) {}
 
   @Post('change-password')
@@ -119,6 +124,21 @@ export class AccountController {
     });
 
     return this._toAddressResponseDto(address);
+  }
+
+  @Delete('address')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @DeleteAddressDoc()
+  async deleteAddress(
+    @CurrentUser() user: TJwtPayload,
+    @Body() body: DeleteAddressRequestDto,
+  ): Promise<null> {
+    await this._deleteAddressUseCase.execute({
+      accountId: user.accountId,
+      addressId: body.addressId,
+    });
+    return null;
   }
 
   private _toAddressResponseDto(address: Address): AddressResponseDto {

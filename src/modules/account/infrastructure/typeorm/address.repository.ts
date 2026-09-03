@@ -39,4 +39,8 @@ export class TypeOrmAddressRepository implements IAddressRepository {
       .findOne({ where: { id } });
     return entity ? AddressMapper.toDomain(entity) : null;
   }
+
+  async delete(id: string): Promise<void> {
+    await this._manager.getRepository(AddressTypeOrmEntity).delete({ id });
+  }
 }

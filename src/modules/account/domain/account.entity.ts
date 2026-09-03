@@ -1,6 +1,7 @@
 import { AccountBlockedError } from './errors/account-blocked.error';
 import { AccountNotActiveError } from './errors/account-not-active.error';
 import { InvalidAccountStatusTransitionError } from './errors/invalid-account-status-transition.error';
+import { InvalidDisplayNameError } from './errors/invalid-display-name.error';
 import { TAccountLoginType } from './value-objects/account-login-type.enum';
 import { TAccountStatus } from './value-objects/account-status.enum';
 
@@ -128,7 +129,11 @@ export class Account {
   }
 
   changeDisplayName(displayName: string): void {
-    this._displayName = displayName;
+    const trimmed = displayName.trim();
+    if (trimmed.length < 5) {
+      throw new InvalidDisplayNameError();
+    }
+    this._displayName = trimmed;
   }
 
   changeAvatar(avatarUrl: string): void {

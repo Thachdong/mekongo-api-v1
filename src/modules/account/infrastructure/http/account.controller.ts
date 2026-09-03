@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -11,14 +12,18 @@ import { CurrentUser } from '@shared/common/auth/current-user.decorator';
 import { JwtAuthGuard } from '@shared/common/auth/jwt-auth.guard';
 import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
 import { ChangeOwnPasswordUseCase } from '../../application/use-cases/change-own-password.use-case';
+import { UpdateAccountProfileUseCase } from '../../application/use-cases/update-account-profile.use-case';
 import { ChangeOwnPasswordRequestDto } from './dto/change-password-request.dto';
+import { UpdateAccountProfileRequestDto } from './dto/update-account-profile-request.dto';
 import { ChangePasswordDoc } from './docs/change-password.doc';
+import { UpdateAccountProfileDoc } from './docs/update-account-profile.doc';
 
 @ApiTags('account')
 @Controller('account')
 export class AccountController {
   constructor(
     private readonly _changeOwnPasswordUseCase: ChangeOwnPasswordUseCase,
+    private readonly _updateAccountProfileUseCase: UpdateAccountProfileUseCase,
   ) {}
 
   @Post('change-password')
@@ -33,6 +38,22 @@ export class AccountController {
       accountId: user.accountId,
       currentPassword: body.oldPassword,
       newPassword: body.newPassword,
+    });
+    return null;
+  }
+
+  @Put('update')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @UpdateAccountProfileDoc()
+  async updateProfile(
+    @CurrentUser() user: TJwtPayload,
+    @Body() body: UpdateAccountProfileRequestDto,
+  ): Promise<null> {
+    await this._updateAccountProfileUseCase.execute({
+      accountId: user.accountId,
+      displayName: body.displayName,
+      avatarUrl: body.avatarUrl,
     });
     return null;
   }

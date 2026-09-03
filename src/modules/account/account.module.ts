@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { StorageModule } from '@shared/infrastructure/storage/storage.module';
 import {
   ACCOUNT_REPOSITORY,
   ACTIVATE_ACCOUNT_USECASE,
@@ -10,12 +11,14 @@ import {
   PROFILE_REPOSITORY,
   REGISTER_ACCOUNT_USECASE,
   TRANSACTION_MANAGER,
+  UPDATE_ACCOUNT_PROFILE_USECASE,
 } from './application/ports/account-application.tokens';
 import { ActivateAccountUseCase } from './application/use-cases/activate-account.use-case';
 import { ChangeAccountPasswordUseCase } from './application/use-cases/change-account-password.use-case';
 import { ChangeOwnPasswordUseCase } from './application/use-cases/change-own-password.use-case';
 import { FindAccountByIdentifierUseCase } from './application/use-cases/find-account-by-identifier.use-case';
 import { RegisterAccountUseCase } from './application/use-cases/register-account.use-case';
+import { UpdateAccountProfileUseCase } from './application/use-cases/update-account-profile.use-case';
 import { AccountController } from './infrastructure/http/account.controller';
 import { AccountTypeOrmEntity } from './infrastructure/typeorm/entities/account.typeorm-entity';
 import { TypeOrmAccountRepository } from './infrastructure/typeorm/account.repository';
@@ -32,6 +35,7 @@ import { TypeOrmTransactionManager } from './infrastructure/typeorm/typeorm-tran
       AddressTypeOrmEntity,
       ProfileTypeOrmEntity,
     ]),
+    StorageModule,
   ],
   controllers: [AccountController],
   providers: [
@@ -56,6 +60,11 @@ import { TypeOrmTransactionManager } from './infrastructure/typeorm/typeorm-tran
     {
       provide: CHANGE_OWN_PASSWORD_USECASE,
       useExisting: ChangeOwnPasswordUseCase,
+    },
+    UpdateAccountProfileUseCase,
+    {
+      provide: UPDATE_ACCOUNT_PROFILE_USECASE,
+      useExisting: UpdateAccountProfileUseCase,
     },
     { provide: ACCOUNT_REPOSITORY, useClass: TypeOrmAccountRepository },
     { provide: ADDRESS_REPOSITORY, useClass: TypeOrmAddressRepository },

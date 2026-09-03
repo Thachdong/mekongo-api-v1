@@ -69,4 +69,8 @@ export class Comment {
   addChild(childId: string): void {
     this._childIds = [...this._childIds, childId];
   }
+
+  removeChildId(childId: string): void {
+    this._childIds = this._childIds.filter((id) => id !== childId);
+  }
 }

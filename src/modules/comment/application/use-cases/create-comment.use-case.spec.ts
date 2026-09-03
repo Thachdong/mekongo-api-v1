@@ -38,6 +38,7 @@ describe('CreateCommentUseCase', () => {
       create: jest.fn(),
       findById: jest.fn(),
       update: jest.fn(),
+      delete: jest.fn(),
     };
     transactionManager = {
       runInTransaction: jest.fn((work: () => Promise<unknown>) => work()),

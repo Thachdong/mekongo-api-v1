@@ -40,4 +40,8 @@ export class TypeOrmCommentRepository implements ICommentRepository {
       .save(entity);
     return CommentMapper.toDomain(saved);
   }
+
+  async delete(id: string): Promise<void> {
+    await this._manager.getRepository(CommentTypeOrmEntity).delete({ id });
+  }
 }

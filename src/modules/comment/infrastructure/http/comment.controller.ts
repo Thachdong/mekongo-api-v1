@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   HttpCode,
   HttpStatus,
   Post,
@@ -11,15 +12,21 @@ import { CurrentUser } from '@shared/common/auth/current-user.decorator';
 import { JwtAuthGuard } from '@shared/common/auth/jwt-auth.guard';
 import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
 import { CreateCommentUseCase } from '../../application/use-cases/create-comment.use-case';
+import { DeleteCommentUseCase } from '../../application/use-cases/delete-comment.use-case';
 import { Comment } from '../../domain/comment.entity';
 import { CommentResponseDto } from './dto/comment-response.dto';
 import { CreateCommentRequestDto } from './dto/create-comment-request.dto';
+import { DeleteCommentRequestDto } from './dto/delete-comment-request.dto';
 import { CreateCommentDoc } from './docs/create-comment.doc';
+import { DeleteCommentDoc } from './docs/delete-comment.doc';
 
 @ApiTags('comment')
 @Controller('comments')
 export class CommentController {
-  constructor(private readonly _createCommentUseCase: CreateCommentUseCase) {}
+  constructor(
+    private readonly _createCommentUseCase: CreateCommentUseCase,
+    private readonly _deleteCommentUseCase: DeleteCommentUseCase,
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -37,6 +44,22 @@ export class CommentController {
     });
 
     return this._toCommentResponseDto(comment);
+  }
+
+  @Delete()
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @DeleteCommentDoc()
+  async delete(
+    @CurrentUser() user: TJwtPayload,
+    @Body() body: DeleteCommentRequestDto,
+  ): Promise<null> {
+    await this._deleteCommentUseCase.execute({
+      profileId: user.profileId,
+      commentId: body.commentId,
+    });
+
+    return null;
   }
 
   private _toCommentResponseDto(comment: Comment): CommentResponseDto {

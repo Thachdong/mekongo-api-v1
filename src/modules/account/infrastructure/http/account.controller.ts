@@ -14,12 +14,15 @@ import { JwtAuthGuard } from '@shared/common/auth/jwt-auth.guard';
 import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
 import { ChangeOwnPasswordUseCase } from '../../application/use-cases/change-own-password.use-case';
 import { GetAccountAddressesUseCase } from '../../application/use-cases/get-account-addresses.use-case';
+import { SetCurrentAddressUseCase } from '../../application/use-cases/set-current-address.use-case';
 import { UpdateAccountProfileUseCase } from '../../application/use-cases/update-account-profile.use-case';
 import { AddressResponseDto } from './dto/address-response.dto';
 import { ChangeOwnPasswordRequestDto } from './dto/change-password-request.dto';
+import { SetCurrentAddressRequestDto } from './dto/set-current-address-request.dto';
 import { UpdateAccountProfileRequestDto } from './dto/update-account-profile-request.dto';
 import { ChangePasswordDoc } from './docs/change-password.doc';
 import { GetAccountAddressesDoc } from './docs/get-account-addresses.doc';
+import { SetCurrentAddressDoc } from './docs/set-current-address.doc';
 import { UpdateAccountProfileDoc } from './docs/update-account-profile.doc';
 
 @ApiTags('account')
@@ -29,6 +32,7 @@ export class AccountController {
     private readonly _changeOwnPasswordUseCase: ChangeOwnPasswordUseCase,
     private readonly _updateAccountProfileUseCase: UpdateAccountProfileUseCase,
     private readonly _getAccountAddressesUseCase: GetAccountAddressesUseCase,
+    private readonly _setCurrentAddressUseCase: SetCurrentAddressUseCase,
   ) {}
 
   @Post('change-password')
@@ -86,5 +90,20 @@ export class AccountController {
       dto.updatedAt = address.updatedAt;
       return dto;
     });
+  }
+
+  @Put('set-current-address')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @SetCurrentAddressDoc()
+  async setCurrentAddress(
+    @CurrentUser() user: TJwtPayload,
+    @Body() body: SetCurrentAddressRequestDto,
+  ): Promise<null> {
+    await this._setCurrentAddressUseCase.execute({
+      accountId: user.accountId,
+      addressId: body.addressId,
+    });
+    return null;
   }
 }

@@ -11,6 +11,7 @@ import {
   GET_ACCOUNT_ADDRESSES_USECASE,
   PROFILE_REPOSITORY,
   REGISTER_ACCOUNT_USECASE,
+  SET_CURRENT_ADDRESS_USECASE,
   TRANSACTION_MANAGER,
   UPDATE_ACCOUNT_PROFILE_USECASE,
 } from './application/ports/account-application.tokens';
@@ -20,6 +21,7 @@ import { ChangeOwnPasswordUseCase } from './application/use-cases/change-own-pas
 import { FindAccountByIdentifierUseCase } from './application/use-cases/find-account-by-identifier.use-case';
 import { GetAccountAddressesUseCase } from './application/use-cases/get-account-addresses.use-case';
 import { RegisterAccountUseCase } from './application/use-cases/register-account.use-case';
+import { SetCurrentAddressUseCase } from './application/use-cases/set-current-address.use-case';
 import { UpdateAccountProfileUseCase } from './application/use-cases/update-account-profile.use-case';
 import { AccountController } from './infrastructure/http/account.controller';
 import { AccountTypeOrmEntity } from './infrastructure/typeorm/entities/account.typeorm-entity';
@@ -72,6 +74,11 @@ import { TypeOrmTransactionManager } from './infrastructure/typeorm/typeorm-tran
     {
       provide: GET_ACCOUNT_ADDRESSES_USECASE,
       useExisting: GetAccountAddressesUseCase,
+    },
+    SetCurrentAddressUseCase,
+    {
+      provide: SET_CURRENT_ADDRESS_USECASE,
+      useExisting: SetCurrentAddressUseCase,
     },
     { provide: ACCOUNT_REPOSITORY, useClass: TypeOrmAccountRepository },
     { provide: ADDRESS_REPOSITORY, useClass: TypeOrmAddressRepository },

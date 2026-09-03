@@ -32,4 +32,11 @@ export class TypeOrmAddressRepository implements IAddressRepository {
       .find({ where: { accountId } });
     return entities.map(AddressMapper.toDomain);
   }
+
+  async findById(id: string): Promise<Address | null> {
+    const entity = await this._manager
+      .getRepository(AddressTypeOrmEntity)
+      .findOne({ where: { id } });
+    return entity ? AddressMapper.toDomain(entity) : null;
+  }
 }

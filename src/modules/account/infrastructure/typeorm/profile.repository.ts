@@ -25,4 +25,11 @@ export class TypeOrmProfileRepository implements IProfileRepository {
       .save(entity);
     return ProfileMapper.toDomain(saved);
   }
+
+  async findAllByAccountId(accountId: string): Promise<Profile[]> {
+    const entities = await this._manager
+      .getRepository(ProfileTypeOrmEntity)
+      .find({ where: { accountId } });
+    return entities.map(ProfileMapper.toDomain);
+  }
 }

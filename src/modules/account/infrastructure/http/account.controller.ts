@@ -13,6 +13,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '@shared/common/auth/current-user.decorator';
 import { Account } from '../../domain/account.entity';
 import { Address } from '../../domain/address.entity';
+import { Profile } from '../../domain/profile.entity';
 import { JwtAuthGuard } from '@shared/common/auth/jwt-auth.guard';
 import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
 import { ChangeOwnPasswordUseCase } from '../../application/use-cases/account/change-own-password.use-case';
@@ -22,15 +23,19 @@ import { CreateAddressUseCase } from '../../application/use-cases/address/create
 import { DeleteAddressUseCase } from '../../application/use-cases/address/delete-address.use-case';
 import { GetAccountAddressesUseCase } from '../../application/use-cases/address/get-account-addresses.use-case';
 import { SetCurrentAddressUseCase } from '../../application/use-cases/address/set-current-address.use-case';
+import { CreateProfileUseCase } from '../../application/use-cases/profile/create-profile.use-case';
 import { AccountResponseDto } from './dto/account-response.dto';
 import { AddressResponseDto } from './dto/address-response.dto';
+import { ProfileResponseDto } from './dto/profile-response.dto';
 import { ChangeOwnPasswordRequestDto } from './dto/change-password-request.dto';
 import { CreateAddressRequestDto } from './dto/create-address-request.dto';
+import { CreateProfileRequestDto } from './dto/create-profile-request.dto';
 import { DeleteAddressRequestDto } from './dto/delete-address-request.dto';
 import { SetCurrentAddressRequestDto } from './dto/set-current-address-request.dto';
 import { UpdateAccountProfileRequestDto } from './dto/update-account-profile-request.dto';
 import { ChangePasswordDoc } from './docs/change-password.doc';
 import { CreateAddressDoc } from './docs/create-address.doc';
+import { CreateProfileDoc } from './docs/create-profile.doc';
 import { DeleteAddressDoc } from './docs/delete-address.doc';
 import { GetAccountDoc } from './docs/get-account.doc';
 import { GetAccountAddressesDoc } from './docs/get-account-addresses.doc';
@@ -48,6 +53,7 @@ export class AccountController {
     private readonly _createAddressUseCase: CreateAddressUseCase,
     private readonly _deleteAddressUseCase: DeleteAddressUseCase,
     private readonly _findAccountByIdUseCase: FindAccountByIdUseCase,
+    private readonly _createProfileUseCase: CreateProfileUseCase,
   ) {}
 
   @Get()
@@ -160,6 +166,22 @@ export class AccountController {
     return null;
   }
 
+  @Post('profile')
+  @HttpCode(HttpStatus.CREATED)
+  @UseGuards(JwtAuthGuard)
+  @CreateProfileDoc()
+  async createProfile(
+    @CurrentUser() user: TJwtPayload,
+    @Body() body: CreateProfileRequestDto,
+  ): Promise<ProfileResponseDto> {
+    const profile = await this._createProfileUseCase.execute({
+      accountId: user.accountId,
+      profileType: body.profileType,
+    });
+
+    return this._toProfileResponseDto(profile);
+  }
+
   private _toAccountResponseDto(account: Account): AccountResponseDto {
     const dto = new AccountResponseDto();
     dto.id = account.id;
@@ -185,6 +207,16 @@ export class AccountController {
     dto.details = address.details;
     dto.createdAt = address.createdAt;
     dto.updatedAt = address.updatedAt;
+    return dto;
+  }
+
+  private _toProfileResponseDto(profile: Profile): ProfileResponseDto {
+    const dto = new ProfileResponseDto();
+    dto.id = profile.id as string;
+    dto.profileType = profile.activeProfile;
+    dto.accountId = profile.accountId;
+    dto.createdAt = profile.createdAt;
+    dto.updatedAt = profile.updatedAt;
     return dto;
   }
 }

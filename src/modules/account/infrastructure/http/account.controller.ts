@@ -25,6 +25,7 @@ import { GetAccountAddressesUseCase } from '../../application/use-cases/address/
 import { SetCurrentAddressUseCase } from '../../application/use-cases/address/set-current-address.use-case';
 import { CreateProfileUseCase } from '../../application/use-cases/profile/create-profile.use-case';
 import { GetAccountProfilesUseCase } from '../../application/use-cases/profile/get-account-profiles.use-case';
+import { SetActiveProfileUseCase } from '../../application/use-cases/profile/set-active-profile.use-case';
 import { AccountResponseDto } from './dto/account-response.dto';
 import { AddressResponseDto } from './dto/address-response.dto';
 import { ProfileResponseDto } from './dto/profile-response.dto';
@@ -32,6 +33,7 @@ import { ChangeOwnPasswordRequestDto } from './dto/change-password-request.dto';
 import { CreateAddressRequestDto } from './dto/create-address-request.dto';
 import { CreateProfileRequestDto } from './dto/create-profile-request.dto';
 import { DeleteAddressRequestDto } from './dto/delete-address-request.dto';
+import { SetActiveProfileRequestDto } from './dto/set-active-profile-request.dto';
 import { SetCurrentAddressRequestDto } from './dto/set-current-address-request.dto';
 import { UpdateAccountProfileRequestDto } from './dto/update-account-profile-request.dto';
 import { ChangePasswordDoc } from './docs/change-password.doc';
@@ -41,6 +43,7 @@ import { GetAccountProfilesDoc } from './docs/get-account-profiles.doc';
 import { DeleteAddressDoc } from './docs/delete-address.doc';
 import { GetAccountDoc } from './docs/get-account.doc';
 import { GetAccountAddressesDoc } from './docs/get-account-addresses.doc';
+import { SetActiveProfileDoc } from './docs/set-active-profile.doc';
 import { SetCurrentAddressDoc } from './docs/set-current-address.doc';
 import { UpdateAccountProfileDoc } from './docs/update-account-profile.doc';
 
@@ -57,6 +60,7 @@ export class AccountController {
     private readonly _findAccountByIdUseCase: FindAccountByIdUseCase,
     private readonly _createProfileUseCase: CreateProfileUseCase,
     private readonly _getAccountProfilesUseCase: GetAccountProfilesUseCase,
+    private readonly _setActiveProfileUseCase: SetActiveProfileUseCase,
   ) {}
 
   @Get()
@@ -197,6 +201,21 @@ export class AccountController {
     });
 
     return profiles.map((profile) => this._toProfileResponseDto(profile));
+  }
+
+  @Put('set-active-profile')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @SetActiveProfileDoc()
+  async setActiveProfile(
+    @CurrentUser() user: TJwtPayload,
+    @Body() body: SetActiveProfileRequestDto,
+  ): Promise<null> {
+    await this._setActiveProfileUseCase.execute({
+      accountId: user.accountId,
+      profileId: body.profileId,
+    });
+    return null;
   }
 
   private _toAccountResponseDto(account: Account): AccountResponseDto {

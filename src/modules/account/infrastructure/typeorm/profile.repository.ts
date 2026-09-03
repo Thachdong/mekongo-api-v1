@@ -32,4 +32,11 @@ export class TypeOrmProfileRepository implements IProfileRepository {
       .find({ where: { accountId } });
     return entities.map(ProfileMapper.toDomain);
   }
+
+  async findById(id: string): Promise<Profile | null> {
+    const entity = await this._manager
+      .getRepository(ProfileTypeOrmEntity)
+      .findOne({ where: { id } });
+    return entity ? ProfileMapper.toDomain(entity) : null;
+  }
 }

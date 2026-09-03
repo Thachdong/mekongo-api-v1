@@ -55,7 +55,7 @@ account hiện tại (không nhận từ client).
 - Approved by: dev (2026-09-03, qua AskUserQuestion)
 
 ### Chunk 2: Tạo Post (module: post) — vertical slice + endpoint
-- status: pending
+- status: done
 - Entity: tái dùng `Post` (không sửa, không tạo mới)
 - Steps:
   1. domain — thêm domain errors mới trong `post` module (mini-gate xác nhận với
@@ -104,6 +104,16 @@ account hiện tại (không nhận từ client).
   chỉ cần xác nhận vẫn đúng, không cần sửa.
 - Gate: vertical slice build được, endpoint `POST /posts` chạy end-to-end (gọi
   được, trả về post đã tạo), account use-case đã thực sự được inject + dùng.
-- Commit range: (điền sau khi chạy xong, có thể tách nhiều commit theo atomic
-  skill: domain / infrastructure-adapter / use-case / infrastructure-endpoint / doc)
-- Approved by: (chờ dev duyệt Plan)
+- Điều chỉnh so với draft ban đầu (phát hiện lúc code, đã note lại):
+  - `PostImageSourceInvalidError`: đổi status 400 → 404, khớp convention lỗi
+    tương tự đã có (`AvatarSourceNotFoundError` cũng 404 "source not found").
+  - `ProfileNotActiveError`: đổi status 400 → 422, khớp convention lỗi vi phạm
+    business rule/precondition đã có (`InvalidDisplayNameError` dùng 422).
+  - Thêm migration `1788431663798-AddPostEntity.ts` (bảng `posts`) — chunk gốc
+    không liệt kê rõ bước này nhưng bắt buộc theo tech stack TypeORM
+    (`synchronize: false`), đã generate + chạy thành công trên DB local.
+- Verify đã chạy: `tsc --noEmit` sạch, `eslint` sạch, `jest` (toàn bộ + riêng
+  post module) pass 20/20, `nest build` sạch, boot thử app thật (`node dist/main.js`)
+  — DI resolve đủ, route `POST /api/posts` map đúng, không lỗi runtime.
+- Commit range: chưa commit (chờ dev xác nhận)
+- Approved by: dev (2026-09-03, qua AskUserQuestion)

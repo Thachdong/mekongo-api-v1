@@ -1,0 +1,2 @@
+export const POST_REPOSITORY = Symbol('POST_REPOSITORY');
+export const CREATE_POST_USECASE = Symbol('CREATE_POST_USECASE');

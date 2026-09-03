@@ -19,6 +19,7 @@ import { SharedTypeOrmModule } from '@shared/infrastructure/database/typeorm.mod
 import { HashingModule } from '@shared/common/hashing/hashing.module';
 import { AuthPassportModule } from '@shared/common/auth/auth.module';
 import { VerificationModule } from './modules/verification/verification.module';
+import { StorageModule } from '@shared/infrastructure/storage/storage.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { VerificationModule } from './modules/verification/verification.module';
     }),
     PinoLoggerModule,
     SharedTypeOrmModule,
+    StorageModule,
     HashingModule,
     AuthPassportModule,
     AccountModule,

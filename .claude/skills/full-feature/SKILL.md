@@ -109,8 +109,12 @@ Chỉ gọi các bước thực sự cần theo Plan của chunk đó — không
 - Với mỗi bước, gọi đúng atomic skill tương ứng, CHỈ truyền phần Plan liên quan
   đến bước đó (không đưa toàn bộ Plan feature gốc) — atomic skill chỉ cần biết
   phạm vi của mình.
-- Mỗi bước chạy xong = **1 commit** (message trỏ về đúng mục Plan, vd
-  `feat(account): add UserRepositoryPort adapter [plan: chunk-1.step-3]`).
+- Mỗi bước chạy xong = **1 commit tiềm năng** (message trỏ về đúng mục Plan, vd
+  `feat(account): add UserRepositoryPort adapter [plan: chunk-1.step-3]`) —
+  nhưng KHÔNG tự chạy `git commit`. Trước khi commit, PHẢI hỏi dev có muốn
+  commit bước này không (hiện diff/file thay đổi + message dự kiến). Chỉ commit
+  khi dev xác nhận đồng ý; nếu dev từ chối hoặc muốn gộp commit khác, giữ working
+  tree as-is và tiếp tục theo yêu cầu dev.
 - Bước `domain` khi tạo entity mới: LUÔN có mini-gate tương tác riêng (baseline →
   suggest → confirm) như định nghĩa trong skill `domain` — đây là điểm DUY NHẤT
   trong 1 chunk được phép dừng tương tác giữa chừng; các bước còn lại chạy liền

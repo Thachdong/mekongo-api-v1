@@ -66,7 +66,7 @@ khác qua `parentId`). `profileId` server tự suy ra từ JWT (giống `POST /p
 - Approved by: dev (2026-09-03, qua AskUserQuestion)
 
 ### Chunk 2: Comment — persistence infra + transaction manager (module: comment)
-- status: pending
+- status: done
 - Entity: tái dùng `Comment`, không sửa entity.
 - Steps:
   1. domain — thêm 2 domain-error mới (mini-gate xác nhận khi chạy skill
@@ -97,8 +97,13 @@ khác qua `parentId`). `profileId` server tự suy ra từ JWT (giống `POST /p
 - Integrate into: Chunk 3 sẽ dùng 2 port này trong `CreateCommentUseCase`.
 - Gate: build comment module thành công (chưa có use-case dùng, nhưng adapter
   compile + migration chạy được trên DB local).
-- Commit range: (điền sau khi chạy xong)
-- Approved by: (chờ dev duyệt Plan)
+- Verify đã chạy: `tsc --noEmit` sạch, `eslint` sạch, `nest build` sạch, migration
+  `1788451666380-AddCommentEntity.ts` generate + chạy thành công trên DB local
+  (bảng `comments` tạo đúng: `parent_id` nullable, `child_ids` text array default
+  `'{}'`), boot thử app thật — `CommentModule` init OK, không lỗi DI. `jest` toàn
+  bộ vẫn 24/24 (chunk này không thêm use-case nên không thêm test).
+- Commit range: chưa commit (chờ dev xác nhận)
+- Approved by: dev (2026-09-03, qua AskUserQuestion)
 
 ### Chunk 3: Comment — CreateCommentUseCase + endpoint (assembly)
 - status: pending

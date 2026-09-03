@@ -4,6 +4,7 @@ import { ProfileTypeOrmEntity } from '@modules/account/infrastructure/typeorm/en
 import { RefreshTokenTypeOrmEntity } from '@modules/auth/infrastructure/typeorm/entities/refresh-token.typeorm-entity';
 import { OtpTypeOrmEntity } from '@modules/verification/infrastructure/typeorm/entities/otp.typeorm-entity';
 import { PostTypeOrmEntity } from '@modules/post/infrastructure/typeorm/entities/post.typeorm-entity';
+import { CommentTypeOrmEntity } from '@modules/comment/infrastructure/typeorm/entities/comment.typeorm-entity';
 import { EntitySchema } from 'typeorm';
 
 type TEntityClass = new (...args: any[]) => object;
@@ -20,4 +21,5 @@ export const ENTITIES: (TEntityClass | EntitySchema)[] = [
   OtpTypeOrmEntity,
   RefreshTokenTypeOrmEntity,
   PostTypeOrmEntity,
+  CommentTypeOrmEntity,
 ];

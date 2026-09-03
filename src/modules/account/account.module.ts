@@ -132,6 +132,8 @@ import { TypeOrmTransactionManager } from './infrastructure/typeorm/typeorm-tran
     ACTIVATE_ACCOUNT_USECASE,
     FIND_ACCOUNT_BY_IDENTIFIER_USECASE,
     CHANGE_ACCOUNT_PASSWORD_USECASE,
+    FIND_ACCOUNT_BY_ID_USECASE,
+    GET_ACCOUNT_ADDRESSES_USECASE,
   ],
 })
 export class AccountModule {}

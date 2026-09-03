@@ -35,6 +35,7 @@
     "@nestjs/typeorm": "^11.0.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
+    "firebase-admin": "^14.3.0",
     "joi": "^18.2.5",
     "js-yaml": "^5.4.1",
     "nestjs-pino": "^4.6.1",
@@ -84,6 +85,11 @@
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
+    "moduleNameMapper": {
+      "^@shared/(.*)$": "<rootDir>/shared/$1",
+      "^@modules/(.*)$": "<rootDir>/modules/$1",
+      "^@config/(.*)$": "<rootDir>/configs/$1"
+    },
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },

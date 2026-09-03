@@ -88,6 +88,11 @@ export class RefreshToken {
     return false;
   }
 
+  revoke(): void {
+    this._isAlive = false;
+    this._revokedAt = new Date();
+  }
+
   renew(newTokenHash: string, newExpiredAt: Date): void {
     if (!this._isAlive) {
       throw new RefreshTokenRevokedError();

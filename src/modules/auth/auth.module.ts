@@ -9,6 +9,7 @@ import { RegisterUseCase } from './application/use-cases/register.use-case';
 import { ResetPasswordUseCase } from './application/use-cases/reset-password.use-case';
 import { ActivateUseCase } from './application/use-cases/activate.use-case';
 import { LoginUseCase } from './application/use-cases/login.use-case';
+import { RefreshTokenUseCase } from './application/use-cases/refresh-token.use-case';
 import { AuthController } from './infrastructure/http/auth.controller';
 import {
   REFRESH_TOKEN_REPOSITORY,
@@ -17,6 +18,7 @@ import {
 import { JwtTokenIssuer } from './infrastructure/jwt/jwt-token-issuer.service';
 import { RefreshTokenTypeOrmEntity } from './infrastructure/typeorm/entities/refresh-token.typeorm-entity';
 import { TypeOrmRefreshTokenRepository } from './infrastructure/typeorm/refresh-token.repository';
+import { LogoutUseCase } from './application/use-cases/logout.use-case';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { TypeOrmRefreshTokenRepository } from './infrastructure/typeorm/refresh-
     ResetPasswordUseCase,
     ChangePasswordUseCase,
     LoginUseCase,
+    LogoutUseCase,
+    RefreshTokenUseCase,
     {
       provide: TOKEN_ISSUER,
       useClass: JwtTokenIssuer,

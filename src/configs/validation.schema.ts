@@ -28,6 +28,8 @@ export const validationSchema = Joi.object({
   FIREBASE_CLIENT_EMAIL: Joi.string().required(),
   FIREBASE_PRIVATE_KEY: Joi.string().required(),
   FIREBASE_STORAGE_BUCKET: Joi.string().required(),
+  FIREBASE_UPLOAD_URL_TTL_MS: Joi.number().default(900000),
+  FIREBASE_DOWNLOAD_URL_TTL_MS: Joi.number().default(3600000),
 
   //  LOGGER CONFIG
   LOG_LEVEL: Joi.string().default(

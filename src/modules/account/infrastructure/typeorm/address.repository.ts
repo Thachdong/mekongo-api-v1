@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { IAddressRepository } from '../../application/ports/address-repository.interface';
+import { IAddressRepository } from '../../application/ports/address/address-repository.interface';
 import { Address } from '../../domain/address.entity';
 import { AddressTypeOrmEntity } from './entities/address.typeorm-entity';
 import { transactionContext } from './transaction-context';
@@ -24,5 +24,23 @@ export class TypeOrmAddressRepository implements IAddressRepository {
       .getRepository(AddressTypeOrmEntity)
       .save(entity);
     return AddressMapper.toDomain(saved);
+  }
+
+  async findAllByAccountId(accountId: string): Promise<Address[]> {
+    const entities = await this._manager
+      .getRepository(AddressTypeOrmEntity)
+      .find({ where: { accountId } });
+    return entities.map(AddressMapper.toDomain);
+  }
+
+  async findById(id: string): Promise<Address | null> {
+    const entity = await this._manager
+      .getRepository(AddressTypeOrmEntity)
+      .findOne({ where: { id } });
+    return entity ? AddressMapper.toDomain(entity) : null;
+  }
+
+  async delete(id: string): Promise<void> {
+    await this._manager.getRepository(AddressTypeOrmEntity).delete({ id });
   }
 }

@@ -20,6 +20,7 @@ import { HashingModule } from '@shared/common/hashing/hashing.module';
 import { AuthPassportModule } from '@shared/common/auth/auth.module';
 import { VerificationModule } from './modules/verification/verification.module';
 import { StorageModule } from '@shared/infrastructure/storage/storage.module';
+import { PostModule } from './modules/post/post.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { StorageModule } from '@shared/infrastructure/storage/storage.module';
     AccountModule,
     AuthModule,
     VerificationModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [

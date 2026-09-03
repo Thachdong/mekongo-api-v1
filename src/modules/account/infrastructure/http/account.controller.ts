@@ -10,17 +10,21 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '@shared/common/auth/current-user.decorator';
+import { Address } from '../../domain/address.entity';
 import { JwtAuthGuard } from '@shared/common/auth/jwt-auth.guard';
 import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
 import { ChangeOwnPasswordUseCase } from '../../application/use-cases/change-own-password.use-case';
+import { CreateAddressUseCase } from '../../application/use-cases/create-address.use-case';
 import { GetAccountAddressesUseCase } from '../../application/use-cases/get-account-addresses.use-case';
 import { SetCurrentAddressUseCase } from '../../application/use-cases/set-current-address.use-case';
 import { UpdateAccountProfileUseCase } from '../../application/use-cases/update-account-profile.use-case';
 import { AddressResponseDto } from './dto/address-response.dto';
 import { ChangeOwnPasswordRequestDto } from './dto/change-password-request.dto';
+import { CreateAddressRequestDto } from './dto/create-address-request.dto';
 import { SetCurrentAddressRequestDto } from './dto/set-current-address-request.dto';
 import { UpdateAccountProfileRequestDto } from './dto/update-account-profile-request.dto';
 import { ChangePasswordDoc } from './docs/change-password.doc';
+import { CreateAddressDoc } from './docs/create-address.doc';
 import { GetAccountAddressesDoc } from './docs/get-account-addresses.doc';
 import { SetCurrentAddressDoc } from './docs/set-current-address.doc';
 import { UpdateAccountProfileDoc } from './docs/update-account-profile.doc';
@@ -33,6 +37,7 @@ export class AccountController {
     private readonly _updateAccountProfileUseCase: UpdateAccountProfileUseCase,
     private readonly _getAccountAddressesUseCase: GetAccountAddressesUseCase,
     private readonly _setCurrentAddressUseCase: SetCurrentAddressUseCase,
+    private readonly _createAddressUseCase: CreateAddressUseCase,
   ) {}
 
   @Post('change-password')
@@ -78,18 +83,7 @@ export class AccountController {
       accountId: user.accountId,
     });
 
-    return addresses.map((address) => {
-      const dto = new AddressResponseDto();
-      dto.id = address.id;
-      dto.label = address.label;
-      dto.province = address.province;
-      dto.provinceCode = address.provinceCode;
-      dto.ward = address.ward;
-      dto.details = address.details;
-      dto.createdAt = address.createdAt;
-      dto.updatedAt = address.updatedAt;
-      return dto;
-    });
+    return addresses.map((address) => this._toAddressResponseDto(address));
   }
 
   @Put('set-current-address')
@@ -105,5 +99,38 @@ export class AccountController {
       addressId: body.addressId,
     });
     return null;
+  }
+
+  @Post('address')
+  @HttpCode(HttpStatus.CREATED)
+  @UseGuards(JwtAuthGuard)
+  @CreateAddressDoc()
+  async createAddress(
+    @CurrentUser() user: TJwtPayload,
+    @Body() body: CreateAddressRequestDto,
+  ): Promise<AddressResponseDto> {
+    const address = await this._createAddressUseCase.execute({
+      accountId: user.accountId,
+      label: body.label,
+      province: body.province,
+      provinceCode: body.provinceCode,
+      ward: body.ward,
+      details: body.details,
+    });
+
+    return this._toAddressResponseDto(address);
+  }
+
+  private _toAddressResponseDto(address: Address): AddressResponseDto {
+    const dto = new AddressResponseDto();
+    dto.id = address.id;
+    dto.label = address.label;
+    dto.province = address.province;
+    dto.provinceCode = address.provinceCode;
+    dto.ward = address.ward;
+    dto.details = address.details;
+    dto.createdAt = address.createdAt;
+    dto.updatedAt = address.updatedAt;
+    return dto;
   }
 }

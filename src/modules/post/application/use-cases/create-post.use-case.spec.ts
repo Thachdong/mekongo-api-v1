@@ -43,7 +43,11 @@ describe('CreatePostUseCase', () => {
   };
 
   beforeEach(() => {
-    postRepository = { create: jest.fn(), findById: jest.fn() };
+    postRepository = {
+      create: jest.fn(),
+      findById: jest.fn(),
+      update: jest.fn(),
+    };
     findAccountByIdUseCase = { execute: jest.fn() };
     getAccountAddressesUseCase = { execute: jest.fn() };
     fileStorage = {

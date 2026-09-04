@@ -1,9 +1,9 @@
 import { PostNotFoundError } from '../../domain/errors/post-not-found.error';
 import { Post } from '../../domain/post.entity';
 import { IPostRepository } from '../ports/post-repository.interface';
-import { FindPostByIdUseCase } from './find-post-by-id.use-case';
+import { IncrementPostLikeCountUseCase } from './increment-post-like-count.use-case';
 
-function buildPost() {
+function buildPost(likeCount = 0) {
   return new Post({
     id: 'post-id',
     postType: 'SELL',
@@ -12,16 +12,16 @@ function buildPost() {
     images: [],
     provinceCode: 79,
     profileId: 'profile-id',
-    likeCount: 0,
+    likeCount,
     commentCount: 0,
     createdAt: null,
     updatedAt: null,
   });
 }
 
-describe('FindPostByIdUseCase', () => {
+describe('IncrementPostLikeCountUseCase', () => {
   let postRepository: jest.Mocked<IPostRepository>;
-  let useCase: FindPostByIdUseCase;
+  let useCase: IncrementPostLikeCountUseCase;
 
   beforeEach(() => {
     postRepository = {
@@ -29,23 +29,25 @@ describe('FindPostByIdUseCase', () => {
       findById: jest.fn(),
       update: jest.fn(),
     };
-    useCase = new FindPostByIdUseCase(postRepository);
+    useCase = new IncrementPostLikeCountUseCase(postRepository);
   });
 
   it('throws PostNotFoundError when post does not exist', async () => {
     postRepository.findById.mockResolvedValue(null);
 
-    await expect(useCase.execute({ postId: 'post-id' })).rejects.toThrow(
-      PostNotFoundError,
-    );
+    await expect(
+      useCase.execute({ postId: 'post-id' }),
+    ).rejects.toThrow(PostNotFoundError);
   });
 
-  it('returns the post when found', async () => {
-    const post = buildPost();
+  it('increments likeCount and persists the post', async () => {
+    const post = buildPost(0);
     postRepository.findById.mockResolvedValue(post);
+    postRepository.update.mockImplementation(async (p) => p);
 
     const result = await useCase.execute({ postId: 'post-id' });
 
-    expect(result).toBe(post);
+    expect(result.likeCount).toBe(1);
+    expect(postRepository.update).toHaveBeenCalledWith(post);
   });
 });

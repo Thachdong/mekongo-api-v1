@@ -23,4 +23,10 @@ export class TypeOrmPostRepository implements IPostRepository {
     const entity = await this._repository.findOne({ where: { id } });
     return entity ? PostMapper.toDomain(entity) : null;
   }
+
+  async update(post: Post): Promise<Post> {
+    const entity = PostMapper.toPersistence(post);
+    const saved = await this._repository.save(entity);
+    return PostMapper.toDomain(saved);
+  }
 }

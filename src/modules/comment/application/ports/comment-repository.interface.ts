@@ -19,4 +19,5 @@ export interface ICommentRepository {
   countChildrenByParentIds(
     parentIds: string[],
   ): Promise<Record<string, number>>;
+  findDirectChildren(parentId: string): Promise<Comment[]>;
 }

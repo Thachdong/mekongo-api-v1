@@ -78,4 +78,12 @@ export class TypeOrmCommentRepository implements ICommentRepository {
       return acc;
     }, {});
   }
+
+  async findDirectChildren(parentId: string): Promise<Comment[]> {
+    const entities = await this._repository.find({
+      where: { parentId },
+      order: { createdAt: 'ASC' },
+    });
+    return entities.map(CommentMapper.toDomain);
+  }
 }

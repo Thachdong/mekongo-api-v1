@@ -51,7 +51,7 @@ comment con của 1 comment cha (1 cấp, không phân trang). Mỗi item kèm a
 ## Chunk tree
 
 ### Chunk 1: Account — batch lookup Profile/Account theo danh sách id (module: account)
-- status: in-progress
+- status: done
 - Entity: tái dùng `Profile`, `Account` — KHÔNG đổi.
 - Steps:
   1. infrastructure (adapter) — thêm `findByIds(ids: string[]): Promise<Profile[]>`
@@ -108,7 +108,15 @@ comment con của 1 comment cha (1 cấp, không phân trang). Mỗi item kèm a
 - Approved by: dev (2026-09-04, qua AskUserQuestion)
 
 ### Chunk 3: Comment — GET children (1 cấp, không phân trang) (module: comment)
-- status: pending
+- status: done
+- Điều chỉnh so với Plan gốc: tách logic ráp author (profile -> account) từng
+  dùng riêng trong `GetCommentsUseCase` (Chunk 2) ra
+  `application/services/resolve-comment-authors.service.ts` (Injectable dùng
+  chung), lý do: Chunk 3 cần đúng logic này y hệt, giữ nguyên trong
+  `GetCommentsUseCase` sẽ bị lặp code. `GetCommentsUseCase` (Chunk 2, đã
+  commit) được sửa lại để dùng service này thay vì gọi thẳng 2 use-case
+  account — hành vi/output không đổi, test cập nhật theo (mock service thay
+  vì mock 2 use-case).
 - Entity: tái dùng `Comment` — KHÔNG đổi.
 - Steps:
   1. infrastructure (adapter) — thêm `findDirectChildren(parentId: string): Promise<Comment[]>`

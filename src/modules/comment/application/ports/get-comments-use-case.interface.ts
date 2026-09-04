@@ -9,7 +9,7 @@ export type TCommentListItem = {
   content: string;
   level: number;
   parentId: string | null;
-  childrenCount: number;
+  childrenCount?: number;
   author: TCommentAuthor;
 };
 

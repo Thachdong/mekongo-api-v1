@@ -35,6 +35,7 @@ describe('DeleteCommentUseCase', () => {
       hasChildren: jest.fn(),
       findRootByPostId: jest.fn(),
       countChildrenByParentIds: jest.fn(),
+      findDirectChildren: jest.fn(),
     };
     commentRepository.hasChildren.mockResolvedValue(false);
 

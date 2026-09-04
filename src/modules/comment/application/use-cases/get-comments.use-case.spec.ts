@@ -1,8 +1,5 @@
-import {
-  IFindAccountsByIdsUseCase,
-  IFindProfilesByIdsUseCase,
-} from '@modules/account/public-api';
 import { Comment } from '../../domain/comment.entity';
+import { ResolveCommentAuthorsService } from '../services/resolve-comment-authors.service';
 import { ICommentRepository } from '../ports/comment-repository.interface';
 import { GetCommentsUseCase } from './get-comments.use-case';
 
@@ -22,8 +19,7 @@ function buildComment(overrides: Record<string, unknown> = {}) {
 
 describe('GetCommentsUseCase', () => {
   let commentRepository: jest.Mocked<ICommentRepository>;
-  let findProfilesByIdsUseCase: jest.Mocked<IFindProfilesByIdsUseCase>;
-  let findAccountsByIdsUseCase: jest.Mocked<IFindAccountsByIdsUseCase>;
+  let resolveCommentAuthorsService: jest.Mocked<ResolveCommentAuthorsService>;
   let useCase: GetCommentsUseCase;
 
   const baseInput = { postId: 'post-id', page: 1, limit: 20 };
@@ -37,14 +33,15 @@ describe('GetCommentsUseCase', () => {
       hasChildren: jest.fn(),
       findRootByPostId: jest.fn(),
       countChildrenByParentIds: jest.fn(),
+      findDirectChildren: jest.fn(),
     };
-    findProfilesByIdsUseCase = { execute: jest.fn() };
-    findAccountsByIdsUseCase = { execute: jest.fn() };
+    resolveCommentAuthorsService = {
+      execute: jest.fn(),
+    } as unknown as jest.Mocked<ResolveCommentAuthorsService>;
 
     useCase = new GetCommentsUseCase(
       commentRepository,
-      findProfilesByIdsUseCase,
-      findAccountsByIdsUseCase,
+      resolveCommentAuthorsService,
     );
   });
 
@@ -57,8 +54,7 @@ describe('GetCommentsUseCase', () => {
     const result = await useCase.execute(baseInput);
 
     expect(result).toEqual({ items: [], total: 0 });
-    expect(findProfilesByIdsUseCase.execute).not.toHaveBeenCalled();
-    expect(findAccountsByIdsUseCase.execute).not.toHaveBeenCalled();
+    expect(resolveCommentAuthorsService.execute).not.toHaveBeenCalled();
   });
 
   it('assembles children count and author for each root comment', async () => {
@@ -70,34 +66,27 @@ describe('GetCommentsUseCase', () => {
     commentRepository.countChildrenByParentIds.mockResolvedValue({
       'comment-1': 3,
     });
-    findProfilesByIdsUseCase.execute.mockResolvedValue([
-      {
-        id: 'profile-1',
-        activeProfile: 'INDIVIDUAL',
-        accountId: 'account-1',
-        createdAt: null,
-        updatedAt: null,
-      } as any,
-    ]);
-    findAccountsByIdsUseCase.execute.mockResolvedValue([
-      {
-        id: 'account-1',
-        displayName: 'John',
-        avatarUrl: 'avatar.png',
-      } as any,
-    ]);
+    resolveCommentAuthorsService.execute.mockResolvedValue(
+      new Map([
+        [
+          'profile-1',
+          {
+            profileId: 'profile-1',
+            displayName: 'John',
+            avatarUrl: 'avatar.png',
+          },
+        ],
+      ]),
+    );
 
     const result = await useCase.execute(baseInput);
 
     expect(commentRepository.countChildrenByParentIds).toHaveBeenCalledWith([
       'comment-1',
     ]);
-    expect(findProfilesByIdsUseCase.execute).toHaveBeenCalledWith({
-      profileIds: ['profile-1'],
-    });
-    expect(findAccountsByIdsUseCase.execute).toHaveBeenCalledWith({
-      accountIds: ['account-1'],
-    });
+    expect(resolveCommentAuthorsService.execute).toHaveBeenCalledWith([
+      comment,
+    ]);
     expect(result).toEqual({
       items: [
         {
@@ -124,8 +113,7 @@ describe('GetCommentsUseCase', () => {
       total: 1,
     });
     commentRepository.countChildrenByParentIds.mockResolvedValue({});
-    findProfilesByIdsUseCase.execute.mockResolvedValue([]);
-    findAccountsByIdsUseCase.execute.mockResolvedValue([]);
+    resolveCommentAuthorsService.execute.mockResolvedValue(new Map());
 
     const result = await useCase.execute(baseInput);
 

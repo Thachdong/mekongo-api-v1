@@ -23,6 +23,7 @@ import { StorageModule } from '@shared/infrastructure/storage/storage.module';
 import { PostModule } from './modules/post/post.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { LikeModule } from './modules/like/like.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { CommentModule } from './modules/comment/comment.module';
     PostModule,
     UploadModule,
     CommentModule,
+    LikeModule,
   ],
   controllers: [AppController],
   providers: [

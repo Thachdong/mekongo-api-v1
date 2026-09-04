@@ -41,7 +41,7 @@ record + giảm `Post.likeCount`.
 - Approved by: (chờ dev duyệt Plan)
 
 ### Chunk 2: Like module — endpoint toggle like/unlike (module: like)
-- status: pending
+- status: done
 - Entity: tái dùng `Like` (không sửa domain)
 - Steps:
   1. use-case — định nghĩa `ILikeRepository` port (`create`, `findByPostAndProfile`,

@@ -16,9 +16,6 @@ export class CommentResponseDto {
   @ApiProperty()
   profileId: string;
 
-  @ApiProperty({ type: [String] })
-  childIds: string[];
-
   @ApiProperty({ type: String, format: 'date-time', nullable: true })
   createdAt: Date | null;
 

@@ -4,7 +4,6 @@ import { ForbiddenCommentDeletionError } from '../../domain/errors/forbidden-com
 import { ProfileNotActiveError } from '../../domain/errors/profile-not-active.error';
 import { Comment } from '../../domain/comment.entity';
 import { ICommentRepository } from '../ports/comment-repository.interface';
-import { ITransactionManager } from '../ports/transaction-manager.interface';
 import { DeleteCommentUseCase } from './delete-comment.use-case';
 
 function buildComment(overrides: Record<string, unknown> = {}) {
@@ -14,7 +13,6 @@ function buildComment(overrides: Record<string, unknown> = {}) {
     parentId: null,
     postId: 'post-id',
     profileId: 'profile-id',
-    childIds: [],
     createdAt: null,
     updatedAt: null,
     ...overrides,
@@ -23,7 +21,6 @@ function buildComment(overrides: Record<string, unknown> = {}) {
 
 describe('DeleteCommentUseCase', () => {
   let commentRepository: jest.Mocked<ICommentRepository>;
-  let transactionManager: jest.Mocked<ITransactionManager>;
   let useCase: DeleteCommentUseCase;
 
   const baseInput = { profileId: 'profile-id', commentId: 'comment-id' };
@@ -34,12 +31,11 @@ describe('DeleteCommentUseCase', () => {
       findById: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
+      hasChildren: jest.fn(),
     };
-    transactionManager = {
-      runInTransaction: jest.fn((work: () => Promise<unknown>) => work()),
-    } as unknown as jest.Mocked<ITransactionManager>;
+    commentRepository.hasChildren.mockResolvedValue(false);
 
-    useCase = new DeleteCommentUseCase(commentRepository, transactionManager);
+    useCase = new DeleteCommentUseCase(commentRepository);
   });
 
   it('throws ProfileNotActiveError when profileId is null', async () => {
@@ -72,19 +68,19 @@ describe('DeleteCommentUseCase', () => {
     expect(commentRepository.delete).not.toHaveBeenCalled();
   });
 
-  it('throws CommentHasChildrenError when comment still has children', async () => {
-    commentRepository.findById.mockResolvedValue(
-      buildComment({ childIds: ['child-id'] }),
-    );
+  it('throws CommentHasChildrenError when the comment still has replies', async () => {
+    commentRepository.findById.mockResolvedValue(buildComment());
+    commentRepository.hasChildren.mockResolvedValue(true);
 
     await expect(useCase.execute(baseInput)).rejects.toThrow(
       CommentHasChildrenError,
     );
 
+    expect(commentRepository.hasChildren).toHaveBeenCalledWith('comment-id');
     expect(commentRepository.delete).not.toHaveBeenCalled();
   });
 
-  it('deletes a root comment without touching any parent', async () => {
+  it('deletes a root comment', async () => {
     commentRepository.findById.mockResolvedValue(buildComment());
 
     await useCase.execute(baseInput);
@@ -93,30 +89,12 @@ describe('DeleteCommentUseCase', () => {
     expect(commentRepository.delete).toHaveBeenCalledWith('comment-id');
   });
 
-  it('deletes a reply and removes it from the parent childIds', async () => {
-    const child = buildComment({ id: 'comment-id', parentId: 'parent-id' });
-    const parent = buildComment({
-      id: 'parent-id',
-      childIds: ['comment-id', 'other-child-id'],
-    });
-    commentRepository.findById.mockImplementation(async (id) =>
-      id === 'comment-id' ? child : id === 'parent-id' ? parent : null,
+  it('deletes a reply without updating its parent', async () => {
+    commentRepository.findById.mockResolvedValue(
+      buildComment({ parentId: 'parent-id' }),
     );
 
     await useCase.execute(baseInput);
-
-    expect(parent.childIds).toEqual(['other-child-id']);
-    expect(commentRepository.update).toHaveBeenCalledWith(parent);
-    expect(commentRepository.delete).toHaveBeenCalledWith('comment-id');
-  });
-
-  it('deletes a reply whose parent no longer exists without throwing', async () => {
-    const child = buildComment({ id: 'comment-id', parentId: 'parent-id' });
-    commentRepository.findById.mockImplementation(async (id) =>
-      id === 'comment-id' ? child : null,
-    );
-
-    await expect(useCase.execute(baseInput)).resolves.toBeUndefined();
 
     expect(commentRepository.update).not.toHaveBeenCalled();
     expect(commentRepository.delete).toHaveBeenCalledWith('comment-id');

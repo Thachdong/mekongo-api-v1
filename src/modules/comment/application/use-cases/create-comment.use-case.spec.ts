@@ -3,7 +3,6 @@ import { ParentCommentNotFoundError } from '../../domain/errors/parent-comment-n
 import { ProfileNotActiveError } from '../../domain/errors/profile-not-active.error';
 import { Comment } from '../../domain/comment.entity';
 import { ICommentRepository } from '../ports/comment-repository.interface';
-import { ITransactionManager } from '../ports/transaction-manager.interface';
 import { CreateCommentUseCase } from './create-comment.use-case';
 
 function buildComment(overrides: Record<string, unknown> = {}) {
@@ -13,7 +12,6 @@ function buildComment(overrides: Record<string, unknown> = {}) {
     parentId: null,
     postId: 'post-id',
     profileId: 'profile-id',
-    childIds: [],
     createdAt: null,
     updatedAt: null,
     ...overrides,
@@ -22,7 +20,6 @@ function buildComment(overrides: Record<string, unknown> = {}) {
 
 describe('CreateCommentUseCase', () => {
   let commentRepository: jest.Mocked<ICommentRepository>;
-  let transactionManager: jest.Mocked<ITransactionManager>;
   let findPostByIdUseCase: jest.Mocked<IFindPostByIdUseCase>;
   let useCase: CreateCommentUseCase;
 
@@ -39,10 +36,8 @@ describe('CreateCommentUseCase', () => {
       findById: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
+      hasChildren: jest.fn(),
     };
-    transactionManager = {
-      runInTransaction: jest.fn((work: () => Promise<unknown>) => work()),
-    } as unknown as jest.Mocked<ITransactionManager>;
     findPostByIdUseCase = { execute: jest.fn() };
 
     findPostByIdUseCase.execute.mockResolvedValue(undefined as any);
@@ -54,18 +49,12 @@ describe('CreateCommentUseCase', () => {
           parentId: comment.parentId,
           postId: comment.postId,
           profileId: comment.profileId,
-          childIds: comment.childIds,
           createdAt: new Date(),
           updatedAt: new Date(),
         }),
     );
-    commentRepository.update.mockImplementation(async (comment) => comment);
 
-    useCase = new CreateCommentUseCase(
-      commentRepository,
-      transactionManager,
-      findPostByIdUseCase,
-    );
+    useCase = new CreateCommentUseCase(commentRepository, findPostByIdUseCase);
   });
 
   it('throws ProfileNotActiveError when profileId is null', async () => {
@@ -111,7 +100,7 @@ describe('CreateCommentUseCase', () => {
     expect(result.profileId).toBe('profile-id');
   });
 
-  it('creates a reply and adds it to the parent childIds', async () => {
+  it('creates a reply after validating the parent, without updating it', async () => {
     const parent = buildComment();
     commentRepository.findById.mockResolvedValue(parent);
 
@@ -121,9 +110,8 @@ describe('CreateCommentUseCase', () => {
     });
 
     expect(result.id).toBe('created-id');
+    expect(result.parentId).toBe('parent-id');
     expect(commentRepository.create).toHaveBeenCalledTimes(1);
-    expect(commentRepository.update).toHaveBeenCalledWith(parent);
-    expect(parent.childIds).toEqual(['created-id']);
-    expect(transactionManager.runInTransaction).toHaveBeenCalledTimes(1);
+    expect(commentRepository.update).not.toHaveBeenCalled();
   });
 });

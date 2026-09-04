@@ -5,4 +5,5 @@ export interface ICommentRepository {
   findById(id: string): Promise<Comment | null>;
   update(comment: Comment): Promise<Comment>;
   delete(id: string): Promise<void>;
+  hasChildren(commentId: string): Promise<boolean>;
 }

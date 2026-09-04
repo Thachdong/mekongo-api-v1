@@ -18,6 +18,12 @@ export class ProfileTypeOrmEntity {
   @Column({ name: 'account_id', type: 'uuid' })
   accountId: string;
 
+  @Column({ name: 'display_name', type: 'text' })
+  displayName: string;
+
+  @Column({ name: 'avatar_url', type: 'text', nullable: true })
+  avatarUrl: string | null;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

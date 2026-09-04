@@ -69,6 +69,8 @@ export class RegisterAccountUseCase implements IRegisterAccountUseCase {
           id: null,
           activeProfile: input.profileType,
           accountId: account.id as string,
+          displayName: input.displayName,
+          avatarUrl: input.avatarUrl,
           createdAt: null,
           updatedAt: null,
         }),

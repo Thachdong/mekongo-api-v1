@@ -39,6 +39,8 @@ export class CreateProfileUseCase implements ICreateProfileUseCase {
         id: null,
         activeProfile: input.profileType,
         accountId: input.accountId,
+        displayName: 'mock display name',
+        avatarUrl: 'mock-avatar-url.png',
         createdAt: null,
         updatedAt: null,
       }),

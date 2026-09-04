@@ -23,6 +23,8 @@ describe('FindProfilesByIdsUseCase', () => {
         id: 'profile-1',
         activeProfile: 'INDIVIDUAL',
         accountId: 'account-1',
+        displayName: 'John',
+        avatarUrl: null,
         createdAt: null,
         updatedAt: null,
       }),

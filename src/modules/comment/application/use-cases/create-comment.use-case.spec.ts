@@ -41,6 +41,8 @@ describe('CreateCommentUseCase', () => {
       update: jest.fn(),
       delete: jest.fn(),
       hasChildren: jest.fn(),
+      findRootByPostId: jest.fn(),
+      countChildrenByParentIds: jest.fn(),
     };
     findPostByIdUseCase = { execute: jest.fn() };
     configService = { getOrThrow: jest.fn() } as any;

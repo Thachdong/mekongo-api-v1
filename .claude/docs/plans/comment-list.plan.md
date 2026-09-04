@@ -71,7 +71,7 @@ comment con của 1 comment cha (1 cấp, không phân trang). Mỗi item kèm a
 - Approved by: dev (2026-09-04, qua AskUserQuestion)
 
 ### Chunk 2: Comment — GET root list (phân trang + childrenCount) (module: comment)
-- status: pending
+- status: done
 - Entity: tái dùng `Comment` — KHÔNG đổi.
 - Steps:
   1. infrastructure (adapter) — thêm vào `ICommentRepository`:
@@ -103,7 +103,8 @@ comment con của 1 comment cha (1 cấp, không phân trang). Mỗi item kèm a
 - Integrate into: không cross-module tiêu thụ thêm (chỉ HTTP).
 - Gate: build sạch, test `get-comments.use-case.spec.ts` (mock
   `ICommentRepository` + 2 use-case account), endpoint chạy thử.
-- Commit range: (điền sau)
+- Verify đã chạy: tsc/eslint/nest build sạch, jest toàn repo 41/41 pass.
+- Commit range: (chờ dev xác nhận)
 - Approved by: dev (2026-09-04, qua AskUserQuestion)
 
 ### Chunk 3: Comment — GET children (1 cấp, không phân trang) (module: comment)

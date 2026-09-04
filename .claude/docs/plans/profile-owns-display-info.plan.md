@@ -72,7 +72,8 @@ dùng được 2 field này từ `Profile` — dev sẽ làm lại đầy đủ 
 - Approved by: (chờ AskUserQuestion)
 
 ### Chunk 2: Comment — dùng displayName/avatarUrl từ Profile, bỏ Account (module: comment)
-- status: pending
+- status: done
+- Verify đã chạy: tsc/eslint/nest build sạch, jest toàn repo 47/47 pass.
 - Entity: không đổi.
 - Steps:
   1. use-case — sửa `ResolveCommentAuthorsService`
@@ -90,7 +91,9 @@ dùng được 2 field này từ `Profile` — dev sẽ làm lại đầy đủ 
 - Approved by: (chờ AskUserQuestion)
 
 ### Chunk 3: Account — dọn dead code (nếu dev xác nhận xoá) (module: account)
-- status: pending (CHỈ chạy nếu dev chọn "xoá" ở quyết định #3)
+- status: done
+- Verify đã chạy: tsc/eslint/nest build sạch, jest toàn repo 46/46 pass, grep
+  xác nhận không còn reference nào tới FindAccountsByIdsUseCase.
 - Steps:
   1. infrastructure — xoá `IAccountRepository.findByIds` +
      `TypeOrmAccountRepository.findByIds`.

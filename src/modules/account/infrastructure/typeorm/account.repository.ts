@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, In, Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { IAccountRepository } from '../../application/ports/account/account-repository.interface';
 import { Account } from '../../domain/account.entity';
 import { AccountTypeOrmEntity } from './entities/account.typeorm-entity';
@@ -46,15 +46,5 @@ export class TypeOrmAccountRepository implements IAccountRepository {
       .getRepository(AccountTypeOrmEntity)
       .findOne({ where: { identifierHash } });
     return entity ? AccountMapper.toDomain(entity) : null;
-  }
-
-  async findByIds(ids: string[]): Promise<Account[]> {
-    if (ids.length === 0) {
-      return [];
-    }
-    const entities = await this._manager
-      .getRepository(AccountTypeOrmEntity)
-      .find({ where: { id: In(ids) } });
-    return entities.map(AccountMapper.toDomain);
   }
 }

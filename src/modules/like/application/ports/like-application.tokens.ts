@@ -1,0 +1,2 @@
+export const LIKE_REPOSITORY = Symbol('LIKE_REPOSITORY');
+export const TOGGLE_LIKE_USECASE = Symbol('TOGGLE_LIKE_USECASE');

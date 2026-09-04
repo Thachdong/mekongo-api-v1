@@ -31,7 +31,7 @@ export class TypeOrmCommentRepository implements ICommentRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await this._repository.delete({ id });
+    await this._repository.softDelete({ id });
   }
 
   async hasChildren(commentId: string): Promise<boolean> {

@@ -23,6 +23,9 @@ export class CommentTypeOrmEntity {
   @Column({ name: 'profile_id', type: 'uuid' })
   profileId: string;
 
+  @Column({ type: 'int' })
+  level: number;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

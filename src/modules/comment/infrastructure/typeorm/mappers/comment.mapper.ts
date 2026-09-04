@@ -9,6 +9,7 @@ export class CommentMapper {
       parentId: entity.parentId,
       postId: entity.postId,
       profileId: entity.profileId,
+      level: entity.level,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     });
@@ -23,6 +24,7 @@ export class CommentMapper {
     entity.parentId = comment.parentId;
     entity.postId = comment.postId;
     entity.profileId = comment.profileId;
+    entity.level = comment.level;
     return entity;
   }
 }

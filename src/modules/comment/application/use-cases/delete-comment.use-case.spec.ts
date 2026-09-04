@@ -13,6 +13,7 @@ function buildComment(overrides: Record<string, unknown> = {}) {
     parentId: null,
     postId: 'post-id',
     profileId: 'profile-id',
+    level: 0,
     createdAt: null,
     updatedAt: null,
     ...overrides,

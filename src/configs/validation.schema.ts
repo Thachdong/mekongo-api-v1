@@ -23,6 +23,9 @@ export const validationSchema = Joi.object({
   OTP_CODE_LENGTH: Joi.number().default(6),
   OTP_EXPIRE_MINUTES: Joi.number().default(5),
 
+  // COMMENT CONFIG
+  COMMENT_LEVEL_LIMIT: Joi.number().default(3),
+
   //  FIREBASE CONFIG
   FIREBASE_PROJECT_ID: Joi.string().required(),
   FIREBASE_CLIENT_EMAIL: Joi.string().required(),

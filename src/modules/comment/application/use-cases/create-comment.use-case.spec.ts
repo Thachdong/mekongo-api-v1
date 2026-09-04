@@ -1,4 +1,6 @@
+import { ConfigService } from '@nestjs/config';
 import { IFindPostByIdUseCase } from '@modules/post/public-api';
+import { CommentLevelLimitExceededError } from '../../domain/errors/comment-level-limit-exceeded.error';
 import { ParentCommentNotFoundError } from '../../domain/errors/parent-comment-not-found.error';
 import { ProfileNotActiveError } from '../../domain/errors/profile-not-active.error';
 import { Comment } from '../../domain/comment.entity';
@@ -12,6 +14,7 @@ function buildComment(overrides: Record<string, unknown> = {}) {
     parentId: null,
     postId: 'post-id',
     profileId: 'profile-id',
+    level: 0,
     createdAt: null,
     updatedAt: null,
     ...overrides,
@@ -21,6 +24,7 @@ function buildComment(overrides: Record<string, unknown> = {}) {
 describe('CreateCommentUseCase', () => {
   let commentRepository: jest.Mocked<ICommentRepository>;
   let findPostByIdUseCase: jest.Mocked<IFindPostByIdUseCase>;
+  let configService: jest.Mocked<ConfigService>;
   let useCase: CreateCommentUseCase;
 
   const baseInput = {
@@ -39,8 +43,10 @@ describe('CreateCommentUseCase', () => {
       hasChildren: jest.fn(),
     };
     findPostByIdUseCase = { execute: jest.fn() };
+    configService = { getOrThrow: jest.fn() } as any;
 
     findPostByIdUseCase.execute.mockResolvedValue(undefined as any);
+    configService.getOrThrow.mockReturnValue({ levelLimit: 3 });
     commentRepository.create.mockImplementation(
       async (comment) =>
         new Comment({
@@ -49,12 +55,17 @@ describe('CreateCommentUseCase', () => {
           parentId: comment.parentId,
           postId: comment.postId,
           profileId: comment.profileId,
+          level: comment.level,
           createdAt: new Date(),
           updatedAt: new Date(),
         }),
     );
 
-    useCase = new CreateCommentUseCase(commentRepository, findPostByIdUseCase);
+    useCase = new CreateCommentUseCase(
+      commentRepository,
+      findPostByIdUseCase,
+      configService,
+    );
   });
 
   it('throws ProfileNotActiveError when profileId is null', async () => {
@@ -88,7 +99,7 @@ describe('CreateCommentUseCase', () => {
     expect(commentRepository.create).not.toHaveBeenCalled();
   });
 
-  it('creates a root comment without touching any parent', async () => {
+  it('creates a root comment with level 0 when parentId is null', async () => {
     const result = await useCase.execute(baseInput);
 
     expect(findPostByIdUseCase.execute).toHaveBeenCalledWith({
@@ -97,11 +108,12 @@ describe('CreateCommentUseCase', () => {
     expect(commentRepository.create).toHaveBeenCalledTimes(1);
     expect(commentRepository.update).not.toHaveBeenCalled();
     expect(result.parentId).toBeNull();
+    expect(result.level).toBe(0);
     expect(result.profileId).toBe('profile-id');
   });
 
-  it('creates a reply after validating the parent, without updating it', async () => {
-    const parent = buildComment();
+  it('creates a reply with level = parent.level + 1', async () => {
+    const parent = buildComment({ level: 1 });
     commentRepository.findById.mockResolvedValue(parent);
 
     const result = await useCase.execute({
@@ -111,7 +123,20 @@ describe('CreateCommentUseCase', () => {
 
     expect(result.id).toBe('created-id');
     expect(result.parentId).toBe('parent-id');
+    expect(result.level).toBe(2);
     expect(commentRepository.create).toHaveBeenCalledTimes(1);
     expect(commentRepository.update).not.toHaveBeenCalled();
+  });
+
+  it('throws CommentLevelLimitExceededError when computed level reaches the limit', async () => {
+    configService.getOrThrow.mockReturnValue({ levelLimit: 3 });
+    const parent = buildComment({ level: 2 });
+    commentRepository.findById.mockResolvedValue(parent);
+
+    await expect(
+      useCase.execute({ ...baseInput, parentId: 'parent-id' }),
+    ).rejects.toThrow(CommentLevelLimitExceededError);
+
+    expect(commentRepository.create).not.toHaveBeenCalled();
   });
 });

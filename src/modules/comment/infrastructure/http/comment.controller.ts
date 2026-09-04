@@ -69,6 +69,7 @@ export class CommentController {
     dto.parentId = comment.parentId;
     dto.postId = comment.postId;
     dto.profileId = comment.profileId;
+    dto.level = comment.level;
     dto.createdAt = comment.createdAt;
     dto.updatedAt = comment.updatedAt;
     return dto;

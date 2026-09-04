@@ -59,11 +59,15 @@ export function CreateCommentDoc() {
     }),
     ApiResponse({
       status: 422,
-      description: 'Account chưa có hồ sơ (profile) hoạt động',
+      description:
+        'Account chưa có hồ sơ (profile) hoạt động (PROFILE_NOT_ACTIVE), hoặc độ sâu reply đã đạt giới hạn tối đa (COMMENT_LEVEL_LIMIT_EXCEEDED)',
       schema: {
         properties: {
           statusCode: { type: 'number', example: 422 },
-          code: { type: 'string', example: 'PROFILE_NOT_ACTIVE' },
+          code: {
+            type: 'string',
+            enum: ['PROFILE_NOT_ACTIVE', 'COMMENT_LEVEL_LIMIT_EXCEEDED'],
+          },
           message: { type: 'string' },
           extra: { type: 'object', nullable: true },
         },

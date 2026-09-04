@@ -35,6 +35,7 @@ describe('ChangeOwnPasswordUseCase', () => {
       create: jest.fn(),
       update: jest.fn(),
       findById: jest.fn(),
+      findByIds: jest.fn(),
       findByIdentifierHash: jest.fn(),
     };
     passwordHasher = {

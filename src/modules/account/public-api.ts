@@ -3,9 +3,25 @@ export {
   CHANGE_ACCOUNT_PASSWORD_USECASE,
   FIND_ACCOUNT_BY_ID_USECASE,
   FIND_ACCOUNT_BY_IDENTIFIER_USECASE,
+  FIND_ACCOUNTS_BY_IDS_USECASE,
+  FIND_PROFILES_BY_IDS_USECASE,
   GET_ACCOUNT_ADDRESSES_USECASE,
   REGISTER_ACCOUNT_USECASE,
 } from './application/ports/account-application.tokens';
+
+export type {
+  IFindAccountsByIdsUseCase,
+  TFindAccountsByIdsInput,
+} from './application/ports/account/find-accounts-by-ids-use-case.interface';
+
+export type {
+  IFindProfilesByIdsUseCase,
+  TFindProfilesByIdsInput,
+} from './application/ports/profile/find-profiles-by-ids-use-case.interface';
+
+export type { Profile } from './domain/profile.entity';
+
+export type { Account } from './domain/account.entity';
 
 export type {
   IFindAccountByIdUseCase,

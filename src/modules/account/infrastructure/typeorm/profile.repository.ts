@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { EntityManager, In, Repository } from 'typeorm';
 import { IProfileRepository } from '../../application/ports/profile-repository.interface';
 import { Profile } from '../../domain/profile.entity';
 import { ProfileMapper } from './mappers/profile.mapper';
@@ -38,5 +38,15 @@ export class TypeOrmProfileRepository implements IProfileRepository {
       .getRepository(ProfileTypeOrmEntity)
       .findOne({ where: { id } });
     return entity ? ProfileMapper.toDomain(entity) : null;
+  }
+
+  async findByIds(ids: string[]): Promise<Profile[]> {
+    if (ids.length === 0) {
+      return [];
+    }
+    const entities = await this._manager
+      .getRepository(ProfileTypeOrmEntity)
+      .find({ where: { id: In(ids) } });
+    return entities.map(ProfileMapper.toDomain);
   }
 }

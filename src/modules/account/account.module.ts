@@ -12,6 +12,8 @@ import {
   DELETE_ADDRESS_USECASE,
   FIND_ACCOUNT_BY_ID_USECASE,
   FIND_ACCOUNT_BY_IDENTIFIER_USECASE,
+  FIND_ACCOUNTS_BY_IDS_USECASE,
+  FIND_PROFILES_BY_IDS_USECASE,
   GET_ACCOUNT_ADDRESSES_USECASE,
   GET_ACCOUNT_PROFILES_USECASE,
   SET_ACTIVE_PROFILE_USECASE,
@@ -26,6 +28,7 @@ import { ChangeAccountPasswordUseCase } from './application/use-cases/account/ch
 import { ChangeOwnPasswordUseCase } from './application/use-cases/account/change-own-password.use-case';
 import { FindAccountByIdUseCase } from './application/use-cases/account/find-account-by-id.use-case';
 import { FindAccountByIdentifierUseCase } from './application/use-cases/account/find-account-by-identifier.use-case';
+import { FindAccountsByIdsUseCase } from './application/use-cases/account/find-accounts-by-ids.use-case';
 import { RegisterAccountUseCase } from './application/use-cases/account/register-account.use-case';
 import { UpdateAccountProfileUseCase } from './application/use-cases/account/update-account-profile.use-case';
 import { CreateAddressUseCase } from './application/use-cases/address/create-address.use-case';
@@ -33,6 +36,7 @@ import { DeleteAddressUseCase } from './application/use-cases/address/delete-add
 import { GetAccountAddressesUseCase } from './application/use-cases/address/get-account-addresses.use-case';
 import { SetCurrentAddressUseCase } from './application/use-cases/address/set-current-address.use-case';
 import { CreateProfileUseCase } from './application/use-cases/profile/create-profile.use-case';
+import { FindProfilesByIdsUseCase } from './application/use-cases/profile/find-profiles-by-ids.use-case';
 import { GetAccountProfilesUseCase } from './application/use-cases/profile/get-account-profiles.use-case';
 import { SetActiveProfileUseCase } from './application/use-cases/profile/set-active-profile.use-case';
 import { AccountController } from './infrastructure/http/account.controller';
@@ -107,6 +111,16 @@ import { TypeOrmTransactionManager } from './infrastructure/typeorm/typeorm-tran
       provide: FIND_ACCOUNT_BY_ID_USECASE,
       useExisting: FindAccountByIdUseCase,
     },
+    FindAccountsByIdsUseCase,
+    {
+      provide: FIND_ACCOUNTS_BY_IDS_USECASE,
+      useExisting: FindAccountsByIdsUseCase,
+    },
+    FindProfilesByIdsUseCase,
+    {
+      provide: FIND_PROFILES_BY_IDS_USECASE,
+      useExisting: FindProfilesByIdsUseCase,
+    },
     CreateProfileUseCase,
     {
       provide: CREATE_PROFILE_USECASE,
@@ -133,6 +147,8 @@ import { TypeOrmTransactionManager } from './infrastructure/typeorm/typeorm-tran
     FIND_ACCOUNT_BY_IDENTIFIER_USECASE,
     CHANGE_ACCOUNT_PASSWORD_USECASE,
     FIND_ACCOUNT_BY_ID_USECASE,
+    FIND_ACCOUNTS_BY_IDS_USECASE,
+    FIND_PROFILES_BY_IDS_USECASE,
     GET_ACCOUNT_ADDRESSES_USECASE,
   ],
 })

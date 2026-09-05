@@ -71,7 +71,7 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
 - Approved by: (chờ dev)
 
 ### Chunk 2: Use-case gửi tin nhắn (module: chat)
-- status: done (chờ dev xác nhận trước khi sang chunk 3)
+- status: approved
 - Entity: tái dùng `Chat` (chunk 1)
 - Steps:
   1. application/services — `validate-chat-participant.service.ts`
@@ -107,10 +107,10 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
     `domain`). Dùng lại `findMessages` sẵn có (chunk 1), không cần thêm port
     mới.
 - Commit range: (điền sau khi chạy xong)
-- Approved by: (chờ dev)
+- Approved by: dev (2026-09-05)
 
 ### Chunk 3: Use-case đọc room list + lịch sử tin nhắn (module: chat)
-- status: pending
+- status: done (chờ dev xác nhận trước khi sang chunk 4)
 - Entity: tái dùng `Chat`
 - Steps:
   1. application/services — `resolve-chat-participants.service.ts`
@@ -125,8 +125,10 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
      lại `ValidateChatParticipantService` (chunk 2) trước khi query).
   3. application/use-cases — `get-chat-rooms.use-case.ts` +
      `.spec.ts`, `get-chat-messages.use-case.ts` + `.spec.ts`.
-- Integrate into: chưa (endpoint ở chunk 4).
-- Gate: 2 use-case chạy được nội bộ, spec pass.
+- Integrate into: chưa (endpoint ở chunk 4). Wire providers mới vào
+  `chat.module.ts`, import thêm `AccountModule` (lấy `FIND_PROFILES_BY_IDS_USECASE`).
+- Gate: 2 use-case chạy được nội bộ, spec pass (15/15 toàn module chat).
+- Build/lint: `tsc --noEmit` sạch, `eslint src/modules/chat` sạch.
 - Commit range: (điền sau khi chạy xong)
 - Approved by: (chờ dev)
 

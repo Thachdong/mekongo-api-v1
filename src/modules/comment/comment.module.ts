@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountModule } from '@modules/account/account.module';
 import { PostModule } from '@modules/post/post.module';
 import {
+  COMMENT_PRESENCE_PORT,
   COMMENT_REPOSITORY,
   CREATE_COMMENT_USECASE,
   DELETE_COMMENT_USECASE,
@@ -15,6 +16,7 @@ import { DeleteCommentUseCase } from './application/use-cases/delete-comment.use
 import { GetCommentChildrenUseCase } from './application/use-cases/get-comment-children.use-case';
 import { GetCommentsUseCase } from './application/use-cases/get-comments.use-case';
 import { CommentController } from './infrastructure/http/comment.controller';
+import { CommentGateway } from './infrastructure/websocket/comment.gateway';
 import { CommentTypeOrmEntity } from './infrastructure/typeorm/entities/comment.typeorm-entity';
 import { TypeOrmCommentRepository } from './infrastructure/typeorm/comment.repository';
 
@@ -39,6 +41,8 @@ import { TypeOrmCommentRepository } from './infrastructure/typeorm/comment.repos
       useExisting: GetCommentChildrenUseCase,
     },
     ResolveCommentAuthorsService,
+    CommentGateway,
+    { provide: COMMENT_PRESENCE_PORT, useExisting: CommentGateway },
   ],
 })
 export class CommentModule {}

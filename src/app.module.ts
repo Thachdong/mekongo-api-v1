@@ -6,6 +6,7 @@ import { AccountModule } from './modules/account/account.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { appConfig } from '@config/app.config';
+import { commentConfig } from '@config/comment.config';
 import { dbConfig } from '@config/db.config';
 import { jwtConfig } from '@config/jwt.config';
 import { firebaseConfig } from '@config/firebase.config';
@@ -31,6 +32,7 @@ import { ChatModule } from './modules/chat/chat.module';
     ConfigModule.forRoot({
       load: [
         appConfig,
+        commentConfig,
         dbConfig,
         jwtConfig,
         firebaseConfig,

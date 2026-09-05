@@ -71,7 +71,7 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
 - Approved by: (chờ dev)
 
 ### Chunk 2: Use-case gửi tin nhắn (module: chat)
-- status: pending
+- status: done (chờ dev xác nhận trước khi sang chunk 3)
 - Entity: tái dùng `Chat` (chunk 1)
 - Steps:
   1. application/services — `validate-chat-participant.service.ts`
@@ -90,8 +90,22 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
   3. application/use-cases — `send-chat-message.use-case.ts` +
      `.spec.ts`: gọi `ValidateChatParticipantService` → tạo `Chat` entity với
      `ownerProfileId` trả về → `chatRepository.create`.
-- Integrate into: chưa expose endpoint (dùng ở chunk 5 — gateway).
-- Gate: use-case chạy được nội bộ, spec pass, mock port qua interface.
+- Integrate into: chưa expose endpoint (dùng ở chunk 5 — gateway). Đã wire
+  provider vào `chat.module.ts` (import `PostModule` để lấy
+  `FIND_POST_BY_ID_USECASE`).
+- Gate: use-case chạy được nội bộ, spec pass (6/6), mock port qua interface.
+- Build/lint: `tsc --noEmit` sạch, `eslint src/modules/chat` sạch.
+- 2 domain-error mới (`SelfChatNotAllowedError`, `ChatParticipantForbiddenError`)
+  tạo qua skill `domain` đúng như mini-gate đã note ở chunk 1 — không có điều
+  chỉnh so với baseline đã chốt.
+- Điều chỉnh so với Plan gốc (dev bổ sung rule sau khi review chunk 2):
+  - **Owner không được chủ động khởi tạo room** — chỉ được reply sau khi buyer
+    đã gửi tin đầu tiên. `SendChatMessageUseCase` check: nếu
+    `senderProfileId === ownerProfileId` và
+    `chatRepository.findMessages(postId, buyerProfileId, 1, 1).total === 0` →
+    throw domain-error mới `OwnerCannotInitiateChatError` (403, tạo qua skill
+    `domain`). Dùng lại `findMessages` sẵn có (chunk 1), không cần thêm port
+    mới.
 - Commit range: (điền sau khi chạy xong)
 - Approved by: (chờ dev)
 

@@ -13,6 +13,7 @@ import { ValidateChatParticipantService } from './application/services/validate-
 import { GetChatMessagesUseCase } from './application/use-cases/get-chat-messages.use-case';
 import { GetChatRoomsUseCase } from './application/use-cases/get-chat-rooms.use-case';
 import { SendChatMessageUseCase } from './application/use-cases/send-chat-message.use-case';
+import { ChatController } from './infrastructure/http/chat.controller';
 import { ChatTypeOrmEntity } from './infrastructure/typeorm/entities/chat.typeorm-entity';
 import { TypeOrmChatRepository } from './infrastructure/typeorm/chat.repository';
 
@@ -22,6 +23,7 @@ import { TypeOrmChatRepository } from './infrastructure/typeorm/chat.repository'
     PostModule,
     AccountModule,
   ],
+  controllers: [ChatController],
   providers: [
     { provide: CHAT_REPOSITORY, useClass: TypeOrmChatRepository },
     ValidateChatParticipantService,

@@ -110,7 +110,7 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
 - Approved by: dev (2026-09-05)
 
 ### Chunk 3: Use-case đọc room list + lịch sử tin nhắn (module: chat)
-- status: done (chờ dev xác nhận trước khi sang chunk 4)
+- status: approved
 - Entity: tái dùng `Chat`
 - Steps:
   1. application/services — `resolve-chat-participants.service.ts`
@@ -130,10 +130,10 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
 - Gate: 2 use-case chạy được nội bộ, spec pass (15/15 toàn module chat).
 - Build/lint: `tsc --noEmit` sạch, `eslint src/modules/chat` sạch.
 - Commit range: (điền sau khi chạy xong)
-- Approved by: (chờ dev)
+- Approved by: dev (2026-09-05)
 
 ### Chunk 4: REST endpoint (list room + lịch sử tin nhắn) + doc (module: chat)
-- status: pending
+- status: done (chờ dev xác nhận trước khi sang chunk 5)
 - Steps:
   1. infrastructure (endpoint) — `chat.controller.ts`:
      - `GET /chats/rooms` (JwtAuthGuard, CurrentUser) → wire
@@ -151,6 +151,15 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
   cần dùng).
 - Gate: 2 REST endpoint chạy end-to-end (build + lint + spec), response qua
   `ResponseInterceptor` envelope chuẩn.
+- `GlobalExceptionFilter` map `DomainError` generic qua `.status/.code/.message/
+  .extra` (không có switch case theo từng code) — confirm không cần thêm mapping
+  riêng cho `PostNotFoundError`/`SelfChatNotAllowedError`/
+  `ChatParticipantForbiddenError`, đều tự map đúng status.
+- `ChatModule` CHƯA import vào `app.module.ts` (việc đó thuộc chunk 5) — 2
+  endpoint compile/test nội bộ pass nhưng chưa chạy được thật qua HTTP.
+- Build/lint/test: `tsc --noEmit` sạch, `eslint src/modules/chat` sạch, 15/15
+  spec pass (không có spec mới ở chunk này, chunk 4 không cần spec riêng cho
+  controller/DTO theo constitution §9).
 - Commit range: (điền sau khi chạy xong)
 - Approved by: (chờ dev)
 

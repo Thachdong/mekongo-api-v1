@@ -29,7 +29,7 @@ nhắn mới tới người nhận (kể cả khi họ chưa join room đó).
 ## Chunk tree
 
 ### Chunk 1: Theo dõi trạng thái đã đọc & đếm tin chưa đọc (module: chat)
-- status: pending
+- status: done
 - Entity: mới — `ChatReadState` (props: postId, buyerProfileId, profileId,
   lastReadAt)
 - Steps:
@@ -54,11 +54,11 @@ nhắn mới tới người nhận (kể cả khi họ chưa join room đó).
   `public-api.ts`.
 - Gate: vertical slice build xong trong module chat, 2 endpoint chạy
   end-to-end.
-- Commit range: (điền sau khi chạy xong)
-- Approved by: (điền khi dev duyệt)
+- Commit range: 98e461c..08d2603
+- Approved by: dev (đã review + commit)
 
 ### Chunk 2: Thông báo realtime khi có tin nhắn đến (module: chat)
-- status: pending
+- status: done
 - Entity: tái dùng (không entity mới)
 - Steps:
   1. infrastructure (adapter/gateway) — thêm `handleConnection` (implements
@@ -80,5 +80,9 @@ nhắn mới tới người nhận (kể cả khi họ chưa join room đó).
   `unreadCountUpdated` trên namespace `/chat` đã kết nối sẵn từ lúc load app.
 - Gate: test thủ công qua 2 socket client (sender + recipient) xác nhận
   recipient nhận `chatNotification` dù chưa `joinRoom`; build/lint pass.
-- Commit range: (điền sau khi chạy xong)
-- Approved by: (điền khi dev duyệt)
+  ĐÃ TEST THẬT: seed post thật + JWT thật + socket.io-client thật (script tạm ở
+  scratchpad, không thuộc repo) — owner nhận `chatNotification` (unreadRooms: 1)
+  ngay khi buyer gửi tin dù owner chưa joinRoom; owner joinRoom xong nhận
+  `unreadCountUpdated` (unreadRooms: 0). Dữ liệu test đã xoá khỏi DB.
+- Commit range: (điền sau khi commit)
+- Approved by: dev (đã duyệt commit)

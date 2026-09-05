@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
+import { verifyWsToken } from './ws-auth.util';
 
 @Injectable()
 export class WsJwtGuard implements CanActivate {
@@ -10,29 +10,17 @@ export class WsJwtGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const client = context.switchToWs().getClient<Socket>();
-    const token = this._extractToken(client);
-
-    if (!token) {
-      throw new WsException('Missing authentication token');
-    }
 
     try {
-      const payload = this._jwtService.verify<TJwtPayload>(token);
-      client.data.user = payload;
+      client.data.user = verifyWsToken(client, this._jwtService);
       return true;
-    } catch {
-      throw new WsException('Invalid or expired authentication token');
+    } catch (error) {
+      const message =
+        error instanceof Error &&
+        error.message === 'Missing authentication token'
+          ? error.message
+          : 'Invalid or expired authentication token';
+      throw new WsException(message);
     }
-  }
-
-  private _extractToken(client: Socket): string | undefined {
-    const authToken = client.handshake.auth?.token as string | undefined;
-    if (authToken) return authToken;
-
-    const header = client.handshake.headers?.authorization;
-    if (header?.startsWith('Bearer ')) return header.slice('Bearer '.length);
-
-    const queryToken = client.handshake.query?.token;
-    return typeof queryToken === 'string' ? queryToken : undefined;
   }
 }

@@ -14,6 +14,8 @@ describe('GetChatMessagesUseCase', () => {
       create: jest.fn(),
       findRoomsByProfileId: jest.fn(),
       findMessages: jest.fn(),
+      upsertReadState: jest.fn(),
+      countUnreadRooms: jest.fn(),
     };
     validateChatParticipantService = {
       execute: jest.fn(),

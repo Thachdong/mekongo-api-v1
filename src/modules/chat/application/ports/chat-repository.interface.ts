@@ -17,4 +17,11 @@ export interface IChatRepository {
     page: number,
     limit: number,
   ): Promise<{ items: Chat[]; total: number }>;
+  upsertReadState(
+    profileId: string,
+    postId: string,
+    buyerProfileId: string,
+    readAt: Date,
+  ): Promise<void>;
+  countUnreadRooms(profileId: string): Promise<number>;
 }

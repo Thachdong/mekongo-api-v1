@@ -15,12 +15,13 @@ import { GetChatRoomsUseCase } from './application/use-cases/get-chat-rooms.use-
 import { SendChatMessageUseCase } from './application/use-cases/send-chat-message.use-case';
 import { ChatController } from './infrastructure/http/chat.controller';
 import { ChatGateway } from './infrastructure/websocket/chat.gateway';
+import { ChatReadStateTypeOrmEntity } from './infrastructure/typeorm/entities/chat-read-state.typeorm-entity';
 import { ChatTypeOrmEntity } from './infrastructure/typeorm/entities/chat.typeorm-entity';
 import { TypeOrmChatRepository } from './infrastructure/typeorm/chat.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ChatTypeOrmEntity]),
+    TypeOrmModule.forFeature([ChatTypeOrmEntity, ChatReadStateTypeOrmEntity]),
     PostModule,
     AccountModule,
   ],

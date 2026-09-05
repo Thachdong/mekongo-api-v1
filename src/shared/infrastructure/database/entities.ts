@@ -7,6 +7,7 @@ import { PostTypeOrmEntity } from '@modules/post/infrastructure/typeorm/entities
 import { CommentTypeOrmEntity } from '@modules/comment/infrastructure/typeorm/entities/comment.typeorm-entity';
 import { LikeTypeOrmEntity } from '@modules/like/infrastructure/typeorm/entities/like.typeorm-entity';
 import { ChatTypeOrmEntity } from '@modules/chat/infrastructure/typeorm/entities/chat.typeorm-entity';
+import { ChatReadStateTypeOrmEntity } from '@modules/chat/infrastructure/typeorm/entities/chat-read-state.typeorm-entity';
 import { EntitySchema } from 'typeorm';
 
 type TEntityClass = new (...args: any[]) => object;
@@ -26,4 +27,5 @@ export const ENTITIES: (TEntityClass | EntitySchema)[] = [
   CommentTypeOrmEntity,
   LikeTypeOrmEntity,
   ChatTypeOrmEntity,
+  ChatReadStateTypeOrmEntity,
 ];

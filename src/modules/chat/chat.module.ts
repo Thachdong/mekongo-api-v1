@@ -14,6 +14,7 @@ import { GetChatMessagesUseCase } from './application/use-cases/get-chat-message
 import { GetChatRoomsUseCase } from './application/use-cases/get-chat-rooms.use-case';
 import { SendChatMessageUseCase } from './application/use-cases/send-chat-message.use-case';
 import { ChatController } from './infrastructure/http/chat.controller';
+import { ChatGateway } from './infrastructure/websocket/chat.gateway';
 import { ChatTypeOrmEntity } from './infrastructure/typeorm/entities/chat.typeorm-entity';
 import { TypeOrmChatRepository } from './infrastructure/typeorm/chat.repository';
 
@@ -34,6 +35,7 @@ import { TypeOrmChatRepository } from './infrastructure/typeorm/chat.repository'
     { provide: GET_CHAT_ROOMS_USECASE, useExisting: GetChatRoomsUseCase },
     GetChatMessagesUseCase,
     { provide: GET_CHAT_MESSAGES_USECASE, useExisting: GetChatMessagesUseCase },
+    ChatGateway,
   ],
 })
 export class ChatModule {}

@@ -34,7 +34,7 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
 ## Chunk tree
 
 ### Chunk 1: Domain + Persistence foundation (module: chat)
-- status: done (chờ dev xác nhận trước khi sang chunk 2)
+- status: approved
 - Entity: mới — `Chat` (domain/chat.entity.ts)
 - Steps:
   1. domain — entity `Chat` (props: id, postId, ownerProfileId,
@@ -67,8 +67,8 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
     2 dòng thừa do lệch tên index cũ của bảng `likes`, không liên quan chat),
     đã `migration:run` thành công lên DB dev.
 - Build/lint: `tsc --noEmit` sạch, `eslint src/modules/chat` sạch.
-- Commit range: (điền sau khi chạy xong)
-- Approved by: (chờ dev)
+- Commit range: `3c401ac`
+- Approved by: dev (2026-09-05)
 
 ### Chunk 2: Use-case gửi tin nhắn (module: chat)
 - status: approved
@@ -106,7 +106,7 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
     throw domain-error mới `OwnerCannotInitiateChatError` (403, tạo qua skill
     `domain`). Dùng lại `findMessages` sẵn có (chunk 1), không cần thêm port
     mới.
-- Commit range: (điền sau khi chạy xong)
+- Commit range: `0ba90fa`
 - Approved by: dev (2026-09-05)
 
 ### Chunk 3: Use-case đọc room list + lịch sử tin nhắn (module: chat)
@@ -129,11 +129,11 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
   `chat.module.ts`, import thêm `AccountModule` (lấy `FIND_PROFILES_BY_IDS_USECASE`).
 - Gate: 2 use-case chạy được nội bộ, spec pass (15/15 toàn module chat).
 - Build/lint: `tsc --noEmit` sạch, `eslint src/modules/chat` sạch.
-- Commit range: (điền sau khi chạy xong)
+- Commit range: `f038600`
 - Approved by: dev (2026-09-05)
 
 ### Chunk 4: REST endpoint (list room + lịch sử tin nhắn) + doc (module: chat)
-- status: done (chờ dev xác nhận trước khi sang chunk 5)
+- status: approved
 - Steps:
   1. infrastructure (endpoint) — `chat.controller.ts`:
      - `GET /chats/rooms` (JwtAuthGuard, CurrentUser) → wire
@@ -160,11 +160,11 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
 - Build/lint/test: `tsc --noEmit` sạch, `eslint src/modules/chat` sạch, 15/15
   spec pass (không có spec mới ở chunk này, chunk 4 không cần spec riêng cho
   controller/DTO theo constitution §9).
-- Commit range: (điền sau khi chạy xong)
-- Approved by: (chờ dev)
+- Commit range: `33e4f65`
+- Approved by: dev (2026-09-05)
 
 ### Chunk 5: WebSocket Gateway realtime (module: chat) — assembly cuối
-- status: pending
+- status: done (chờ dev xác nhận)
 - Steps:
   1. infrastructure (websocket) — `infrastructure/websocket/chat.gateway.ts`:
      - `@UseGuards(WsJwtGuard)`, namespace riêng (vd `/chat`).
@@ -188,5 +188,24 @@ buyer chat 2 post khác nhau của cùng chủ post = 2 room khác nhau.
     sẽ KHÔNG có test tự động kèm theo, chỉ verify build/lint. Nếu dev muốn
     test tay qua socket client, cần xác nhận cách test (vd script `wscat`)
     trước khi coi chunk done.
-- Commit range: (điền sau khi chạy xong)
+- Điều chỉnh so với Plan gốc (phát hiện khi implement, không phải business rule
+  mà là kỹ thuật, tự xử lý không cần hỏi dev vì không đụng file global):
+  - `GlobalExceptionFilter` (`shared/common/filters/global-exception.filter.ts`)
+    chỉ handle HTTP context (gọi `host.switchToHttp()` không phân biệt
+    transport) — nếu để lọt exception từ gateway, filter global sẽ crash. Thêm
+    `WsDomainExceptionFilter` riêng
+    (`infrastructure/websocket/ws-domain-exception.filter.ts`, trong phạm vi
+    ghi của module chat) gắn `@UseFilters` chỉ ở `ChatGateway` — filter cục bộ
+    override filter global cho scope này, không sửa file global.
+  - Thêm 2 DTO validate cho message payload
+    (`infrastructure/websocket/dto/join-room.dto.ts`,
+    `send-message.dto.ts`) — tận dụng `APP_PIPE` (`ValidationPipe`) đã đăng ký
+    global, áp dụng xuyên suốt mọi transport kể cả WS.
+- Verify thêm ngoài build/lint: boot thử app bằng `ts-node` — Nest resolve DI
+  đầy đủ, `ChatGateway subscribed to "joinRoom"/"sendMessage"`, route
+  `/api/chats/rooms`, `/api/chats/messages` map đúng, không lỗi runtime.
+- Build/lint: `tsc --noEmit` sạch, `eslint` sạch (toàn bộ file đã đụng trong
+  suốt plan — module chat, app.module.ts, main.ts, shared/websocket,
+  shared/common/auth), 67/67 test toàn project pass (không riêng module chat).
+- Commit range: (điền sau khi chạy xong — dev tự commit)
 - Approved by: (chờ dev)

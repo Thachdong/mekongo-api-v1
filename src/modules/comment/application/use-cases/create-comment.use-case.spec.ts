@@ -1,9 +1,11 @@
 import { ConfigService } from '@nestjs/config';
 import { IFindPostByIdUseCase } from '@modules/post/public-api';
+import { ICreateNotificationUseCase } from '@modules/notification/public-api';
 import { CommentLevelLimitExceededError } from '../../domain/errors/comment-level-limit-exceeded.error';
 import { ParentCommentNotFoundError } from '../../domain/errors/parent-comment-not-found.error';
 import { ProfileNotActiveError } from '../../domain/errors/profile-not-active.error';
 import { Comment } from '../../domain/comment.entity';
+import { ICommentPresencePort } from '../ports/comment-presence.interface';
 import { ICommentRepository } from '../ports/comment-repository.interface';
 import { CreateCommentUseCase } from './create-comment.use-case';
 
@@ -24,6 +26,8 @@ function buildComment(overrides: Record<string, unknown> = {}) {
 describe('CreateCommentUseCase', () => {
   let commentRepository: jest.Mocked<ICommentRepository>;
   let findPostByIdUseCase: jest.Mocked<IFindPostByIdUseCase>;
+  let commentPresencePort: jest.Mocked<ICommentPresencePort>;
+  let createNotificationUseCase: jest.Mocked<ICreateNotificationUseCase>;
   let configService: jest.Mocked<ConfigService>;
   let useCase: CreateCommentUseCase;
 
@@ -46,9 +50,13 @@ describe('CreateCommentUseCase', () => {
       findDirectChildren: jest.fn(),
     };
     findPostByIdUseCase = { execute: jest.fn() };
+    commentPresencePort = { isViewingPost: jest.fn().mockReturnValue(false) };
+    createNotificationUseCase = { execute: jest.fn() };
     configService = { getOrThrow: jest.fn() } as any;
 
-    findPostByIdUseCase.execute.mockResolvedValue(undefined as any);
+    findPostByIdUseCase.execute.mockResolvedValue({
+      profileId: 'post-owner-id',
+    } as any);
     configService.getOrThrow.mockReturnValue({ levelLimit: 3 });
     commentRepository.create.mockImplementation(
       async (comment) =>
@@ -67,6 +75,8 @@ describe('CreateCommentUseCase', () => {
     useCase = new CreateCommentUseCase(
       commentRepository,
       findPostByIdUseCase,
+      commentPresencePort,
+      createNotificationUseCase,
       configService,
     );
   });
@@ -141,5 +151,71 @@ describe('CreateCommentUseCase', () => {
     ).rejects.toThrow(CommentLevelLimitExceededError);
 
     expect(commentRepository.create).not.toHaveBeenCalled();
+  });
+
+  describe('notification side-effect', () => {
+    it('notifies the post owner on a top-level comment when the owner is not the commenter and not viewing the post', async () => {
+      await useCase.execute(baseInput);
+
+      expect(commentPresencePort.isViewingPost).toHaveBeenCalledWith(
+        'post-id',
+        'post-owner-id',
+      );
+      expect(createNotificationUseCase.execute).toHaveBeenCalledWith({
+        recipientProfileId: 'post-owner-id',
+        actorProfileId: 'profile-id',
+        type: 'NEW_COMMENT',
+        postId: 'post-id',
+        commentId: 'created-id',
+        contentPreview: 'hello',
+      });
+    });
+
+    it('does not notify when the post owner is commenting on their own post', async () => {
+      findPostByIdUseCase.execute.mockResolvedValue({
+        profileId: 'profile-id',
+      } as any);
+
+      await useCase.execute(baseInput);
+
+      expect(createNotificationUseCase.execute).not.toHaveBeenCalled();
+    });
+
+    it('does not notify when the recipient is already viewing the post', async () => {
+      commentPresencePort.isViewingPost.mockReturnValue(true);
+
+      await useCase.execute(baseInput);
+
+      expect(createNotificationUseCase.execute).not.toHaveBeenCalled();
+    });
+
+    it('notifies the parent comment author (not the post owner) on a reply', async () => {
+      const parent = buildComment({ level: 0, profileId: 'parent-author-id' });
+      commentRepository.findById.mockResolvedValue(parent);
+
+      await useCase.execute({ ...baseInput, parentId: 'parent-id' });
+
+      expect(commentPresencePort.isViewingPost).toHaveBeenCalledWith(
+        'post-id',
+        'parent-author-id',
+      );
+      expect(createNotificationUseCase.execute).toHaveBeenCalledWith({
+        recipientProfileId: 'parent-author-id',
+        actorProfileId: 'profile-id',
+        type: 'NEW_REPLY',
+        postId: 'post-id',
+        commentId: 'created-id',
+        contentPreview: 'hello',
+      });
+    });
+
+    it('does not notify when replying to your own comment', async () => {
+      const parent = buildComment({ level: 0, profileId: 'profile-id' });
+      commentRepository.findById.mockResolvedValue(parent);
+
+      await useCase.execute({ ...baseInput, parentId: 'parent-id' });
+
+      expect(createNotificationUseCase.execute).not.toHaveBeenCalled();
+    });
   });
 });

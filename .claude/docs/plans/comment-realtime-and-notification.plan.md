@@ -83,7 +83,7 @@ mark-as-read).
 - Approved by: dev (đã review + commit)
 
 ### Chunk 2: Notification module (mới) — persist + REST + realtime
-- status: pending
+- status: done
 - Entity: MỚI — `Notification`:
   - `id` uuid
   - `recipientProfileId` uuid — người nhận
@@ -130,8 +130,12 @@ mark-as-read).
 - Gate: vertical slice build được, 4 endpoint chạy end-to-end; test socket
   client thật xác nhận nhận `newNotification` khi gọi thử
   `CreateNotificationUseCase`.
-- Commit range: (điền sau khi chạy xong)
-- Approved by: (điền khi dev duyệt)
+  ĐÃ TEST THẬT qua REST (seed notification thẳng DB + JWT thật): GET list, GET
+  unread-count, POST mark-single (1→0), POST mark-all — tất cả đúng. (Chưa test
+  riêng socket `newNotification` push ở chunk này vì chưa có nơi gọi
+  CreateNotificationUseCase thật — sẽ test cùng lúc E2E ở Chunk 3.)
+- Commit range: d350763
+- Approved by: dev (đã review + commit)
 
 ### Chunk 3: Comment → Notification (assembly, cross-module)
 - status: pending

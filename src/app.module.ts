@@ -26,6 +26,7 @@ import { UploadModule } from './modules/upload/upload.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { LikeModule } from './modules/like/like.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { ChatModule } from './modules/chat/chat.module';
     CommentModule,
     LikeModule,
     ChatModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [

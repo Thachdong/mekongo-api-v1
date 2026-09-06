@@ -40,7 +40,7 @@ mark-as-read).
 ## Chunk tree
 
 ### Chunk 1: Realtime hiển thị comment mới + presence tracking (module: comment)
-- status: pending
+- status: done
 - Entity: tái dùng `Comment` (không đổi)
 - Steps:
   1. infrastructure (adapter/gateway) — `CommentGateway` mới
@@ -74,8 +74,13 @@ mark-as-read).
 - Gate: build/lint/test pass; test E2E bằng socket client thật (2 client cùng
   join `post:<id>`, xác nhận nhận `newComment`; test `isProfileViewingPost`
   qua unit test hoặc log tạm).
-- Commit range: (điền sau khi chạy xong)
-- Approved by: (điền khi dev duyệt)
+  ĐÃ TEST THẬT: viewer đã joinPostComments nhận `newComment` qua REST
+  POST /comments thật; viewer chưa join thì không nhận. Nhân tiện fix 1 bug có
+  sẵn (không liên quan chunk này) chặn test: `commentConfig` chưa được đăng ký
+  vào `ConfigModule.forRoot({load})` trong app.module.ts → mọi POST /comments
+  đều 500. Đã fix qua skill config-env.
+- Commit range: a3e3dfa
+- Approved by: dev (đã review + commit)
 
 ### Chunk 2: Notification module (mới) — persist + REST + realtime
 - status: pending

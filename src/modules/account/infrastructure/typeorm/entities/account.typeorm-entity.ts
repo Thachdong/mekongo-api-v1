@@ -34,9 +34,6 @@ export class AccountTypeOrmEntity {
   @Column({ name: 'avatar_url', type: 'varchar', nullable: true })
   avatarUrl: string | null;
 
-  @Column({ name: 'current_address_id', type: 'uuid', nullable: true })
-  currentAddressId: string | null;
-
   @Column({ name: 'active_profile_id', type: 'uuid', nullable: true })
   activeProfileId: string | null;
 

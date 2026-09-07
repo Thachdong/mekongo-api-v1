@@ -9,6 +9,7 @@ export class ProfileMapper {
       accountId: entity.accountId,
       displayName: entity.displayName,
       avatarUrl: entity.avatarUrl,
+      addressId: entity.addressId,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     });
@@ -23,6 +24,7 @@ export class ProfileMapper {
     entity.accountId = profile.accountId;
     entity.displayName = profile.displayName;
     entity.avatarUrl = profile.avatarUrl;
+    entity.addressId = profile.addressId;
     return entity;
   }
 }

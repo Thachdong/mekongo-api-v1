@@ -12,7 +12,6 @@ export class AccountMapper {
       blockUntil: entity.blockUntil,
       displayName: entity.displayName,
       avatarUrl: entity.avatarUrl,
-      currentAddressId: entity.currentAddressId,
       activeProfileId: entity.activeProfileId,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
@@ -31,7 +30,6 @@ export class AccountMapper {
     entity.blockUntil = account.blockUntil;
     entity.displayName = account.displayName;
     entity.avatarUrl = account.avatarUrl;
-    entity.currentAddressId = account.currentAddressId;
     entity.activeProfileId = account.activeProfileId;
     return entity;
   }

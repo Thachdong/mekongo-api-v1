@@ -11,6 +11,7 @@ export class AddressMapper {
       ward: entity.ward,
       details: entity.details,
       accountId: entity.accountId,
+      profileId: entity.profileId,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     });
@@ -27,6 +28,7 @@ export class AddressMapper {
     entity.ward = address.ward;
     entity.details = address.details;
     entity.accountId = address.accountId;
+    entity.profileId = address.profileId;
     return entity;
   }
 }

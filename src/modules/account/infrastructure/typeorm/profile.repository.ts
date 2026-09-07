@@ -26,6 +26,14 @@ export class TypeOrmProfileRepository implements IProfileRepository {
     return ProfileMapper.toDomain(saved);
   }
 
+  async update(profile: Profile): Promise<Profile> {
+    const entity = ProfileMapper.toPersistence(profile);
+    const saved = await this._manager
+      .getRepository(ProfileTypeOrmEntity)
+      .save(entity);
+    return ProfileMapper.toDomain(saved);
+  }
+
   async findAllByAccountId(accountId: string): Promise<Profile[]> {
     const entities = await this._manager
       .getRepository(ProfileTypeOrmEntity)

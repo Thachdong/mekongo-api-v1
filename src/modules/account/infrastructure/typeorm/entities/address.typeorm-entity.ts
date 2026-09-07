@@ -29,6 +29,9 @@ export class AddressTypeOrmEntity {
   @Column({ name: 'account_id', type: 'uuid' })
   accountId: string;
 
+  @Column({ name: 'profile_id', type: 'uuid', nullable: true })
+  profileId: string | null;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

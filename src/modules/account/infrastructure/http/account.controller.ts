@@ -225,7 +225,6 @@ export class AccountController {
     dto.status = account.status;
     dto.displayName = account.displayName;
     dto.avatarUrl = account.avatarUrl;
-    dto.currentAddressId = account.currentAddressId;
     dto.activeProfileId = account.activeProfileId;
     dto.blockUntil = account.blockUntil;
     dto.createdAt = account.createdAt;

@@ -24,6 +24,9 @@ export class ProfileTypeOrmEntity {
   @Column({ name: 'avatar_url', type: 'text', nullable: true })
   avatarUrl: string | null;
 
+  @Column({ name: 'address_id', type: 'uuid', nullable: true })
+  addressId: string | null;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

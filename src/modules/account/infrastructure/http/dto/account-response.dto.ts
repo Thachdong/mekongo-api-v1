@@ -17,9 +17,6 @@ export class AccountResponseDto {
   avatarUrl: string | null;
 
   @ApiProperty({ type: String, nullable: true })
-  currentAddressId: string | null;
-
-  @ApiProperty({ type: String, nullable: true })
   activeProfileId: string | null;
 
   @ApiProperty({ type: String, format: 'date-time', nullable: true })

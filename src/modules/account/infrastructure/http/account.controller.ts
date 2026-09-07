@@ -185,6 +185,8 @@ export class AccountController {
     const profile = await this._createProfileUseCase.execute({
       accountId: user.accountId,
       profileType: body.profileType,
+      addressId: body.addressId,
+      newAddress: body.newAddress,
     });
 
     return this._toProfileResponseDto(profile);
@@ -252,6 +254,7 @@ export class AccountController {
     dto.id = profile.id as string;
     dto.profileType = profile.activeProfile;
     dto.accountId = profile.accountId;
+    dto.addressId = profile.addressId;
     dto.createdAt = profile.createdAt;
     dto.updatedAt = profile.updatedAt;
     return dto;

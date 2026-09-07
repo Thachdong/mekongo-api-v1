@@ -11,6 +11,9 @@ export class ProfileResponseDto {
   @ApiProperty()
   accountId: string;
 
+  @ApiProperty({ type: String, nullable: true })
+  addressId: string | null;
+
   @ApiProperty({ type: String, format: 'date-time', nullable: true })
   createdAt: Date | null;
 

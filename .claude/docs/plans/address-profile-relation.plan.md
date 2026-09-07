@@ -142,7 +142,15 @@ profile nào đang "chọn" address, chỉ dùng làm dấu vết tạo.
 - Approved by: (chờ dev duyệt chunk tree)
 
 ### Chunk 4: CreateProfileUseCase — chọn address có sẵn HOẶC tạo mới (module: account)
-- status: pending
+- status: done
+- Verify đã chạy: tsc — lỗi CreateProfile đã hết, còn lại đúng phạm vi chunk
+  5-7. eslint sạch. jest module account 6 suite / 20 test pass (spec mới cho
+  create-profile, trước đây chưa có, cover đủ XOR/existing-address/new-address/
+  wrong-account nhánh).
+- Domain error mới: `InvalidProfileAddressInputError` (400,
+  INVALID_PROFILE_ADDRESS_INPUT).
+- Doc: `create-profile.doc.ts` — gộp 400 (validation + INVALID_PROFILE_ADDRESS_INPUT
+  qua `oneOf`), thêm mới 404 (ADDRESS_NOT_FOUND).
 - Entity: có thể cần domain-error mới (vd `InvalidProfileAddressInputError` khi
   cả 2 hoặc không nhánh nào được truyền) — mini-gate xác nhận tên/message với
   dev khi chạy skill `domain`.

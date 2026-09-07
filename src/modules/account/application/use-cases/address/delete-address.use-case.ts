@@ -1,25 +1,24 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  ACCOUNT_REPOSITORY,
   ADDRESS_REPOSITORY,
+  PROFILE_REPOSITORY,
 } from '../../ports/account-application.tokens';
-import { IAccountRepository } from '../../ports/account/account-repository.interface';
 import { IAddressRepository } from '../../ports/address/address-repository.interface';
+import { IProfileRepository } from '../../ports/profile-repository.interface';
 import {
   IDeleteAddressUseCase,
   TDeleteAddressInput,
 } from '../../ports/address/delete-address-use-case.interface';
-import { AccountNotFoundError } from '../../../domain/errors/account-not-found.error';
+import { AddressAssignedToProfileError } from '../../../domain/errors/address-assigned-to-profile.error';
 import { AddressNotFoundError } from '../../../domain/errors/address-not-found.error';
-import { CannotDeleteCurrentAddressError } from '../../../domain/errors/cannot-delete-current-address.error';
 
 @Injectable()
 export class DeleteAddressUseCase implements IDeleteAddressUseCase {
   constructor(
     @Inject(ADDRESS_REPOSITORY)
     private readonly _addressRepository: IAddressRepository,
-    @Inject(ACCOUNT_REPOSITORY)
-    private readonly _accountRepository: IAccountRepository,
+    @Inject(PROFILE_REPOSITORY)
+    private readonly _profileRepository: IProfileRepository,
   ) {}
 
   async execute(input: TDeleteAddressInput): Promise<void> {
@@ -29,14 +28,15 @@ export class DeleteAddressUseCase implements IDeleteAddressUseCase {
       throw new AddressNotFoundError();
     }
 
-    const account = await this._accountRepository.findById(input.accountId);
+    const profiles = await this._profileRepository.findAllByAccountId(
+      input.accountId,
+    );
+    const isAssigned = profiles.some(
+      (profile) => profile.addressId === input.addressId,
+    );
 
-    if (!account) {
-      throw new AccountNotFoundError();
-    }
-
-    if (account.currentAddressId === input.addressId) {
-      throw new CannotDeleteCurrentAddressError();
+    if (isAssigned) {
+      throw new AddressAssignedToProfileError();
     }
 
     await this._addressRepository.delete(input.addressId);

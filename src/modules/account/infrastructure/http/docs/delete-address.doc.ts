@@ -47,15 +47,11 @@ export function DeleteAddressDoc() {
     }),
     ApiResponse({
       status: 404,
-      description:
-        'Address không tồn tại/không thuộc account đang gọi, hoặc account không tồn tại',
+      description: 'Address không tồn tại/không thuộc account đang gọi',
       schema: {
         properties: {
           statusCode: { type: 'number', example: 404 },
-          code: {
-            type: 'string',
-            enum: ['ADDRESS_NOT_FOUND', 'ACCOUNT_NOT_FOUND'],
-          },
+          code: { type: 'string', example: 'ADDRESS_NOT_FOUND' },
           message: { type: 'string' },
           extra: { type: 'object', nullable: true },
         },
@@ -64,11 +60,11 @@ export function DeleteAddressDoc() {
     ApiResponse({
       status: 409,
       description:
-        'addressId đang là currentAddressId của account, không cho xoá',
+        'Address đang được gán làm addressId của 1 profile, không thể xoá',
       schema: {
         properties: {
           statusCode: { type: 'number', example: 409 },
-          code: { type: 'string', example: 'CANNOT_DELETE_CURRENT_ADDRESS' },
+          code: { type: 'string', example: 'ADDRESS_ASSIGNED_TO_PROFILE' },
           message: { type: 'string' },
           extra: { type: 'object', nullable: true },
         },

@@ -211,7 +211,16 @@ profile nào đang "chọn" address, chỉ dùng làm dấu vết tạo.
 - Approved by: (chờ dev duyệt chunk tree)
 
 ### Chunk 6: DeleteAddressUseCase — đổi guard logic (module: account)
-- status: pending
+- status: done
+- Verify đã chạy: grep sạch (`CannotDeleteCurrentAddress`/`CANNOT_DELETE_CURRENT_ADDRESS`
+  hết). tsc — lỗi chỉ còn đúng chunk 7 (post module). eslint sạch. jest
+  module account 8 suite / 29 test pass (spec mới cho delete-address, trước
+  đây chưa có).
+- Domain error đổi tên: `CannotDeleteCurrentAddressError` →
+  `AddressAssignedToProfileError` (409, ADDRESS_ASSIGNED_TO_PROFILE).
+- Điều chỉnh phát sinh: use-case bỏ hẳn dependency `IAccountRepository` (không
+  còn cần `AccountNotFoundError` — check giờ dựa hoàn toàn trên Profile), nên
+  doc 404 cũng bớt 1 nguyên nhân (chỉ còn ADDRESS_NOT_FOUND).
 - Entity: có thể cần đổi tên `CannotDeleteCurrentAddressError` — flag, hỏi dev
   giữ tên hay đổi (vd `AddressAssignedToProfileError`) lúc chạy skill `domain`.
 - Steps:

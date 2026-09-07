@@ -96,8 +96,8 @@ profile nào đang "chọn" address, chỉ dùng làm dấu vết tạo.
   test fail do field xoá — cập nhật cùng chunk này nếu là test entity/mapper
   thuần, KHÔNG sửa test use-case ở chunk này — để dành cho chunk use-case
   tương ứng).
-- Commit range: (điền sau)
-- Approved by: (chờ dev duyệt chunk tree)
+- Commit range: 0c7337e
+- Approved by: dev (2026-09-07)
 
 ### Chunk 2: CreateAddressUseCase — nhận profileId optional (module: account)
 - status: done
@@ -116,8 +116,8 @@ profile nào đang "chọn" address, chỉ dùng làm dấu vết tạo.
   3. doc — cập nhật `create-address.doc.ts` (field mới trong request/response
      example).
 - Gate: build sạch, test account pass.
-- Commit range: (điền sau)
-- Approved by: (chờ dev duyệt chunk tree)
+- Commit range: 02f57be
+- Approved by: dev (2026-09-07)
 
 ### Chunk 3: RegisterAccountUseCase — bỏ currentAddressId, gắn address cho profile đầu tiên (module: account)
 - status: done
@@ -138,8 +138,8 @@ profile nào đang "chọn" address, chỉ dùng làm dấu vết tạo.
      `account.changeActiveProfileId`. Update spec.
 - Gate: build sạch, test account pass (kể cả spec register-account đã sửa ở
   chunk 1 nếu có).
-- Commit range: (điền sau)
-- Approved by: (chờ dev duyệt chunk tree)
+- Commit range: cb5a6d1
+- Approved by: dev (2026-09-07)
 
 ### Chunk 4: CreateProfileUseCase — chọn address có sẵn HOẶC tạo mới (module: account)
 - status: done
@@ -172,11 +172,22 @@ profile nào đang "chọn" address, chỉ dùng làm dấu vết tạo.
      `_toProfileResponseDto` thêm `addressId`.
   4. doc — cập nhật doc tạo profile.
 - Gate: build sạch, test account pass.
-- Commit range: (điền sau)
-- Approved by: (chờ dev duyệt chunk tree)
+- Commit range: 8792929
+- Approved by: dev (2026-09-07)
 
 ### Chunk 5: Đổi set-current-address → set-profile-address (module: account)
-- status: pending
+- status: done
+- Verify đã chạy: grep xác nhận sạch (không còn `SetCurrentAddress*`,
+  `SET_CURRENT_ADDRESS_USECASE`, `changeCurrentAddressId`). tsc — lỗi hết
+  đúng ở phạm vi chunk 6-7. eslint sạch (đã --fix). jest module account 7
+  suite / 25 test pass.
+- Điều chỉnh phát sinh (ghi nhận, không phải quyết định thiết kế mới): Plan
+  gốc ghi "inject qua token/interface theo pattern use-case khác" — thực tế
+  đọc code thấy `AccountController` inject TẤT CẢ use-case bằng concrete
+  class trực tiếp (không qua token), token chỉ dùng để bind provider trong
+  `account.module.ts` + export public-api khi cần. Đã sửa theo đúng pattern
+  thật của codebase (`_setProfileAddressUseCase: SetProfileAddressUseCase`),
+  không theo mô tả sai trong Plan.
 - Steps:
   1. use-case — xoá `SetCurrentAddressUseCase` + port
      (`set-current-address-use-case.interface.ts`) + token

@@ -18,7 +18,7 @@ import {
   SET_ACTIVE_PROFILE_USECASE,
   PROFILE_REPOSITORY,
   REGISTER_ACCOUNT_USECASE,
-  SET_CURRENT_ADDRESS_USECASE,
+  SET_PROFILE_ADDRESS_USECASE,
   TRANSACTION_MANAGER,
   UPDATE_ACCOUNT_PROFILE_USECASE,
 } from './application/ports/account-application.tokens';
@@ -32,7 +32,7 @@ import { UpdateAccountProfileUseCase } from './application/use-cases/account/upd
 import { CreateAddressUseCase } from './application/use-cases/address/create-address.use-case';
 import { DeleteAddressUseCase } from './application/use-cases/address/delete-address.use-case';
 import { GetAccountAddressesUseCase } from './application/use-cases/address/get-account-addresses.use-case';
-import { SetCurrentAddressUseCase } from './application/use-cases/address/set-current-address.use-case';
+import { SetProfileAddressUseCase } from './application/use-cases/address/set-profile-address.use-case';
 import { CreateProfileUseCase } from './application/use-cases/profile/create-profile.use-case';
 import { FindProfilesByIdsUseCase } from './application/use-cases/profile/find-profiles-by-ids.use-case';
 import { GetAccountProfilesUseCase } from './application/use-cases/profile/get-account-profiles.use-case';
@@ -89,10 +89,10 @@ import { TypeOrmTransactionManager } from './infrastructure/typeorm/typeorm-tran
       provide: GET_ACCOUNT_ADDRESSES_USECASE,
       useExisting: GetAccountAddressesUseCase,
     },
-    SetCurrentAddressUseCase,
+    SetProfileAddressUseCase,
     {
-      provide: SET_CURRENT_ADDRESS_USECASE,
-      useExisting: SetCurrentAddressUseCase,
+      provide: SET_PROFILE_ADDRESS_USECASE,
+      useExisting: SetProfileAddressUseCase,
     },
     CreateAddressUseCase,
     {

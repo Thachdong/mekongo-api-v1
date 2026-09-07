@@ -120,7 +120,15 @@ profile nào đang "chọn" address, chỉ dùng làm dấu vết tạo.
 - Approved by: (chờ dev duyệt chunk tree)
 
 ### Chunk 3: RegisterAccountUseCase — bỏ currentAddressId, gắn address cho profile đầu tiên (module: account)
-- status: pending
+- status: done
+- Verify đã chạy: tsc — lỗi RegisterAccount đã hết, còn lại đúng phạm vi chunk
+  4-7. eslint sạch. jest module account 5 suite / 13 test pass.
+- Điều chỉnh phát sinh (ghi nhận, không phải quyết định thiết kế mới): 2 spec
+  `change-own-password.use-case.spec.ts` và `update-account-profile.use-case.spec.ts`
+  có fixture Account dùng `currentAddressId` — xoá field khỏi fixture (thuần
+  dọn field chết theo Chunk 1, không đổi hành vi test). Thêm mới
+  `register-account.use-case.spec.ts` (trước đây chưa có, theo yêu cầu bắt
+  buộc mỗi use-case phải có spec ở constitution mục 9).
 - Steps:
   1. use-case — đổi thứ tự dựng entity: Account (không còn
      `currentAddressId`) → Profile (`addressId: null`, seed

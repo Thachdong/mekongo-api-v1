@@ -43,8 +43,20 @@ export class RegisterAccountUseCase implements IRegisterAccountUseCase {
           blockUntil: null,
           displayName: input.displayName,
           avatarUrl: input.avatarUrl,
-          currentAddressId: null,
           activeProfileId: null,
+          createdAt: null,
+          updatedAt: null,
+        }),
+      );
+
+      const profile = await this._profileRepository.create(
+        new Profile({
+          id: null,
+          activeProfile: input.profileType,
+          accountId: account.id as string,
+          displayName: input.displayName,
+          avatarUrl: input.avatarUrl,
+          addressId: null,
           createdAt: null,
           updatedAt: null,
         }),
@@ -59,29 +71,19 @@ export class RegisterAccountUseCase implements IRegisterAccountUseCase {
           ward: input.address.ward,
           details: input.address.details,
           accountId: account.id as string,
+          profileId: profile.id,
           createdAt: null,
           updatedAt: null,
         }),
       );
 
-      const profile = await this._profileRepository.create(
-        new Profile({
-          id: null,
-          activeProfile: input.profileType,
-          accountId: account.id as string,
-          displayName: input.displayName,
-          avatarUrl: input.avatarUrl,
-          createdAt: null,
-          updatedAt: null,
-        }),
-      );
+      profile.changeAddressId(address.id as string);
+      const updatedProfile = await this._profileRepository.update(profile);
 
-      account.changeCurrentAddressId(address.id as string);
       account.changeActiveProfileId(profile.id as string);
-
       const updatedAccount = await this._accountRepository.update(account);
 
-      return { account: updatedAccount, address, profile };
+      return { account: updatedAccount, address, profile: updatedProfile };
     });
   }
 }

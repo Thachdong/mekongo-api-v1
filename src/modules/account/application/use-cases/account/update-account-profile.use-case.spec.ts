@@ -16,7 +16,6 @@ function buildAccount(overrides: Partial<TAccountProps> = {}) {
     blockUntil: null,
     displayName: 'display-name',
     avatarUrl: null,
-    currentAddressId: null,
     activeProfileId: null,
     createdAt: null,
     updatedAt: null,

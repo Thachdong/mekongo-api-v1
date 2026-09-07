@@ -6,6 +6,7 @@ import { AccountModule } from './modules/account/account.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { appConfig } from '@config/app.config';
+import { commentConfig } from '@config/comment.config';
 import { dbConfig } from '@config/db.config';
 import { jwtConfig } from '@config/jwt.config';
 import { firebaseConfig } from '@config/firebase.config';
@@ -24,12 +25,15 @@ import { PostModule } from './modules/post/post.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { CommentModule } from './modules/comment/comment.module';
 import { LikeModule } from './modules/like/like.module';
+import { ChatModule } from './modules/chat/chat.module';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [
         appConfig,
+        commentConfig,
         dbConfig,
         jwtConfig,
         firebaseConfig,
@@ -51,6 +55,8 @@ import { LikeModule } from './modules/like/like.module';
     UploadModule,
     CommentModule,
     LikeModule,
+    ChatModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [

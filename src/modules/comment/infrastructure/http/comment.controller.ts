@@ -20,6 +20,7 @@ import { GetCommentChildrenUseCase } from '../../application/use-cases/get-comme
 import { GetCommentsUseCase } from '../../application/use-cases/get-comments.use-case';
 import { TCommentListItem } from '../../application/ports/get-comments-use-case.interface';
 import { Comment } from '../../domain/comment.entity';
+import { CommentGateway } from '../websocket/comment.gateway';
 import { CommentListItemResponseDto } from './dto/comment-list-item-response.dto';
 import { CommentResponseDto } from './dto/comment-response.dto';
 import { CreateCommentRequestDto } from './dto/create-comment-request.dto';
@@ -39,6 +40,7 @@ export class CommentController {
     private readonly _deleteCommentUseCase: DeleteCommentUseCase,
     private readonly _getCommentsUseCase: GetCommentsUseCase,
     private readonly _getCommentChildrenUseCase: GetCommentChildrenUseCase,
+    private readonly _commentGateway: CommentGateway,
   ) {}
 
   @Post()
@@ -56,7 +58,10 @@ export class CommentController {
       content: body.content,
     });
 
-    return this._toCommentResponseDto(comment);
+    const dto = this._toCommentResponseDto(comment);
+    this._commentGateway.broadcastNewComment(body.postId, dto);
+
+    return dto;
   }
 
   @Delete()

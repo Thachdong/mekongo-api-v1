@@ -100,7 +100,11 @@ profile nào đang "chọn" address, chỉ dùng làm dấu vết tạo.
 - Approved by: (chờ dev duyệt chunk tree)
 
 ### Chunk 2: CreateAddressUseCase — nhận profileId optional (module: account)
-- status: pending
+- status: done
+- Verify đã chạy: tsc — lỗi CreateAddress đã hết, còn lại đúng phạm vi chunk
+  3-7. eslint sạch (đã --fix). jest use-case address pass (2/2, spec mới tạo
+  do trước đây chưa có). doc `create-address.doc.ts` không cần sửa (dùng DTO
+  class trực tiếp, swagger tự đọc field mới qua `@ApiProperty`).
 - Entity: tái dùng (không đổi thêm).
 - Steps:
   1. use-case — `TCreateAddressInput` thêm `profileId?: string | null`;

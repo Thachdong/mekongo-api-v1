@@ -153,6 +153,7 @@ export class AccountController {
       provinceCode: body.provinceCode,
       ward: body.ward,
       details: body.details,
+      profileId: body.profileId,
     });
 
     return this._toAddressResponseDto(address);
@@ -240,6 +241,7 @@ export class AccountController {
     dto.provinceCode = address.provinceCode;
     dto.ward = address.ward;
     dto.details = address.details;
+    dto.profileId = address.profileId;
     dto.createdAt = address.createdAt;
     dto.updatedAt = address.updatedAt;
     return dto;

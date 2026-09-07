@@ -19,6 +19,9 @@ export class AddressResponseDto {
   @ApiProperty()
   details: string;
 
+  @ApiProperty({ type: String, nullable: true })
+  profileId: string | null;
+
   @ApiProperty({ type: String, format: 'date-time', nullable: true })
   createdAt: Date | null;
 

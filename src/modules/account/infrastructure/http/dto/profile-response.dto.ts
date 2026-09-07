@@ -11,6 +11,12 @@ export class ProfileResponseDto {
   @ApiProperty()
   accountId: string;
 
+  @ApiProperty()
+  displayName: string;
+
+  @ApiProperty({ type: String, nullable: true })
+  avatarUrl: string | null;
+
   @ApiProperty({ type: String, nullable: true })
   addressId: string | null;
 

@@ -15,8 +15,8 @@ export class Profile {
   private readonly _id: string | null;
   private _activeProfile: TProfileType;
   private readonly _accountId: string;
-  private readonly _displayName: string;
-  private readonly _avatarUrl: string | null;
+  private _displayName: string;
+  private _avatarUrl: string | null;
   private _addressId: string | null;
   private readonly _createdAt: Date | null;
   private readonly _updatedAt: Date | null;
@@ -70,5 +70,13 @@ export class Profile {
 
   changeAddressId(addressId: string): void {
     this._addressId = addressId;
+  }
+
+  changeDisplayName(displayName: string): void {
+    this._displayName = displayName;
+  }
+
+  changeAvatarUrl(avatarUrl: string | null): void {
+    this._avatarUrl = avatarUrl;
   }
 }

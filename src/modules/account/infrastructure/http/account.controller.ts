@@ -103,6 +103,7 @@ export class AccountController {
   ): Promise<null> {
     await this._updateAccountProfileUseCase.execute({
       accountId: user.accountId,
+      profileId: body.profileId,
       displayName: body.displayName,
       avatarUrl: body.avatarUrl,
     });
@@ -227,8 +228,6 @@ export class AccountController {
     dto.id = account.id;
     dto.loginType = account.loginType;
     dto.status = account.status;
-    dto.displayName = account.displayName;
-    dto.avatarUrl = account.avatarUrl;
     dto.activeProfileId = account.activeProfileId;
     dto.blockUntil = account.blockUntil;
     dto.createdAt = account.createdAt;
@@ -255,6 +254,8 @@ export class AccountController {
     dto.id = profile.id as string;
     dto.profileType = profile.activeProfile;
     dto.accountId = profile.accountId;
+    dto.displayName = profile.displayName;
+    dto.avatarUrl = profile.avatarUrl;
     dto.addressId = profile.addressId;
     dto.createdAt = profile.createdAt;
     dto.updatedAt = profile.updatedAt;

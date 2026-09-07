@@ -1,9 +1,11 @@
 import { Account, TAccountProps } from '../../../domain/account.entity';
+import { Profile, TProfileProps } from '../../../domain/profile.entity';
 import { AccountNotFoundError } from '../../../domain/errors/account-not-found.error';
 import { AvatarSourceNotFoundError } from '../../../domain/errors/avatar-source-not-found.error';
-import { InvalidDisplayNameError } from '../../../domain/errors/invalid-display-name.error';
+import { ProfileNotFoundError } from '../../../domain/errors/profile-not-found.error';
 import { IFileStorage } from '@shared/infrastructure/storage/file-storage.interface';
 import { IAccountRepository } from '../../ports/account/account-repository.interface';
+import { IProfileRepository } from '../../ports/profile-repository.interface';
 import { UpdateAccountProfileUseCase } from './update-account-profile.use-case';
 
 function buildAccount(overrides: Partial<TAccountProps> = {}) {
@@ -23,8 +25,23 @@ function buildAccount(overrides: Partial<TAccountProps> = {}) {
   });
 }
 
+function buildProfile(overrides: Partial<TProfileProps> = {}) {
+  return new Profile({
+    id: 'profile-id',
+    activeProfile: 'INDIVIDUAL',
+    accountId: 'account-id',
+    displayName: 'display-name',
+    avatarUrl: null,
+    addressId: null,
+    createdAt: null,
+    updatedAt: null,
+    ...overrides,
+  });
+}
+
 describe('UpdateAccountProfileUseCase', () => {
   let accountRepository: jest.Mocked<IAccountRepository>;
+  let profileRepository: jest.Mocked<IProfileRepository>;
   let fileStorage: jest.Mocked<IFileStorage>;
   let useCase: UpdateAccountProfileUseCase;
 
@@ -35,6 +52,13 @@ describe('UpdateAccountProfileUseCase', () => {
       findById: jest.fn(),
       findByIdentifierHash: jest.fn(),
     };
+    profileRepository = {
+      create: jest.fn(),
+      update: jest.fn(),
+      findAllByAccountId: jest.fn(),
+      findById: jest.fn(),
+      findByIds: jest.fn(),
+    };
     fileStorage = {
       getSignedUploadUrl: jest.fn(),
       getSignedDownloadUrl: jest.fn(),
@@ -42,60 +66,99 @@ describe('UpdateAccountProfileUseCase', () => {
       moveObject: jest.fn(),
       deleteObject: jest.fn(),
     };
-    useCase = new UpdateAccountProfileUseCase(accountRepository, fileStorage);
+    useCase = new UpdateAccountProfileUseCase(
+      accountRepository,
+      profileRepository,
+      fileStorage,
+    );
   });
 
   it('throws AccountNotFoundError when account does not exist', async () => {
     accountRepository.findById.mockResolvedValue(null);
 
     await expect(
-      useCase.execute({ accountId: 'account-id', displayName: 'new-name' }),
+      useCase.execute({
+        accountId: 'account-id',
+        profileId: 'profile-id',
+        displayName: 'new-name',
+      }),
     ).rejects.toThrow(AccountNotFoundError);
 
-    expect(accountRepository.update).not.toHaveBeenCalled();
+    expect(profileRepository.update).not.toHaveBeenCalled();
   });
 
-  it('trims and updates displayName', async () => {
-    const account = buildAccount();
-    accountRepository.findById.mockResolvedValue(account);
+  it('throws ProfileNotFoundError when profile does not exist', async () => {
+    accountRepository.findById.mockResolvedValue(buildAccount());
+    profileRepository.findById.mockResolvedValue(null);
+
+    await expect(
+      useCase.execute({
+        accountId: 'account-id',
+        profileId: 'profile-id',
+        displayName: 'new-name',
+      }),
+    ).rejects.toThrow(ProfileNotFoundError);
+
+    expect(profileRepository.update).not.toHaveBeenCalled();
+  });
+
+  it('throws ProfileNotFoundError when profile belongs to another account', async () => {
+    accountRepository.findById.mockResolvedValue(buildAccount());
+    profileRepository.findById.mockResolvedValue(
+      buildProfile({ accountId: 'other-account' }),
+    );
+
+    await expect(
+      useCase.execute({
+        accountId: 'account-id',
+        profileId: 'profile-id',
+        displayName: 'new-name',
+      }),
+    ).rejects.toThrow(ProfileNotFoundError);
+
+    expect(profileRepository.update).not.toHaveBeenCalled();
+  });
+
+  it('updates displayName on the profile', async () => {
+    accountRepository.findById.mockResolvedValue(buildAccount());
+    const profile = buildProfile();
+    profileRepository.findById.mockResolvedValue(profile);
 
     await useCase.execute({
       accountId: 'account-id',
-      displayName: '  new-name  ',
+      profileId: 'profile-id',
+      displayName: 'new-name',
     });
 
-    expect(account.displayName).toBe('new-name');
-    expect(accountRepository.update).toHaveBeenCalledWith(account);
-  });
-
-  it('throws InvalidDisplayNameError when displayName is shorter than 5 chars after trim', async () => {
-    accountRepository.findById.mockResolvedValue(buildAccount());
-
-    await expect(
-      useCase.execute({ accountId: 'account-id', displayName: '  ab  ' }),
-    ).rejects.toThrow(InvalidDisplayNameError);
-
-    expect(accountRepository.update).not.toHaveBeenCalled();
+    expect(profile.displayName).toBe('new-name');
+    expect(profileRepository.update).toHaveBeenCalledWith(profile);
   });
 
   it('throws AvatarSourceNotFoundError when avatarUrl does not start with TMP/', async () => {
     accountRepository.findById.mockResolvedValue(buildAccount());
+    profileRepository.findById.mockResolvedValue(buildProfile());
 
     await expect(
-      useCase.execute({ accountId: 'account-id', avatarUrl: 'other/key.png' }),
+      useCase.execute({
+        accountId: 'account-id',
+        profileId: 'profile-id',
+        avatarUrl: 'other/key.png',
+      }),
     ).rejects.toThrow(AvatarSourceNotFoundError);
 
     expect(fileStorage.moveObject).not.toHaveBeenCalled();
-    expect(accountRepository.update).not.toHaveBeenCalled();
+    expect(profileRepository.update).not.toHaveBeenCalled();
   });
 
-  it('moves avatar from TMP to ACCOUNT bucket and stores destination key', async () => {
-    const account = buildAccount();
-    accountRepository.findById.mockResolvedValue(account);
+  it('moves avatar from TMP to ACCOUNT bucket and stores destination key on the profile', async () => {
+    accountRepository.findById.mockResolvedValue(buildAccount());
+    const profile = buildProfile();
+    profileRepository.findById.mockResolvedValue(profile);
     fileStorage.moveObject.mockResolvedValue(undefined);
 
     await useCase.execute({
       accountId: 'account-id',
+      profileId: 'profile-id',
       avatarUrl: 'TMP/uuid-avatar.png',
     });
 
@@ -103,21 +166,41 @@ describe('UpdateAccountProfileUseCase', () => {
       'TMP/uuid-avatar.png',
       'ACCOUNT/account-id/uuid-avatar.png',
     );
-    expect(account.avatarUrl).toBe('ACCOUNT/account-id/uuid-avatar.png');
-    expect(accountRepository.update).toHaveBeenCalledWith(account);
+    expect(profile.avatarUrl).toBe('ACCOUNT/account-id/uuid-avatar.png');
+    expect(profileRepository.update).toHaveBeenCalledWith(profile);
   });
 
   it('throws AvatarSourceNotFoundError when moveObject fails', async () => {
     accountRepository.findById.mockResolvedValue(buildAccount());
+    profileRepository.findById.mockResolvedValue(buildProfile());
     fileStorage.moveObject.mockRejectedValue(new Error('not found'));
 
     await expect(
       useCase.execute({
         accountId: 'account-id',
+        profileId: 'profile-id',
         avatarUrl: 'TMP/uuid-avatar.png',
       }),
     ).rejects.toThrow(AvatarSourceNotFoundError);
 
-    expect(accountRepository.update).not.toHaveBeenCalled();
+    expect(profileRepository.update).not.toHaveBeenCalled();
+  });
+
+  it('updates both displayName and avatarUrl', async () => {
+    accountRepository.findById.mockResolvedValue(buildAccount());
+    const profile = buildProfile();
+    profileRepository.findById.mockResolvedValue(profile);
+    fileStorage.moveObject.mockResolvedValue(undefined);
+
+    await useCase.execute({
+      accountId: 'account-id',
+      profileId: 'profile-id',
+      displayName: 'new-name',
+      avatarUrl: 'TMP/uuid-avatar.png',
+    });
+
+    expect(profile.displayName).toBe('new-name');
+    expect(profile.avatarUrl).toBe('ACCOUNT/account-id/uuid-avatar.png');
+    expect(profileRepository.update).toHaveBeenCalledWith(profile);
   });
 });

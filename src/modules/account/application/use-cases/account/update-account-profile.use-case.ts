@@ -4,18 +4,25 @@ import { IFileStorage } from '@shared/infrastructure/storage/file-storage.interf
 import { TMP_STORAGE_PREFIX } from '@shared/infrastructure/storage/storage-key.util';
 import { AccountNotFoundError } from '../../../domain/errors/account-not-found.error';
 import { AvatarSourceNotFoundError } from '../../../domain/errors/avatar-source-not-found.error';
+import { ProfileNotFoundError } from '../../../domain/errors/profile-not-found.error';
 import { IAccountRepository } from '../../ports/account/account-repository.interface';
+import { IProfileRepository } from '../../ports/profile-repository.interface';
 import {
   IUpdateAccountProfileUseCase,
   TUpdateAccountProfileInput,
 } from '../../ports/account/update-account-profile-use-case.interface';
-import { ACCOUNT_REPOSITORY } from '../../ports/account-application.tokens';
+import {
+  ACCOUNT_REPOSITORY,
+  PROFILE_REPOSITORY,
+} from '../../ports/account-application.tokens';
 
 @Injectable()
 export class UpdateAccountProfileUseCase implements IUpdateAccountProfileUseCase {
   constructor(
     @Inject(ACCOUNT_REPOSITORY)
     private readonly _accountRepository: IAccountRepository,
+    @Inject(PROFILE_REPOSITORY)
+    private readonly _profileRepository: IProfileRepository,
     @Inject(FILE_STORAGE)
     private readonly _fileStorage: IFileStorage,
   ) {}
@@ -27,8 +34,14 @@ export class UpdateAccountProfileUseCase implements IUpdateAccountProfileUseCase
       throw new AccountNotFoundError();
     }
 
+    const profile = await this._profileRepository.findById(input.profileId);
+
+    if (!profile || profile.accountId !== input.accountId) {
+      throw new ProfileNotFoundError();
+    }
+
     if (input.displayName !== undefined) {
-      account.changeDisplayName(input.displayName);
+      profile.changeDisplayName(input.displayName);
     }
 
     if (input.avatarUrl !== undefined) {
@@ -36,10 +49,10 @@ export class UpdateAccountProfileUseCase implements IUpdateAccountProfileUseCase
         input.accountId,
         input.avatarUrl,
       );
-      account.changeAvatar(destinationKey);
+      profile.changeAvatarUrl(destinationKey);
     }
 
-    await this._accountRepository.update(account);
+    await this._profileRepository.update(profile);
   }
 
   private async _moveAvatarFromTmp(

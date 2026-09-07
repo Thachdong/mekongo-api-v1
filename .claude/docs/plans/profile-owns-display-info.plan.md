@@ -106,7 +106,20 @@ dùng được 2 field này từ `Profile` — dev sẽ làm lại đầy đủ 
 - Approved by: (chờ AskUserQuestion)
 
 ### Chunk 4: Hoàn thiện endpoint — UpdateProfileUseCase + response DTO trả đúng field từ Profile (module: account)
-- status: pending
+- status: done
+- Verify đã chạy: grep xác nhận `AccountResponseDto` hết `displayName`/
+  `avatarUrl`, `ProfileResponseDto` có đủ 2 field. `tsc --noEmit` toàn repo
+  sạch. eslint sạch. jest toàn repo 33 suite / 105 test pass.
+- `IProfileRepository.update` đã có sẵn từ Chunk 1 của
+  `address-profile-relation.plan.md` — tái dùng, không thêm trùng lặp.
+- Điều chỉnh phát sinh: `InvalidDisplayNameError` (422) không còn throw được
+  qua endpoint này nữa — use-case cũ validate qua `Account.changeDisplayName`
+  (trim + min 5 ký tự), mutator mới `Profile.changeDisplayName` không có
+  validate (đúng theo yêu cầu baseline lúc tạo mutator: "giữ đơn giản"). Đã bỏ
+  block 422 khỏi doc, bỏ test case tương ứng khỏi spec — ghi nhận ở đây vì đây
+  là thay đổi hành vi (mất validation), không phải chỉ đổi chỗ lưu dữ liệu.
+- Commit range: (điền sau)
+- Approved by: (chờ dev duyệt chunk tree)
 - Quyết định đã chốt với dev (AskUserQuestion, 2026-09-07):
   1. `UpdateAccountProfileUseCase` đổi hẳn sang sửa `Profile` (không còn sửa
      `Account` nữa). Request thêm `profileId` (bắt buộc).

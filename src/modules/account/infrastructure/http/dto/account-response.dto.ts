@@ -10,12 +10,6 @@ export class AccountResponseDto {
   @ApiProperty()
   status: string;
 
-  @ApiProperty()
-  displayName: string;
-
-  @ApiProperty({ type: String, nullable: true })
-  avatarUrl: string | null;
-
   @ApiProperty({ type: String, nullable: true })
   activeProfileId: string | null;
 

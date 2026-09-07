@@ -4,9 +4,9 @@ import { IFileStorage } from '@shared/infrastructure/storage/file-storage.interf
 import { TMP_STORAGE_PREFIX } from '@shared/infrastructure/storage/storage-key.util';
 import {
   Address,
-  FIND_ACCOUNT_BY_ID_USECASE,
+  FIND_PROFILES_BY_IDS_USECASE,
   GET_ACCOUNT_ADDRESSES_USECASE,
-  IFindAccountByIdUseCase,
+  IFindProfilesByIdsUseCase,
   IGetAccountAddressesUseCase,
 } from '@modules/account/public-api';
 import { CurrentAddressNotFoundError } from '../../domain/errors/current-address-not-found.error';
@@ -25,8 +25,8 @@ export class CreatePostUseCase implements ICreatePostUseCase {
   constructor(
     @Inject(POST_REPOSITORY)
     private readonly _postRepository: IPostRepository,
-    @Inject(FIND_ACCOUNT_BY_ID_USECASE)
-    private readonly _findAccountByIdUseCase: IFindAccountByIdUseCase,
+    @Inject(FIND_PROFILES_BY_IDS_USECASE)
+    private readonly _findProfilesByIdsUseCase: IFindProfilesByIdsUseCase,
     @Inject(GET_ACCOUNT_ADDRESSES_USECASE)
     private readonly _getAccountAddressesUseCase: IGetAccountAddressesUseCase,
     @Inject(FILE_STORAGE)
@@ -38,7 +38,10 @@ export class CreatePostUseCase implements ICreatePostUseCase {
       throw new ProfileNotActiveError();
     }
 
-    const provinceCode = await this._resolveProvinceCode(input.accountId);
+    const provinceCode = await this._resolveProvinceCode(
+      input.accountId,
+      input.profileId,
+    );
 
     const images = await Promise.all(
       input.images.map((image) => this._moveImageFromTmp(input.title, image)),
@@ -61,21 +64,26 @@ export class CreatePostUseCase implements ICreatePostUseCase {
     return this._postRepository.create(post);
   }
 
-  private async _resolveProvinceCode(accountId: string): Promise<number> {
-    const account = await this._findAccountByIdUseCase.execute({ accountId });
+  private async _resolveProvinceCode(
+    accountId: string,
+    profileId: string,
+  ): Promise<number> {
+    const [profile] = await this._findProfilesByIdsUseCase.execute({
+      profileIds: [profileId],
+    });
     const addresses = await this._getAccountAddressesUseCase.execute({
       accountId,
     });
 
-    const currentAddress = addresses.find(
-      (address: Address) => address.id === account.currentAddressId,
-    );
+    const address = profile
+      ? addresses.find((a: Address) => a.id === profile.addressId)
+      : undefined;
 
-    if (!currentAddress) {
+    if (!address) {
       throw new CurrentAddressNotFoundError();
     }
 
-    return currentAddress.provinceCode;
+    return address.provinceCode;
   }
 
   private async _moveImageFromTmp(

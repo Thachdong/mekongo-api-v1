@@ -236,7 +236,10 @@ profile nào đang "chọn" address, chỉ dùng làm dấu vết tạo.
 - Approved by: (chờ dev duyệt chunk tree)
 
 ### Chunk 7: Post module — resolve provinceCode qua Profile.addressId (module: post)
-- status: pending
+- status: done
+- Verify đã chạy: tsc TOÀN REPO sạch hoàn toàn (không còn lỗi nào — đây là
+  chunk cuối cùng đụng compile error). eslint sạch. jest post module
+  create-post 6/6 pass (thêm 1 case mới: profile không tồn tại).
 - Steps:
   1. use-case — `CreatePostUseCase._resolveProvinceCode`: đổi tham số từ
      `accountId` sang dùng `input.profileId`; gọi
@@ -254,7 +257,22 @@ profile nào đang "chọn" address, chỉ dùng làm dấu vết tạo.
 - Approved by: (chờ dev duyệt chunk tree)
 
 ### Chunk 8: Lắp ráp cuối — dọn sạch & kiểm tra toàn repo (module: account/post)
-- status: pending
+- status: done
+- Verify đã chạy:
+  - grep toàn repo: `currentAddressId`/`current_address_id` chỉ còn trong 2
+    file migration (tạo cột cũ + migration mới drop cột) — đúng như dự kiến,
+    không còn trong application/domain/infrastructure code.
+    `SetCurrentAddressUseCase`/`SET_CURRENT_ADDRESS_USECASE`/
+    `CannotDeleteCurrentAddressError`/`CANNOT_DELETE_CURRENT_ADDRESS`: 0 kết
+    quả.
+  - `tsc --noEmit` toàn repo: sạch hoàn toàn.
+  - `eslint src`: lỗi còn lại chỉ ở file KHÔNG thuộc CR này (post
+    increment/decrement-like-count use-case, các migration cũ trước Chunk 1)
+    — lint debt có sẵn từ trước, không phải do CR này gây ra, không sửa (out
+    of scope).
+  - `jest` toàn repo: 33 suite / 103 test pass.
+- Commit range: (điền sau)
+- Approved by: (chờ dev duyệt chunk tree)
 - Steps:
   1. grep toàn repo xác nhận không còn `currentAddressId`/`current_address_id`
      ngoài migration cũ, không còn `SetCurrentAddressUseCase`.

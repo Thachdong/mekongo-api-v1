@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from '@modules/post/post.module';
 import { AccountModule } from '@modules/account/account.module';
+import { WsAuthModule } from '@shared/websocket/ws-auth.module';
 import {
   CHAT_REPOSITORY,
   GET_CHAT_MESSAGES_USECASE,
@@ -28,6 +29,7 @@ import { TypeOrmChatRepository } from './infrastructure/typeorm/chat.repository'
     TypeOrmModule.forFeature([ChatTypeOrmEntity, ChatReadStateTypeOrmEntity]),
     PostModule,
     AccountModule,
+    WsAuthModule,
   ],
   controllers: [ChatController],
   providers: [

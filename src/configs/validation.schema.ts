@@ -18,6 +18,8 @@ export const validationSchema = Joi.object({
   ACCESS_TOKEN_SECRET: Joi.string().required(),
   REFRESH_TOKEN_EXPIRED_IN: Joi.string().default('7d'),
   REFRESH_TOKEN_SECRET: Joi.string().required(),
+  WS_TOKEN_EXPIRED_IN: Joi.string().default('15m'),
+  WS_TOKEN_SECRET: Joi.string().required(),
 
   // OTP CONFIG
   OTP_CODE_LENGTH: Joi.number().default(6),

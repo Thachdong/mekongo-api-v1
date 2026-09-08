@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountModule } from '@modules/account/account.module';
 import { NotificationModule } from '@modules/notification/notification.module';
 import { PostModule } from '@modules/post/post.module';
+import { WsAuthModule } from '@shared/websocket/ws-auth.module';
 import {
   COMMENT_PRESENCE_PORT,
   COMMENT_REPOSITORY,
@@ -27,6 +28,7 @@ import { TypeOrmCommentRepository } from './infrastructure/typeorm/comment.repos
     PostModule,
     AccountModule,
     NotificationModule,
+    WsAuthModule,
   ],
   controllers: [CommentController],
   providers: [

@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {
   OnGatewayConnection,
@@ -6,6 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { verifyWsToken } from '@shared/websocket/ws-auth.util';
+import { WS_JWT_SERVICE } from '@shared/websocket/ws-jwt.tokens';
 import { INotificationRealtimePort } from '../../application/ports/notification-realtime.interface';
 
 function personalRoomKey(profileId: string): string {
@@ -19,7 +21,10 @@ export class NotificationGateway
   @WebSocketServer()
   private readonly _server: Server;
 
-  constructor(private readonly _jwtService: JwtService) {}
+  constructor(
+    @Inject(WS_JWT_SERVICE)
+    private readonly _jwtService: JwtService,
+  ) {}
 
   handleConnection(client: Socket): void {
     try {

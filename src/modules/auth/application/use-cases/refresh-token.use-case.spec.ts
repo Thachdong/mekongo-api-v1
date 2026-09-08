@@ -43,6 +43,7 @@ describe('RefreshTokenUseCase', () => {
     };
     tokenIssuer = {
       signAccessToken: jest.fn().mockReturnValue('new-access-token'),
+      signWsToken: jest.fn().mockReturnValue('new-ws-token'),
     };
     configService = { get: jest.fn().mockReturnValue('7d') } as any;
     useCase = new RefreshTokenUseCase(

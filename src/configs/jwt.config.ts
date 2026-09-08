@@ -5,4 +5,6 @@ export const jwtConfig = registerAs('jwt', () => ({
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
   refreshTkenExpiredIn: process.env.REFRESH_TOKEN_EXPIRED_IN ?? '7d',
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+  wsTokenExpiredIn: process.env.WS_TOKEN_EXPIRED_IN ?? '15m',
+  wsTokenSecret: process.env.WS_TOKEN_SECRET,
 }));

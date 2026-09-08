@@ -30,6 +30,7 @@ import {
   TAuthRefreshTokenOutput,
 } from '../../application/use-cases/refresh-token.use-case';
 import { LogoutUseCase } from '../../application/use-cases/logout.use-case';
+import { IssueWsTokenUseCase } from '../../application/use-cases/issue-ws-token.use-case';
 import { ChangePasswordRequestDto } from './dto/change-password-request.dto';
 import { RegisterRequestDto } from './dto/register-request.dto';
 import { ResetPasswordRequestDto } from './dto/reset-password-request.dto';
@@ -37,6 +38,7 @@ import { ActivateRequestDto } from './dto/activate-request.dto';
 import { LoginRequestDto } from './dto/login-request.dto';
 import { RefreshTokenRequestDto } from './dto/refresh-token-request.dto';
 import { LogoutRequestDto } from './dto/logout-request.dto';
+import { WsTokenResponseDto } from './dto/ws-token-response.dto';
 import { ChangePasswordDoc } from './docs/change-password.doc';
 import { RegisterDoc } from './docs/register.doc';
 import { ResetPasswordDoc } from './docs/reset-password.doc';
@@ -44,6 +46,7 @@ import { ActivateDoc } from './docs/activate.doc';
 import { LoginDoc } from './docs/login.doc';
 import { RefreshTokenDoc } from './docs/refresh-token.doc';
 import { LogoutDoc } from './docs/logout.doc';
+import { WsTokenDoc } from './docs/ws-token.doc';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -56,6 +59,7 @@ export class AuthController {
     private readonly _loginUseCase: LoginUseCase,
     private readonly _refreshTokenUseCase: RefreshTokenUseCase,
     private readonly _logoutUseCase: LogoutUseCase,
+    private readonly _issueWsTokenUseCase: IssueWsTokenUseCase,
   ) {}
 
   @Post('register')
@@ -154,5 +158,22 @@ export class AuthController {
       refreshToken: body.refreshToken,
     });
     return null;
+  }
+
+  @Post('ws-token')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @WsTokenDoc()
+  async issueWsToken(
+    @CurrentUser() user: TJwtPayload,
+  ): Promise<WsTokenResponseDto> {
+    const { wsToken } = this._issueWsTokenUseCase.execute({
+      accountId: user.accountId,
+      profileId: user.profileId,
+    });
+
+    const response = new WsTokenResponseDto();
+    response.wsToken = wsToken;
+    return response;
   }
 }

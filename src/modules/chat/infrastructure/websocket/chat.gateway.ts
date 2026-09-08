@@ -1,4 +1,4 @@
-import { UseFilters, UseGuards } from '@nestjs/common';
+import { Inject, UseFilters } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {
   ConnectedSocket,
@@ -10,8 +10,8 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { WsCurrentUser } from '@shared/websocket/ws-current-user.decorator';
-import { WsJwtGuard } from '@shared/websocket/ws-jwt.guard';
 import { verifyWsToken } from '@shared/websocket/ws-auth.util';
+import { WS_JWT_SERVICE } from '@shared/websocket/ws-jwt.tokens';
 import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
 import { ValidateChatParticipantService } from '../../application/services/validate-chat-participant.service';
 import { GetUnreadChatCountUseCase } from '../../application/use-cases/get-unread-chat-count.use-case';
@@ -30,7 +30,6 @@ function personalRoomKey(profileId: string): string {
   return `user:${profileId}`;
 }
 
-@UseGuards(WsJwtGuard)
 @UseFilters(WsDomainExceptionFilter)
 @WebSocketGateway({ namespace: '/chat' })
 export class ChatGateway implements OnGatewayConnection {
@@ -38,6 +37,7 @@ export class ChatGateway implements OnGatewayConnection {
   private readonly _server: Server;
 
   constructor(
+    @Inject(WS_JWT_SERVICE)
     private readonly _jwtService: JwtService,
     private readonly _validateChatParticipantService: ValidateChatParticipantService,
     private readonly _sendChatMessageUseCase: SendChatMessageUseCase,

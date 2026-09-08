@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountModule } from '@modules/account/account.module';
+import { WsAuthModule } from '@shared/websocket/ws-auth.module';
 import {
   CREATE_NOTIFICATION_USECASE,
   GET_NOTIFICATIONS_USECASE,
@@ -25,6 +26,7 @@ import { TypeOrmNotificationRepository } from './infrastructure/typeorm/notifica
   imports: [
     TypeOrmModule.forFeature([NotificationTypeOrmEntity]),
     AccountModule,
+    WsAuthModule,
   ],
   controllers: [NotificationController],
   providers: [

@@ -4,11 +4,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountModule } from '@modules/account/account.module';
 import { VerificationModule } from '@modules/verification/verification.module';
+import { WsAuthModule } from '@shared/websocket/ws-auth.module';
 import { ChangePasswordUseCase } from './application/use-cases/change-password.use-case';
 import { RegisterUseCase } from './application/use-cases/register.use-case';
 import { ResetPasswordUseCase } from './application/use-cases/reset-password.use-case';
 import { ActivateUseCase } from './application/use-cases/activate.use-case';
 import { LoginUseCase } from './application/use-cases/login.use-case';
+import { IssueWsTokenUseCase } from './application/use-cases/issue-ws-token.use-case';
 import { RefreshTokenUseCase } from './application/use-cases/refresh-token.use-case';
 import { AuthController } from './infrastructure/http/auth.controller';
 import {
@@ -24,6 +26,7 @@ import { LogoutUseCase } from './application/use-cases/logout.use-case';
   imports: [
     AccountModule,
     VerificationModule,
+    WsAuthModule,
     TypeOrmModule.forFeature([RefreshTokenTypeOrmEntity]),
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -44,6 +47,7 @@ import { LogoutUseCase } from './application/use-cases/logout.use-case';
     LoginUseCase,
     LogoutUseCase,
     RefreshTokenUseCase,
+    IssueWsTokenUseCase,
     {
       provide: TOKEN_ISSUER,
       useClass: JwtTokenIssuer,

@@ -1,4 +1,4 @@
-import { UseFilters, UseGuards } from '@nestjs/common';
+import { Inject, UseFilters } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {
   ConnectedSocket,
@@ -11,8 +11,8 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { WsCurrentUser } from '@shared/websocket/ws-current-user.decorator';
-import { WsJwtGuard } from '@shared/websocket/ws-jwt.guard';
 import { verifyWsToken } from '@shared/websocket/ws-auth.util';
+import { WS_JWT_SERVICE } from '@shared/websocket/ws-jwt.tokens';
 import { TJwtPayload } from '@shared/common/auth/jwt-payload.type';
 import { ICommentPresencePort } from '../../application/ports/comment-presence.interface';
 import { JoinPostCommentsDto } from './dto/join-post-comments.dto';
@@ -22,7 +22,6 @@ function postCommentsRoomKey(postId: string): string {
   return `post:${postId}`;
 }
 
-@UseGuards(WsJwtGuard)
 @UseFilters(WsDomainExceptionFilter)
 @WebSocketGateway({ namespace: '/comments' })
 export class CommentGateway
@@ -33,7 +32,10 @@ export class CommentGateway
 
   private readonly _viewersByProfileId = new Map<string, Set<string>>();
 
-  constructor(private readonly _jwtService: JwtService) {}
+  constructor(
+    @Inject(WS_JWT_SERVICE)
+    private readonly _jwtService: JwtService,
+  ) {}
 
   handleConnection(client: Socket): void {
     try {

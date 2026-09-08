@@ -10,7 +10,8 @@ import { UpdateAccountProfileRequestDto } from '../dto/update-account-profile-re
 export function UpdateAccountProfileDoc() {
   return applyDecorators(
     ApiOperation({
-      summary: 'Cập nhật displayName/avatarUrl của account đang đăng nhập',
+      summary:
+        'Cập nhật displayName/avatarUrl của 1 profile thuộc account đang đăng nhập',
     }),
     ApiBearerAuth('access-token'),
     ApiBody({ type: UpdateAccountProfileRequestDto }),
@@ -27,7 +28,7 @@ export function UpdateAccountProfileDoc() {
     ApiResponse({
       status: 400,
       description:
-        'Validation failed — thiếu cả displayName và avatarUrl, hoặc field sai kiểu',
+        'Validation failed — thiếu profileId/không phải UUID, hoặc thiếu cả displayName và avatarUrl, hoặc field sai kiểu',
       schema: {
         properties: {
           statusCode: { type: 'number', example: 400 },
@@ -49,30 +50,19 @@ export function UpdateAccountProfileDoc() {
     ApiResponse({
       status: 404,
       description:
-        'Không tìm thấy account, hoặc avatarUrl không phải file hợp lệ trong TMP',
+        'Không tìm thấy account, hoặc profileId không tồn tại/không thuộc account đang gọi, hoặc avatarUrl không phải file hợp lệ trong TMP',
       schema: {
         properties: {
           statusCode: { type: 'number', example: 404 },
           code: {
             type: 'string',
-            enum: ['ACCOUNT_NOT_FOUND', 'AVATAR_SOURCE_NOT_FOUND'],
+            enum: [
+              'ACCOUNT_NOT_FOUND',
+              'PROFILE_NOT_FOUND',
+              'AVATAR_SOURCE_NOT_FOUND',
+            ],
           },
           message: { type: 'string' },
-          extra: { type: 'object', nullable: true },
-        },
-      },
-    }),
-    ApiResponse({
-      status: 422,
-      description: 'displayName sau khi trim ngắn hơn 5 ký tự',
-      schema: {
-        properties: {
-          statusCode: { type: 'number', example: 422 },
-          code: { type: 'string', example: 'INVALID_DISPLAY_NAME' },
-          message: {
-            type: 'string',
-            example: 'Display name must be at least 5 characters',
-          },
           extra: { type: 'object', nullable: true },
         },
       },

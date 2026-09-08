@@ -1,5 +1,5 @@
 import {
-  IFindAccountByIdUseCase,
+  IFindProfilesByIdsUseCase,
   IGetAccountAddressesUseCase,
 } from '@modules/account/public-api';
 import { IFileStorage } from '@shared/infrastructure/storage/file-storage.interface';
@@ -18,17 +18,17 @@ function buildAddress(overrides: Record<string, unknown> = {}) {
   } as any;
 }
 
-function buildAccount(overrides: Record<string, unknown> = {}) {
+function buildProfile(overrides: Record<string, unknown> = {}) {
   return {
-    id: 'account-id',
-    currentAddressId: 'address-id',
+    id: 'profile-id',
+    addressId: 'address-id',
     ...overrides,
   } as any;
 }
 
 describe('CreatePostUseCase', () => {
   let postRepository: jest.Mocked<IPostRepository>;
-  let findAccountByIdUseCase: jest.Mocked<IFindAccountByIdUseCase>;
+  let findProfilesByIdsUseCase: jest.Mocked<IFindProfilesByIdsUseCase>;
   let getAccountAddressesUseCase: jest.Mocked<IGetAccountAddressesUseCase>;
   let fileStorage: jest.Mocked<IFileStorage>;
   let useCase: CreatePostUseCase;
@@ -48,7 +48,7 @@ describe('CreatePostUseCase', () => {
       findById: jest.fn(),
       update: jest.fn(),
     };
-    findAccountByIdUseCase = { execute: jest.fn() };
+    findProfilesByIdsUseCase = { execute: jest.fn() };
     getAccountAddressesUseCase = { execute: jest.fn() };
     fileStorage = {
       getSignedUploadUrl: jest.fn(),
@@ -58,14 +58,14 @@ describe('CreatePostUseCase', () => {
       deleteObject: jest.fn(),
     };
 
-    findAccountByIdUseCase.execute.mockResolvedValue(buildAccount());
+    findProfilesByIdsUseCase.execute.mockResolvedValue([buildProfile()]);
     getAccountAddressesUseCase.execute.mockResolvedValue([buildAddress()]);
     fileStorage.moveObject.mockResolvedValue(undefined);
     postRepository.create.mockImplementation(async (post) => post);
 
     useCase = new CreatePostUseCase(
       postRepository,
-      findAccountByIdUseCase,
+      findProfilesByIdsUseCase,
       getAccountAddressesUseCase,
       fileStorage,
     );
@@ -79,10 +79,20 @@ describe('CreatePostUseCase', () => {
     expect(postRepository.create).not.toHaveBeenCalled();
   });
 
-  it('throws CurrentAddressNotFoundError when no address matches account.currentAddressId', async () => {
+  it('throws CurrentAddressNotFoundError when no address matches profile.addressId', async () => {
     getAccountAddressesUseCase.execute.mockResolvedValue([
       buildAddress({ id: 'other-address-id' }),
     ]);
+
+    await expect(useCase.execute(baseInput)).rejects.toThrow(
+      CurrentAddressNotFoundError,
+    );
+
+    expect(postRepository.create).not.toHaveBeenCalled();
+  });
+
+  it('throws CurrentAddressNotFoundError when the posting profile is not found', async () => {
+    findProfilesByIdsUseCase.execute.mockResolvedValue([]);
 
     await expect(useCase.execute(baseInput)).rejects.toThrow(
       CurrentAddressNotFoundError,

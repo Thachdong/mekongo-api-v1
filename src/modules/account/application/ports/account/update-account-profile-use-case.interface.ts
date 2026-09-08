@@ -1,5 +1,6 @@
 export type TUpdateAccountProfileInput = {
   accountId: string;
+  profileId: string;
   displayName?: string;
   avatarUrl?: string;
 };

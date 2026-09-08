@@ -22,13 +22,29 @@ export function CreateProfileDoc() {
     }),
     ApiResponse({
       status: 400,
-      description: 'Validation failed — profileType thiếu hoặc không hợp lệ',
+      description:
+        'Validation failed (profileType thiếu/không hợp lệ, hoặc addressId/newAddress sai format) HOẶC không truyền đúng 1 trong 2 field addressId/newAddress (code INVALID_PROFILE_ADDRESS_INPUT)',
       schema: {
-        properties: {
-          statusCode: { type: 'number', example: 400 },
-          message: { type: 'array', items: { type: 'string' } },
-          error: { type: 'string', example: 'Bad Request' },
-        },
+        oneOf: [
+          {
+            properties: {
+              statusCode: { type: 'number', example: 400 },
+              message: { type: 'array', items: { type: 'string' } },
+              error: { type: 'string', example: 'Bad Request' },
+            },
+          },
+          {
+            properties: {
+              statusCode: { type: 'number', example: 400 },
+              code: {
+                type: 'string',
+                example: 'INVALID_PROFILE_ADDRESS_INPUT',
+              },
+              message: { type: 'string' },
+              extra: { type: 'object', nullable: true },
+            },
+          },
+        ],
       },
     }),
     ApiResponse({
@@ -38,6 +54,18 @@ export function CreateProfileDoc() {
         properties: {
           statusCode: { type: 'number', example: 401 },
           message: { type: 'string' },
+        },
+      },
+    }),
+    ApiResponse({
+      status: 404,
+      description: 'addressId truyền vào không thuộc về account đang đăng nhập',
+      schema: {
+        properties: {
+          statusCode: { type: 'number', example: 404 },
+          code: { type: 'string', example: 'ADDRESS_NOT_FOUND' },
+          message: { type: 'string' },
+          extra: { type: 'object', nullable: true },
         },
       },
     }),

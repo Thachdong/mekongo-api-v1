@@ -6,6 +6,7 @@ export type TAddressProps = {
   ward: string;
   details: string;
   accountId: string;
+  profileId: string | null;
   createdAt: Date | null;
   updatedAt: Date | null;
 };
@@ -18,6 +19,7 @@ export class Address {
   private _ward: string;
   private _details: string;
   private readonly _accountId: string;
+  private readonly _profileId: string | null;
   private readonly _createdAt: Date | null;
   private readonly _updatedAt: Date | null;
 
@@ -29,6 +31,7 @@ export class Address {
     this._ward = props.ward;
     this._details = props.details;
     this._accountId = props.accountId;
+    this._profileId = props.profileId;
     this._createdAt = props.createdAt;
     this._updatedAt = props.updatedAt;
   }
@@ -59,6 +62,10 @@ export class Address {
 
   get accountId(): string {
     return this._accountId;
+  }
+
+  get profileId(): string | null {
+    return this._profileId;
   }
 
   get createdAt(): Date | null {

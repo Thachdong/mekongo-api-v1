@@ -24,6 +24,7 @@ export class CreateAddressUseCase implements ICreateAddressUseCase {
         ward: input.ward,
         details: input.details,
         accountId: input.accountId,
+        profileId: input.profileId ?? null,
         createdAt: null,
         updatedAt: null,
       }),

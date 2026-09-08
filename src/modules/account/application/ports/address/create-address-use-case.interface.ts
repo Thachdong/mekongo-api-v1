@@ -7,6 +7,7 @@ export type TCreateAddressInput = {
   provinceCode: number;
   ward: string;
   details: string;
+  profileId?: string | null;
 };
 
 export interface ICreateAddressUseCase {

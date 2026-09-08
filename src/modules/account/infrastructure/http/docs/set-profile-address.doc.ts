@@ -5,18 +5,18 @@ import {
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { SetCurrentAddressRequestDto } from '../dto/set-current-address-request.dto';
+import { SetProfileAddressRequestDto } from '../dto/set-profile-address-request.dto';
 
-export function SetCurrentAddressDoc() {
+export function SetProfileAddressDoc() {
   return applyDecorators(
     ApiOperation({
-      summary: 'Set currentAddressId của account đang đăng nhập',
+      summary: 'Gán 1 address có sẵn của account cho 1 profile',
     }),
     ApiBearerAuth('access-token'),
-    ApiBody({ type: SetCurrentAddressRequestDto }),
+    ApiBody({ type: SetProfileAddressRequestDto }),
     ApiResponse({
       status: 200,
-      description: 'Set current address thành công',
+      description: 'Gán address cho profile thành công',
       schema: {
         properties: {
           data: { type: 'object', nullable: true, example: null },
@@ -26,7 +26,8 @@ export function SetCurrentAddressDoc() {
     }),
     ApiResponse({
       status: 400,
-      description: 'Validation failed — addressId thiếu hoặc không phải UUID',
+      description:
+        'Validation failed — profileId/addressId thiếu hoặc không phải UUID',
       schema: {
         properties: {
           statusCode: { type: 'number', example: 400 },
@@ -48,13 +49,13 @@ export function SetCurrentAddressDoc() {
     ApiResponse({
       status: 404,
       description:
-        'Address không tồn tại/không thuộc account đang gọi, hoặc account không tồn tại',
+        'Profile không tồn tại/không thuộc account đang gọi, hoặc address không tồn tại/không thuộc account đang gọi',
       schema: {
         properties: {
           statusCode: { type: 'number', example: 404 },
           code: {
             type: 'string',
-            enum: ['ADDRESS_NOT_FOUND', 'ACCOUNT_NOT_FOUND'],
+            enum: ['PROFILE_NOT_FOUND', 'ADDRESS_NOT_FOUND'],
           },
           message: { type: 'string' },
           extra: { type: 'object', nullable: true },

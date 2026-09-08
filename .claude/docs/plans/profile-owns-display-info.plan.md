@@ -105,6 +105,66 @@ dùng được 2 field này từ `Profile` — dev sẽ làm lại đầy đủ 
 - Commit range: (điền sau)
 - Approved by: (chờ AskUserQuestion)
 
+### Chunk 4: Hoàn thiện endpoint — UpdateProfileUseCase + response DTO trả đúng field từ Profile (module: account)
+- status: done
+- Verify đã chạy: grep xác nhận `AccountResponseDto` hết `displayName`/
+  `avatarUrl`, `ProfileResponseDto` có đủ 2 field. `tsc --noEmit` toàn repo
+  sạch. eslint sạch. jest toàn repo 33 suite / 105 test pass.
+- `IProfileRepository.update` đã có sẵn từ Chunk 1 của
+  `address-profile-relation.plan.md` — tái dùng, không thêm trùng lặp.
+- Điều chỉnh phát sinh: `InvalidDisplayNameError` (422) không còn throw được
+  qua endpoint này nữa — use-case cũ validate qua `Account.changeDisplayName`
+  (trim + min 5 ký tự), mutator mới `Profile.changeDisplayName` không có
+  validate (đúng theo yêu cầu baseline lúc tạo mutator: "giữ đơn giản"). Đã bỏ
+  block 422 khỏi doc, bỏ test case tương ứng khỏi spec — ghi nhận ở đây vì đây
+  là thay đổi hành vi (mất validation), không phải chỉ đổi chỗ lưu dữ liệu.
+- Commit range: (điền sau)
+- Approved by: (chờ dev duyệt chunk tree)
+- Quyết định đã chốt với dev (AskUserQuestion, 2026-09-07):
+  1. `UpdateAccountProfileUseCase` đổi hẳn sang sửa `Profile` (không còn sửa
+     `Account` nữa). Request thêm `profileId` (bắt buộc).
+  2. `GET account` (`AccountResponseDto`) BỎ `displayName`/`avatarUrl` khỏi
+     response — client lấy 2 field này từ `GET account/profile`
+     (`ProfileResponseDto`, thêm ở chunk này).
+  3. `Account.displayName`/`avatarUrl` (entity + cột DB) giữ nguyên, không xoá
+     — chỉ không còn endpoint nào đọc/ghi qua Account nữa (out-of-scope dọn
+     dead code entity, để dành CR khác nếu cần).
+- Phụ thuộc: cần `IProfileRepository.update` — nếu
+  `.claude/docs/plans/address-profile-relation.plan.md` Chunk 1 đã chạy trước
+  thì tái dùng method đó; nếu chưa, thêm mới ở đây (không thêm trùng lặp).
+- Steps:
+  1. domain — `Profile` thêm 2 mutator: `changeDisplayName(displayName: string): void`,
+     `changeAvatarUrl(avatarUrl: string | null): void` (mini-gate xác nhận
+     trước khi code — theo skill `domain`).
+  2. infrastructure (adapter) — nếu `IProfileRepository.update` chưa tồn tại
+     (xem mục Phụ thuộc), thêm vào `IProfileRepository` +
+     `TypeOrmProfileRepository`.
+  3. use-case — `UpdateAccountProfileUseCase`: `TUpdateAccountProfileInput`
+     thêm `profileId: string` (bắt buộc); load `Profile` theo
+     `profileId`, verify `profile.accountId === input.accountId`
+     (`ProfileNotFoundError` nếu sai/không tồn tại); thay
+     `account.changeDisplayName`/`changeAvatar` bằng
+     `profile.changeDisplayName`/`changeAvatarUrl`; bỏ hẳn dependency
+     `IAccountRepository` nếu không còn dùng chỗ nào khác trong use-case này
+     (giữ lại nếu vẫn cần load account để verify accountId — ưu tiên cách này
+     để tránh phải tin tưởng input mù). Update spec.
+  4. infrastructure (endpoint) —
+     - `UpdateAccountProfileRequestDto` thêm `profileId: string` (bắt buộc,
+       `@IsUUID()`), giữ nguyên `displayName?`/`avatarUrl?` +
+       `AtLeastOneOf` validator hiện có.
+     - `ProfileResponseDto` + `_toProfileResponseDto` thêm
+       `displayName: string`, `avatarUrl: string | null`.
+     - `AccountResponseDto` + `_toAccountResponseDto`: XOÁ
+       `displayName`/`avatarUrl` khỏi response.
+  5. doc — cập nhật `update-account-profile.doc.ts`,
+     `get-account-profiles.doc.ts`/tương đương, và doc của `GET account` nếu
+     có field example cũ.
+- Gate: build sạch, test account pass, grep xác nhận
+  `AccountResponseDto` không còn `displayName`/`avatarUrl`, `ProfileResponseDto`
+  có đủ 2 field.
+- Commit range: (điền sau)
+- Approved by: (chờ dev duyệt chunk tree)
+
 ## Ghi chú Post module
 Không có chunk nào cho Post — hiện tại Post module không đọc
 `displayName`/`avatarUrl` ở đâu cả (chỉ dùng Account cho `currentAddressId` lúc

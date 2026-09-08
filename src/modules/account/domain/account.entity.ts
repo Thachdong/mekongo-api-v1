@@ -14,7 +14,6 @@ export type TAccountProps = {
   blockUntil: Date | null;
   displayName: string;
   avatarUrl: string | null;
-  currentAddressId: string | null;
   activeProfileId: string | null;
   createdAt: Date | null;
   updatedAt: Date | null;
@@ -29,7 +28,6 @@ export class Account {
   private _blockUntil: Date | null;
   private _displayName: string;
   private _avatarUrl: string | null;
-  private _currentAddressId: string | null;
   private _activeProfileId: string | null;
   private readonly _createdAt: Date | null;
   private readonly _updatedAt: Date | null;
@@ -43,7 +41,6 @@ export class Account {
     this._blockUntil = props.blockUntil;
     this._displayName = props.displayName;
     this._avatarUrl = props.avatarUrl;
-    this._currentAddressId = props.currentAddressId;
     this._activeProfileId = props.activeProfileId;
     this._createdAt = props.createdAt;
     this._updatedAt = props.updatedAt;
@@ -79,10 +76,6 @@ export class Account {
 
   get avatarUrl(): string | null {
     return this._avatarUrl;
-  }
-
-  get currentAddressId(): string | null {
-    return this._currentAddressId;
   }
 
   get activeProfileId(): string | null {
@@ -138,10 +131,6 @@ export class Account {
 
   changeAvatar(avatarUrl: string): void {
     this._avatarUrl = avatarUrl;
-  }
-
-  changeCurrentAddressId(addressId: string): void {
-    this._currentAddressId = addressId;
   }
 
   changeActiveProfileId(profileId: string): void {

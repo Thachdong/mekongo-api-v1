@@ -1,5 +1,5 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 import {
   registerDecorator,
   ValidationArguments,
@@ -33,6 +33,11 @@ function AtLeastOneOf(
 }
 
 export class UpdateAccountProfileRequestDto {
+  @ApiProperty()
+  @IsUUID()
+  @IsNotEmpty()
+  profileId: string;
+
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()

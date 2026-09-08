@@ -9,6 +9,7 @@ describe('FindProfilesByIdsUseCase', () => {
   beforeEach(() => {
     profileRepository = {
       create: jest.fn(),
+      update: jest.fn(),
       findAllByAccountId: jest.fn(),
       findById: jest.fn(),
       findByIds: jest.fn(),
@@ -25,6 +26,7 @@ describe('FindProfilesByIdsUseCase', () => {
         accountId: 'account-1',
         displayName: 'John',
         avatarUrl: null,
+        addressId: null,
         createdAt: null,
         updatedAt: null,
       }),

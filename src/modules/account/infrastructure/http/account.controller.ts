@@ -22,7 +22,7 @@ import { UpdateAccountProfileUseCase } from '../../application/use-cases/account
 import { CreateAddressUseCase } from '../../application/use-cases/address/create-address.use-case';
 import { DeleteAddressUseCase } from '../../application/use-cases/address/delete-address.use-case';
 import { GetAccountAddressesUseCase } from '../../application/use-cases/address/get-account-addresses.use-case';
-import { SetCurrentAddressUseCase } from '../../application/use-cases/address/set-current-address.use-case';
+import { SetProfileAddressUseCase } from '../../application/use-cases/address/set-profile-address.use-case';
 import { CreateProfileUseCase } from '../../application/use-cases/profile/create-profile.use-case';
 import { GetAccountProfilesUseCase } from '../../application/use-cases/profile/get-account-profiles.use-case';
 import { SetActiveProfileUseCase } from '../../application/use-cases/profile/set-active-profile.use-case';
@@ -34,7 +34,7 @@ import { CreateAddressRequestDto } from './dto/create-address-request.dto';
 import { CreateProfileRequestDto } from './dto/create-profile-request.dto';
 import { DeleteAddressRequestDto } from './dto/delete-address-request.dto';
 import { SetActiveProfileRequestDto } from './dto/set-active-profile-request.dto';
-import { SetCurrentAddressRequestDto } from './dto/set-current-address-request.dto';
+import { SetProfileAddressRequestDto } from './dto/set-profile-address-request.dto';
 import { UpdateAccountProfileRequestDto } from './dto/update-account-profile-request.dto';
 import { ChangePasswordDoc } from './docs/change-password.doc';
 import { CreateAddressDoc } from './docs/create-address.doc';
@@ -44,7 +44,7 @@ import { DeleteAddressDoc } from './docs/delete-address.doc';
 import { GetAccountDoc } from './docs/get-account.doc';
 import { GetAccountAddressesDoc } from './docs/get-account-addresses.doc';
 import { SetActiveProfileDoc } from './docs/set-active-profile.doc';
-import { SetCurrentAddressDoc } from './docs/set-current-address.doc';
+import { SetProfileAddressDoc } from './docs/set-profile-address.doc';
 import { UpdateAccountProfileDoc } from './docs/update-account-profile.doc';
 
 @ApiTags('account')
@@ -54,7 +54,7 @@ export class AccountController {
     private readonly _changeOwnPasswordUseCase: ChangeOwnPasswordUseCase,
     private readonly _updateAccountProfileUseCase: UpdateAccountProfileUseCase,
     private readonly _getAccountAddressesUseCase: GetAccountAddressesUseCase,
-    private readonly _setCurrentAddressUseCase: SetCurrentAddressUseCase,
+    private readonly _setProfileAddressUseCase: SetProfileAddressUseCase,
     private readonly _createAddressUseCase: CreateAddressUseCase,
     private readonly _deleteAddressUseCase: DeleteAddressUseCase,
     private readonly _findAccountByIdUseCase: FindAccountByIdUseCase,
@@ -103,6 +103,7 @@ export class AccountController {
   ): Promise<null> {
     await this._updateAccountProfileUseCase.execute({
       accountId: user.accountId,
+      profileId: body.profileId,
       displayName: body.displayName,
       avatarUrl: body.avatarUrl,
     });
@@ -123,16 +124,17 @@ export class AccountController {
     return addresses.map((address) => this._toAddressResponseDto(address));
   }
 
-  @Put('set-current-address')
+  @Put('set-profile-address')
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
-  @SetCurrentAddressDoc()
-  async setCurrentAddress(
+  @SetProfileAddressDoc()
+  async setProfileAddress(
     @CurrentUser() user: TJwtPayload,
-    @Body() body: SetCurrentAddressRequestDto,
+    @Body() body: SetProfileAddressRequestDto,
   ): Promise<null> {
-    await this._setCurrentAddressUseCase.execute({
+    await this._setProfileAddressUseCase.execute({
       accountId: user.accountId,
+      profileId: body.profileId,
       addressId: body.addressId,
     });
     return null;
@@ -153,6 +155,7 @@ export class AccountController {
       provinceCode: body.provinceCode,
       ward: body.ward,
       details: body.details,
+      profileId: body.profileId,
     });
 
     return this._toAddressResponseDto(address);
@@ -184,6 +187,8 @@ export class AccountController {
     const profile = await this._createProfileUseCase.execute({
       accountId: user.accountId,
       profileType: body.profileType,
+      addressId: body.addressId,
+      newAddress: body.newAddress,
     });
 
     return this._toProfileResponseDto(profile);
@@ -223,9 +228,6 @@ export class AccountController {
     dto.id = account.id;
     dto.loginType = account.loginType;
     dto.status = account.status;
-    dto.displayName = account.displayName;
-    dto.avatarUrl = account.avatarUrl;
-    dto.currentAddressId = account.currentAddressId;
     dto.activeProfileId = account.activeProfileId;
     dto.blockUntil = account.blockUntil;
     dto.createdAt = account.createdAt;
@@ -241,6 +243,7 @@ export class AccountController {
     dto.provinceCode = address.provinceCode;
     dto.ward = address.ward;
     dto.details = address.details;
+    dto.profileId = address.profileId;
     dto.createdAt = address.createdAt;
     dto.updatedAt = address.updatedAt;
     return dto;
@@ -251,6 +254,9 @@ export class AccountController {
     dto.id = profile.id as string;
     dto.profileType = profile.activeProfile;
     dto.accountId = profile.accountId;
+    dto.displayName = profile.displayName;
+    dto.avatarUrl = profile.avatarUrl;
+    dto.addressId = profile.addressId;
     dto.createdAt = profile.createdAt;
     dto.updatedAt = profile.updatedAt;
     return dto;
